@@ -1,13 +1,13 @@
-package org.serratec.com.backend.eccomerce;
+package org.serratec.com.backend.ecommerce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EccomerceApplication {
+public class EcommerceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EccomerceApplication.class, args);
+		SpringApplication.run(EcommerceApplication.class, args);
 	}
 
 }
