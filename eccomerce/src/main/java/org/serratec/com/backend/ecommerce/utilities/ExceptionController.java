@@ -1,4 +1,4 @@
-package org.serratec.com.backend.ecommerce.util;
+package org.serratec.com.backend.ecommerce.utilities;
 
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
