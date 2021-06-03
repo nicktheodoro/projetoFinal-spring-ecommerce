@@ -10,12 +10,12 @@ public class AddressMapper {
 	public AddressEntity toEntity(AddressDto dto) {
 		AddressEntity entity = new AddressEntity();
 		entity.setCep(dto.getCep());
-		entity.setRua(dto.getRua());
+		entity.setRua(dto.getLogradouro());
 		entity.setBairro(dto.getBairro());
-		entity.setCidade(dto.getCidade());
+		entity.setCidade(dto.getLocalidade());
 		entity.setNumero(dto.getNumero());
 		entity.setComplemento(dto.getComplemento());
-		entity.setEstado(dto.getEstado());
+		entity.setEstado(dto.getUf());
 		
 		return entity;
 	}
@@ -23,12 +23,12 @@ public class AddressMapper {
 	public AddressDto toDto(AddressEntity entity) {
 		AddressDto dto = new AddressDto();
 		dto.setCep(entity.getCep());
-		dto.setRua(entity.getRua());
+		dto.setLogradouro(entity.getRua());
 		dto.setBairro(entity.getBairro());
-		dto.setCidade(entity.getCidade());
+		dto.setLocalidade(entity.getCidade());
 		dto.setNumero(entity.getNumero());
 		dto.setComplemento(entity.getComplemento());
-		dto.setEstado(entity.getEstado());
+		dto.setUf(entity.getEstado());
 		
 		return dto;
 	}

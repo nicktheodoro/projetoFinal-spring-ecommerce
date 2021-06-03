@@ -24,7 +24,7 @@ public class AddressEntity {
 	private String complemento;
 	private String estado;
 	
-	@OneToMany(mappedBy="cliente")
+	@OneToMany(mappedBy="endereco")
 	private List<ClientEntity> clientes ;
 
 	public Long getId() {
@@ -99,5 +99,4 @@ public class AddressEntity {
 		this.clientes = clientes;
 	}
 
-	
 }

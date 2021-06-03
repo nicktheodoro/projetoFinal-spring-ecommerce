@@ -3,6 +3,7 @@ package org.serratec.com.backend.ecommerce.entities.dto;
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.serratec.com.backend.ecommerce.entities.AddressEntity;
@@ -32,8 +33,8 @@ public class ClientDto {
 	@NotEmpty(message = "Este campo não pode ser vazio")
 	@Size(min = 10 , max = 11)
 	private String telefone;
-	
-	@NotEmpty(message = "Este campo não pode ser vazio")
+
+	@NotNull
 	private LocalDate dataNascimento;
 	
 	private AddressEntity endereco;
@@ -101,6 +102,4 @@ public class ClientDto {
 	public void setEndereco(AddressEntity endereco) {
 		this.endereco = endereco;
 	}
-
-	
 }

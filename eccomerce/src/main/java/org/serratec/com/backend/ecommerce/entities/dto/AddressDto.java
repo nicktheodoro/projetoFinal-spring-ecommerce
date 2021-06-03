@@ -1,5 +1,6 @@
 package org.serratec.com.backend.ecommerce.entities.dto;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -9,28 +10,22 @@ public class AddressDto {
 	@Size(min = 9 , max = 9)
 	private String cep;
 	
-	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 3, max=120)
-	private String rua;
+	@Column(name = "rua")
+	private String logradouro;
 	
-	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 3, max=120)
 	private String bairro;
 	
-	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 3, max=120)
-	private String cidade;
+	@Column(name = "cidade")
+	private String localidade;
 	
 	@NotEmpty(message = "Este campo não pode ser vazio")
 	private String numero;
 	
-	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 3, max=120)
+	@Size(max=120)
 	private String complemento;
 	
-	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 3, max=120)
-	private String estado;
+	@Column(name = "estado")
+	private String uf;
 
 	public String getCep() {
 		return cep;
@@ -40,12 +35,12 @@ public class AddressDto {
 		this.cep = cep;
 	}
 
-	public String getRua() {
-		return rua;
+	public String getLogradouro() {
+		return logradouro;
 	}
 
-	public void setRua(String rua) {
-		this.rua = rua;
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
 
 	public String getBairro() {
@@ -56,12 +51,12 @@ public class AddressDto {
 		this.bairro = bairro;
 	}
 
-	public String getCidade() {
-		return cidade;
+	public String getLocalidade() {
+		return localidade;
 	}
 
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
+	public void setLocalidade(String localidade) {
+		this.localidade = localidade;
 	}
 
 	public String getNumero() {
@@ -80,12 +75,11 @@ public class AddressDto {
 		this.complemento = complemento;
 	}
 
-	public String getEstado() {
-		return estado;
+	public String getUf() {
+		return uf;
 	}
 
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public void setUf(String uf) {
+		this.uf = uf;
 	}
-	
 }

@@ -25,30 +25,31 @@ public class AddressController {
 
 	@Autowired
 	AddressService service;
-	
+
 	@GetMapping
-	public ResponseEntity <List<AddressDto>> getAll(){
-		return new ResponseEntity<List<AddressDto>> (service.getAll(),HttpStatus.OK);
+	public ResponseEntity<List<AddressDto>> getAll() {
+		return new ResponseEntity<List<AddressDto>>(service.getAll(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<AddressDto> getOne(@PathVariable Long id) throws EntityNotFoundException{
-		return new ResponseEntity <AddressDto> (service.getById(id), HttpStatus.OK);
+	public ResponseEntity<AddressDto> getOne(@PathVariable Long id) throws EntityNotFoundException {
+		return new ResponseEntity<AddressDto>(service.getById(id), HttpStatus.OK);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<AddressDto> create( @Valid @RequestBody AddressDto dto){
+	public ResponseEntity<AddressDto> create(@Valid @RequestBody AddressDto dto) {
 		return new ResponseEntity<AddressDto>(service.create(dto), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<AddressDto> update(@PathVariable Long id, @Valid @RequestBody AddressDto dto) throws EntityNotFoundException{
+	public ResponseEntity<AddressDto> update(@PathVariable Long id, @Valid @RequestBody AddressDto dto)
+			throws EntityNotFoundException {
 		return new ResponseEntity<AddressDto>(service.update(id, dto), HttpStatus.ACCEPTED);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id){
+	public ResponseEntity<String> delete(@PathVariable Long id) {
 		return new ResponseEntity<String>(service.delete(id), HttpStatus.NO_CONTENT);
 	}
-	
+
 }
