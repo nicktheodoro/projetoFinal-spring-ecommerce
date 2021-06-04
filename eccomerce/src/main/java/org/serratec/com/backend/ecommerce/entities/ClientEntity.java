@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="CLIENTE")
+@Table(name = "CLIENTE")
 public class ClientEntity {
 
 	@Id
@@ -24,9 +24,9 @@ public class ClientEntity {
 	private String cpf;
 	private String telefone;
 	private LocalDate dataNascimento;
-	
+
 	@ManyToOne
-	@JoinColumn (name = "id_endereco", referencedColumnName = "id")
+	@JoinColumn(name = "id_endereco", referencedColumnName = "id")
 	private AddressEntity endereco;
 
 	public Long getId() {
@@ -100,5 +100,5 @@ public class ClientEntity {
 	public void setEndereco(AddressEntity endereco) {
 		this.endereco = endereco;
 	}
-		
+
 }

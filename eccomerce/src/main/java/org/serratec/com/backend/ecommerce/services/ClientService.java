@@ -20,10 +20,6 @@ public class ClientService {
 	@Autowired
 	ClientMapper mapper;
 
-	private ClientEntity findById(Long id) throws EntityNotFoundException {
-		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " nÃ£o encontrado."));
-	}
-
 	public List<ClientDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
@@ -54,5 +50,9 @@ public class ClientService {
 	public String delete(Long id) {
 		repository.deleteById(id);
 		return "Deletado com sucesso";
+	}
+
+	private ClientEntity findById(Long id) throws EntityNotFoundException {
+		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
 }

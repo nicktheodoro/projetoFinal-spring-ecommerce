@@ -7,23 +7,23 @@ import javax.validation.constraints.Size;
 public class AddressDto {
 
 	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 9 , max = 9)
+	@Size(min = 9, max = 9)
 	private String cep;
-	
+
 	@Column(name = "rua")
 	private String logradouro;
-	
+
 	private String bairro;
-	
+
 	@Column(name = "cidade")
 	private String localidade;
-	
+
 	@NotEmpty(message = "Este campo não pode ser vazio")
 	private String numero;
-	
-	@Size(max=120)
+
+	@Size(max = 120)
 	private String complemento;
-	
+
 	@Column(name = "estado")
 	private String uf;
 

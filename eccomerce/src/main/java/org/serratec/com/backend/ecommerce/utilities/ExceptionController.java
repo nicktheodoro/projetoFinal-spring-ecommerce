@@ -13,13 +13,13 @@ public class ExceptionController {
 		HttpHeaders header = new HttpHeaders();
 		header.add("LIBRARY", "ECOMMERCE_V1");
 		header.add("x-error-msg", ex.getMessage());
-		
-		return header; 
+
+		return header;
 	}
-	
+
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<String> handlerEntityNotFoundException(EntityNotFoundException ex){
+	public ResponseEntity<String> handlerEntityNotFoundException(EntityNotFoundException ex) {
 		return ResponseEntity.notFound().headers(this.header(ex)).build();
-				
+
 	}
 }

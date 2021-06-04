@@ -9,34 +9,34 @@ import javax.validation.constraints.Size;
 import org.serratec.com.backend.ecommerce.entities.AddressEntity;
 
 public class ClientDto {
-	
+
 	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 5 , max = 120 )
+	@Size(min = 5, max = 120)
 	private String email;
-	
+
 	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size( max = 32 )
+	@Size(max = 32)
 	private String username;
-	
+
 	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 8 , max = 128)
+	@Size(min = 8, max = 128)
 	private String senha;
-	
+
 	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 3, max = 200 )
+	@Size(min = 3, max = 200)
 	private String nome;
-	
+
 	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 11 , max = 11)
+	@Size(min = 11, max = 11)
 	private String cpf;
-	
+
 	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 10 , max = 11)
+	@Size(min = 10, max = 11)
 	private String telefone;
 
 	@NotNull
 	private LocalDate dataNascimento;
-	
+
 	private AddressEntity endereco;
 
 	public String getEmail() {

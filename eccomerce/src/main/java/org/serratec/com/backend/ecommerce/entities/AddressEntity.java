@@ -10,11 +10,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="ENDERECO")
+@Table(name = "ENDERECO")
 public class AddressEntity {
 
 	@Id
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String cep;
 	private String rua;
@@ -23,9 +23,9 @@ public class AddressEntity {
 	private String numero;
 	private String complemento;
 	private String estado;
-	
-	@OneToMany(mappedBy="endereco")
-	private List<ClientEntity> clientes ;
+
+	@OneToMany(mappedBy = "endereco")
+	private List<ClientEntity> clientes;
 
 	public Long getId() {
 		return id;

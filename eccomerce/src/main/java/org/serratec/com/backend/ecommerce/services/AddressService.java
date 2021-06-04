@@ -24,29 +24,25 @@ public class AddressService {
 	@Autowired
 	AddressMapper mapper;
 
-	private AddressEntity findById(Long id) throws EntityNotFoundException {
-		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
-	}
-	
 	public List<AddressDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
-	
+
 	public AddressDto getById(Long id) throws EntityNotFoundException {
 		return mapper.toDto(this.findById(id));
 	}
-	
+
 	public AddressDto create(AddressDto dto) {
 		AddressDto address = this.getCep(dto.getCep());
 		address.setNumero(dto.getNumero());
 		address.setComplemento(dto.getComplemento());
-		
+
 		return mapper.toDto(repository.save(mapper.toEntity(address)));
 	}
-	
+
 	public AddressDto update(Long id, AddressDto addressUpdate) throws EntityNotFoundException {
 		AddressEntity address = this.findById(id);
-		
+
 		address.setCep(addressUpdate.getCep());
 		address.setRua(addressUpdate.getLogradouro());
 		address.setBairro(addressUpdate.getBairro());
@@ -54,26 +50,29 @@ public class AddressService {
 		address.setNumero(addressUpdate.getNumero());
 		address.setComplemento(addressUpdate.getComplemento());
 		address.setEstado(addressUpdate.getUf());
-		
+
 		return mapper.toDto(repository.save(address));
 	}
-	
-	public String delete (Long id) {
+
+	public String delete(Long id) {
 		repository.deleteById(id);
 		return "Deletado com sucesso";
 	}
-	
+
+	private AddressEntity findById(Long id) throws EntityNotFoundException {
+		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
+	}
+
 	private AddressDto getCep(@PathVariable(name = "cep") String cep) {
 		RestTemplate restTemplate = new RestTemplate();
 
-		String url = "http://viacep.com.br/ws/{cep}/json/";
+		String uri = "http://viacep.com.br/ws/{cep}/json/";
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("cep", cep);
 
-		AddressDto address = restTemplate.getForObject(url, AddressDto.class, params);
+		AddressDto address = restTemplate.getForObject(uri, AddressDto.class, params);
 
 		return address;
 	}
-	
 }
