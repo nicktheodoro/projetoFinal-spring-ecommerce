@@ -34,8 +34,13 @@ public class ProductService {
 	}
 	
 	public ProductDto create(ProductDto product) {
-		repository.save(mapper.toModel(product));
-		return product;
+		try {
+			repository.save(mapper.toModel(product));
+			return product;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException("Categoria: "+ product.getCategoria().getId() + " não existe");				
+		}
+		
 	}
 	
 	public ProductDto update(Long id, ProductDto dto) throws EntityNotFoundException {
