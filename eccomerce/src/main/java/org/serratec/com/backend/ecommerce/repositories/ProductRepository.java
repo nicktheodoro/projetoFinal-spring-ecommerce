@@ -1,5 +1,8 @@
 package org.serratec.com.backend.ecommerce.repositories;
 
-public interface ProductRepository {
+import org.serratec.com.backend.ecommerce.entities.ProductEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
 }
