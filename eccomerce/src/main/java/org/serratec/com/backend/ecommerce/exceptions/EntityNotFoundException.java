@@ -4,6 +4,7 @@ public class EntityNotFoundException extends Exception {
 
 	private static final long serialVersionUID = -7586785837020747782L;
 
+
 	private String msg;
 
 	public EntityNotFoundException() {
