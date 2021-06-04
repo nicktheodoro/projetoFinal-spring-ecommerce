@@ -59,7 +59,7 @@ public class AddressService {
 		return "Deletado com sucesso";
 	}
 
-	private AddressEntity findById(Long id) throws EntityNotFoundException {
+	public AddressEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
 

@@ -37,7 +37,7 @@ public class ClientController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ClientDto> create(@Valid @RequestBody ClientDto dto) {
+	public ResponseEntity<ClientDto> create(@Valid @RequestBody ClientDto dto) throws EntityNotFoundException {
 		return new ResponseEntity<ClientDto>(service.create(dto), HttpStatus.CREATED);
 	}
 

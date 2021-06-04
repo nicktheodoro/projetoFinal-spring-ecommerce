@@ -19,6 +19,9 @@ public class ClientService {
 
 	@Autowired
 	ClientMapper mapper;
+	
+	@Autowired
+	AddressService address;
 
 	public List<ClientDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
@@ -28,8 +31,10 @@ public class ClientService {
 		return mapper.toDto(this.findById(id));
 	}
 
-	public ClientDto create(ClientDto dto) {
-		return mapper.toDto(repository.save(mapper.toEntity(dto)));
+	public ClientDto create(ClientDto dto) throws EntityNotFoundException {
+		ClientEntity entity = mapper.toEntity(dto);
+		entity.setEndereco(address.findById(dto.getEndereco().getId()));
+		return mapper.toDto(repository.save(entity));
 	}
 
 	public ClientDto update(Long id, ClientDto clientUpdate) throws EntityNotFoundException {
@@ -52,7 +57,8 @@ public class ClientService {
 		return "Deletado com sucesso";
 	}
 
-	private ClientEntity findById(Long id) throws EntityNotFoundException {
+	public ClientEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
+
 }
