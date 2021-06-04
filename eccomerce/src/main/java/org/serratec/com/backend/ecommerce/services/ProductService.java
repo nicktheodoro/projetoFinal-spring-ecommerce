@@ -14,69 +14,60 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
-	
+
 	@Autowired
 	ProductRepository repository;
-	
+
 	@Autowired
 	ProductMapper mapper;
-	
-	private ProductEntity findById(Long id) throws EntityNotFoundException {
-		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
-	}
-	
+
 	public List<ProductDto> getAll() {
-		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList()); 
+		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
-	
+
 	public ProductDto getById(Long id) throws EntityNotFoundException {
 		return mapper.toDto(this.findById(id));
 	}
-	
+
 	public ProductDto create(ProductDto product) {
 		try {
 			repository.save(mapper.toModel(product));
 			return product;
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityViolationException("Categoria: "+ product.getCategoria().getId() + " não existe");				
+			throw new DataIntegrityViolationException("Categoria: " + product.getCategoria().getId() + " não existe");
 		}
-		
 	}
-	
+
 	public ProductDto update(Long id, ProductDto dto) throws EntityNotFoundException {
 		ProductEntity product = this.findById(id);
-		
-				
-		if(dto.getNome() != null) {
-			product.setNome(dto.getNome());	
-		}
-		if(dto.getDescricao() != null) {
+		product.setNome(dto.getNome());
+		product.setPreco(dto.getPreco());
+		product.setQtdEstoque(dto.getQtdEstoque());
+		product.setCategoria(dto.getCategoria());
+
+		if (dto.getDescricao() != null) {
 			product.setDescricao(dto.getDescricao());
 		}
-		if(dto.getPreco()!= null) {
-			product.setPreco(dto.getPreco());
-		}
-		if(dto.getQtdEstoque() != null) {
-			product.setQtdEstoque(dto.getQtdEstoque());
-		}
-		if(dto.getCategoria() != null) {
-			product.setCategoria(dto.getCategoria());
-		}		
-		//Update de imagem
+
+		// Update de imagem
 //		if(dto.getImagem() != null) {
 //			product.setImagem(dto.getImagem());
 //		}	
 		return mapper.toDto(repository.save(product));
 	}
-	
+
 	public void delete(Long id) throws EntityNotFoundException {
 		try {
-			if(this.findById(id) !=null) {
+			if (this.findById(id) != null) {
 				repository.deleteById(id);
 			}
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityViolationException("Produto com id: "+ id +
-					" está associado a um ou mais pedidos, favor verificar");
+			throw new DataIntegrityViolationException(
+					"Produto com id: " + id + " está associado a um ou mais pedidos, favor verificar");
 		}
+	}
+	
+	private ProductEntity findById(Long id) throws EntityNotFoundException {
+		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
 }

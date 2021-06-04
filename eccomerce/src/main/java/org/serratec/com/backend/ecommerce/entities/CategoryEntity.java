@@ -8,26 +8,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "CATEGORIA")
 public class CategoryEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@NotBlank(message = "{nome.not.blank}")
-	@Size(max = 40)
 	private String nome;
-	
 	private String descricao;
 
 	@OneToMany(mappedBy = "categoria")
 	private List<ProductEntity> products;
-	
 
 	public CategoryEntity(Long id) {
 		super();
@@ -37,7 +30,7 @@ public class CategoryEntity {
 	public CategoryEntity() {
 		super();
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -61,5 +54,4 @@ public class CategoryEntity {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-
 }

@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.serratec.com.backend.ecommerce.entities.ClientEntity;
 import org.serratec.com.backend.ecommerce.entities.ProductEntity;
+
 
 public class PurchaseDto {
 	
@@ -18,21 +20,18 @@ public class PurchaseDto {
 	
 	@NotBlank
 	private Double valorTotal;
-	
-	
+
+	@NotNull
 	private LocalDate dtPedido;
 	
 	@FutureOrPresent
 	private LocalDate dtEntrega;
 	
-	
+	@NotNull
 	private String status;
-	
 	
 	@NotBlank
 	private ClientEntity cliente;
-
-	
 
 	public void setNrPedido(Long nrPedido) {
 		this.nrPedido = nrPedido;

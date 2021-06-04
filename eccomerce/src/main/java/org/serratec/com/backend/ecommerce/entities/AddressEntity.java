@@ -98,5 +98,4 @@ public class AddressEntity {
 	public void setClientes(List<ClientEntity> clientes) {
 		this.clientes = clientes;
 	}
-
 }
