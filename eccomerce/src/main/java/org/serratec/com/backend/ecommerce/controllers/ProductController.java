@@ -36,7 +36,6 @@ public class ProductController {
 	
 	@PostMapping
 	public ResponseEntity<ProductDto> create(@RequestBody ProductDto category) {
-		category.getCategoria().getNome();
 		return new ResponseEntity<ProductDto>(service.create(category),HttpStatus.CREATED);
 	}
 	
