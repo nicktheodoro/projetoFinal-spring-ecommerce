@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductMapper {
 
-	public ProductEntity toModel(ProductDto dto) {
+	public ProductEntity toEntity(ProductDto dto) {
 		ProductEntity product = new ProductEntity();
 		product.setNome(dto.getNome());
 		product.setDescricao(dto.getDescricao());

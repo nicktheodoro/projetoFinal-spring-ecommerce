@@ -11,6 +11,7 @@ import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.AddressMapper;
 import org.serratec.com.backend.ecommerce.repositories.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
@@ -42,23 +43,32 @@ public class AddressService {
 
 	public AddressDto update(Long id, AddressDto addressUpdate) throws EntityNotFoundException {
 		AddressEntity address = this.findById(id);
-		address.setCep(addressUpdate.getCep());
-		address.setRua(addressUpdate.getLogradouro());
-		address.setBairro(addressUpdate.getBairro());
-		address.setCidade(addressUpdate.getLocalidade());
 		address.setNumero(addressUpdate.getNumero());
-		address.setEstado(addressUpdate.getUf());
 
 		if (addressUpdate != null) {
 			address.setComplemento(addressUpdate.getComplemento());
 		}
-		
+
+		addressUpdate = this.getCep(addressUpdate.getCep());
+		address.setCep(addressUpdate.getCep());
+		address.setBairro(addressUpdate.getBairro());
+		address.setCidade(addressUpdate.getLocalidade());
+		address.setEstado(addressUpdate.getUf());
+		address.setRua(addressUpdate.getLogradouro());
+
 		return mapper.toDto(repository.save(address));
 	}
 
-	public String delete(Long id) {
-		repository.deleteById(id);
-		return "Deletado com sucesso";
+	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
+		try {
+			if (this.findById(id) != null) {
+				repository.deleteById(id);
+			}
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException(
+					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
+		}
+
 	}
 
 	public AddressEntity findById(Long id) throws EntityNotFoundException {

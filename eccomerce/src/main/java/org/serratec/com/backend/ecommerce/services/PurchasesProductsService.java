@@ -9,6 +9,7 @@ import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.PurchasesProductsMapper;
 import org.serratec.com.backend.ecommerce.repositories.PurchasesProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -51,8 +52,15 @@ public class PurchasesProductsService {
 		
 	}
 	
-	public String delete(Long id) {
-		repository.deleteById(id);
-		return "Deletado com sucesso";
+	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
+		try {
+			if (this.findById(id) != null) {
+				repository.deleteById(id);
+			}
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException(
+					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
+		}
+
 	}
 }

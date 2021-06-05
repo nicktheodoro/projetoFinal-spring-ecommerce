@@ -21,7 +21,7 @@ public class CategoryService {
 	@Autowired
 	CategoryMapper mapper;
 
-	private CategoryEntity findById(Long id) throws EntityNotFoundException {
+	public CategoryEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
 
@@ -34,7 +34,7 @@ public class CategoryService {
 	}
 
 	public CategoryDto create(CategoryDto category) {
-		repository.save(mapper.toModel(category));
+		repository.save(mapper.toEntity(category));
 
 		return category;
 	}
@@ -50,7 +50,7 @@ public class CategoryService {
 		return mapper.toDto(repository.save(category));
 	}
 
-	public void delete(Long id) throws EntityNotFoundException {
+	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
 		try {
 			if (this.findById(id) != null) {
 				repository.deleteById(id);
@@ -59,5 +59,6 @@ public class CategoryService {
 			throw new DataIntegrityViolationException(
 					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
 		}
+
 	}
 }

@@ -3,6 +3,7 @@ package org.serratec.com.backend.ecommerce.controllers;
 import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.dto.ProductDto;
+import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,18 +36,18 @@ public class ProductController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProductDto> create(@RequestBody ProductDto category) {
+	public ResponseEntity<ProductDto> create(@RequestBody ProductDto category) throws EntityNotFoundException {
 		return new ResponseEntity<ProductDto>(service.create(category),HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<ProductDto> update(@PathVariable Long id, @RequestBody ProductDto category) throws EntityNotFoundException {
-		return new ResponseEntity<ProductDto>(service.update(id, category), HttpStatus.OK);
+		return new ResponseEntity<ProductDto>(service.update(id, category), HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException {
+	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
 		service.delete(id);
-		return new ResponseEntity<String>("Categoria com " +id +" deletada com sucesso!", HttpStatus.OK);
+		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.NO_CONTENT);
 	}
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PurchaseMapper {
 
-	public PurchaseEntity toModel(PurchaseDto dto) {
+	public PurchaseEntity toEntity(PurchaseDto dto) {
 		PurchaseEntity purchase = new PurchaseEntity();
 		purchase.setNumeroPedido(dto.getNumeroPedido());
 		purchase.setDataEntrega(dto.getDataEntrega());
