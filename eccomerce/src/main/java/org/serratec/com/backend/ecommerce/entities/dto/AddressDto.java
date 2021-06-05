@@ -1,12 +1,12 @@
 package org.serratec.com.backend.ecommerce.entities.dto;
 
 import javax.persistence.Column;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class AddressDto {
 
-	@NotEmpty(message = "Este campo não pode ser vazio")
+	@NotBlank(message = "{nome.not.blank}")
 	@Size(min = 9, max = 9)
 	private String cep;
 
@@ -18,12 +18,13 @@ public class AddressDto {
 	@Column(name = "cidade")
 	private String localidade;
 
-	@NotEmpty(message = "Este campo não pode ser vazio")
+	@NotBlank(message = "{nome.not.blank}")
 	private String numero;
 
 	@Size(max = 120)
 	private String complemento;
 
+	@Size(min = 2, max = 2)
 	@Column(name = "estado")
 	private String uf;
 

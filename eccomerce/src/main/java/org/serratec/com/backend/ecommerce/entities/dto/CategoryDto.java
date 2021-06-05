@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class CategoryDto {
-	
+
 	@NotBlank(message = "{nome.not.blank}")
 	@Size(max = 40)
 	private String nome;
