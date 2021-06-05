@@ -4,26 +4,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PRODUTOS_PEDIDOS")
+@Table(name = "PRODUTO_PEDIDO")
 public class PurchasesProducts {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private Integer quantidade;
-	
 	private Double preco;
 	
-	@OneToOne
-	private PurchaseEntity pedido;
-	
-	@OneToOne
-	private ProductEntity produto;
+	private Integer quantidade;
 
 	public Long getId() {
 		return id;
@@ -31,14 +24,6 @@ public class PurchasesProducts {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
 	}
 
 	public Double getPreco() {
@@ -49,19 +34,11 @@ public class PurchasesProducts {
 		this.preco = preco;
 	}
 
-	public PurchaseEntity getPedido() {
-		return pedido;
+	public Integer getQuantidade() {
+		return quantidade;
 	}
 
-	public void setPedido(PurchaseEntity pedido) {
-		this.pedido = pedido;
-	}
-
-	public ProductEntity getProduto() {
-		return produto;
-	}
-
-	public void setProduto(ProductEntity produto) {
-		this.produto = produto;
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
 	}
 }

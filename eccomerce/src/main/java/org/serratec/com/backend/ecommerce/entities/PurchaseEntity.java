@@ -1,20 +1,24 @@
 package org.serratec.com.backend.ecommerce.entities;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "PEDIDOS")
 public class PurchaseEntity {
+	
+	// Add Lista de Produtos do Pedido
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +28,16 @@ public class PurchaseEntity {
 	private LocalDate dataPedido;
 	private LocalDate dataEntrega;
 	private String status;
-	//private List<ProductEntity> listaDeProdutosDoPedido;
 
 	@ManyToOne
 	private ClientEntity cliente;
 
-	@JsonIgnore
-	@OneToOne
-	private PurchasesProducts pedidos;
+	@ManyToMany
+	@JoinTable(name = "produto_pedido",
+	joinColumns = @JoinColumn(referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
+	@Column(name = "produtos_id")
+	private List<ProductEntity> produtos;
 
 	public Long getId() {
 		return id;
@@ -81,14 +87,6 @@ public class PurchaseEntity {
 		this.status = status;
 	}
 
-//	public List<ProductEntity> getListaDeProdutosDoPedido() {
-//		return listaDeProdutosDoPedido;
-//	}
-//
-//	public void setListaDeProdutosDoPedido(List<ProductEntity> listaDeProdutosDoPedido) {
-//		this.listaDeProdutosDoPedido = listaDeProdutosDoPedido;
-//	}
-
 	public ClientEntity getCliente() {
 		return cliente;
 	}
@@ -97,13 +95,11 @@ public class PurchaseEntity {
 		this.cliente = cliente;
 	}
 
-	public PurchasesProducts getPedidos() {
-		return pedidos;
+	public List<ProductEntity> getProdutos() {
+		return produtos;
 	}
 
-	public void setPedidos(PurchasesProducts pedidos) {
-		this.pedidos = pedidos;
+	public void setProdutos(List<ProductEntity> produtos) {
+		this.produtos = produtos;
 	}
-
-	
 }

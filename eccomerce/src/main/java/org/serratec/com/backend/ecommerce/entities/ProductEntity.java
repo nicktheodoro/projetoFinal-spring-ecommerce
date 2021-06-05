@@ -1,16 +1,16 @@
 package org.serratec.com.backend.ecommerce.entities;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "PRODUTO")
@@ -22,15 +22,15 @@ public class ProductEntity {
 	private String nome;
 	private String descricao;
 	private Double preco;
-	private Integer qtdEstoque;
-	private LocalDate dtCadastro;
+	private Integer quantidadeEstoque;
+	private LocalDate dataCadastro;
 
 	@ManyToOne
 	private CategoryEntity categoria;
-	
-	@JsonIgnore
-	@OneToOne
-	private PurchasesProducts produtos;
+
+	@ManyToMany(mappedBy = "produtos")
+	@Column(name = "pedidos_id")
+	private List<PurchaseEntity> pedidos;
 
 	public Long getId() {
 		return id;
@@ -64,20 +64,20 @@ public class ProductEntity {
 		this.preco = preco;
 	}
 
-	public Integer getQtdEstoque() {
-		return qtdEstoque;
+	public Integer getQuantidadeEstoque() {
+		return quantidadeEstoque;
 	}
 
-	public void setQtdEstoque(Integer qtdEstoque) {
-		this.qtdEstoque = qtdEstoque;
+	public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+		this.quantidadeEstoque = quantidadeEstoque;
 	}
 
-	public LocalDate getDtCadastro() {
-		return dtCadastro;
+	public LocalDate getDataCadastro() {
+		return dataCadastro;
 	}
 
-	public void setDtCadastro(LocalDate dtCadastro) {
-		this.dtCadastro = dtCadastro;
+	public void setDataCadastro(LocalDate dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 
 	public CategoryEntity getCategoria() {
@@ -88,16 +88,14 @@ public class ProductEntity {
 		this.categoria = categoria;
 	}
 
-	public PurchasesProducts getProdutos() {
-		return produtos;
+	public List<PurchaseEntity> getPedidos() {
+		return pedidos;
 	}
 
-	public void setProdutos(PurchasesProducts produtos) {
-		this.produtos = produtos;
+	public void setPedidos(List<PurchaseEntity> pedidos) {
+		this.pedidos = pedidos;
 	}
 
-	
 	// Adicionar imagens
 	// private String imagem;
-
 }

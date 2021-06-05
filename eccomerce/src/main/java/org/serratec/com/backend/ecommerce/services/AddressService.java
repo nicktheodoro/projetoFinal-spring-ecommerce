@@ -42,15 +42,17 @@ public class AddressService {
 
 	public AddressDto update(Long id, AddressDto addressUpdate) throws EntityNotFoundException {
 		AddressEntity address = this.findById(id);
-
 		address.setCep(addressUpdate.getCep());
 		address.setRua(addressUpdate.getLogradouro());
 		address.setBairro(addressUpdate.getBairro());
 		address.setCidade(addressUpdate.getLocalidade());
 		address.setNumero(addressUpdate.getNumero());
-		address.setComplemento(addressUpdate.getComplemento());
 		address.setEstado(addressUpdate.getUf());
 
+		if (addressUpdate != null) {
+			address.setComplemento(addressUpdate.getComplemento());
+		}
+		
 		return mapper.toDto(repository.save(address));
 	}
 

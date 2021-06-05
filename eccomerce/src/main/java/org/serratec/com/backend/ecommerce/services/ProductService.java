@@ -38,15 +38,15 @@ public class ProductService {
 		}
 	}
 
-	public ProductDto update(Long id, ProductDto dto) throws EntityNotFoundException {
+	public ProductDto update(Long id, ProductDto productUpdate) throws EntityNotFoundException {
 		ProductEntity product = this.findById(id);
-		product.setNome(dto.getNome());
-		product.setPreco(dto.getPreco());
-		product.setQtdEstoque(dto.getQtdEstoque());
-		product.setCategoria(dto.getCategoria());
+		product.setNome(productUpdate.getNome());
+		product.setPreco(productUpdate.getPreco());
+		product.setQuantidadeEstoque(productUpdate.getQuantidadeEstoque());
+		product.setCategoria(productUpdate.getCategoria());
 
-		if (dto.getDescricao() != null) {
-			product.setDescricao(dto.getDescricao());
+		if (productUpdate.getDescricao() != null) {
+			product.setDescricao(productUpdate.getDescricao());
 		}
 
 		// Update de imagem
@@ -66,7 +66,7 @@ public class ProductService {
 					"Produto com id: " + id + " está associado a um ou mais pedidos, favor verificar");
 		}
 	}
-	
+
 	private ProductEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}

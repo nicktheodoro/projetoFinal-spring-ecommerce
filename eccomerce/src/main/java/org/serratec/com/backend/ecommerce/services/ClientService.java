@@ -23,6 +23,9 @@ public class ClientService {
 	@Autowired
 	AddressService address;
 
+	@Autowired
+	AddressService service;
+
 	public List<ClientDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
@@ -33,7 +36,8 @@ public class ClientService {
 
 	public ClientDto create(ClientDto dto) throws EntityNotFoundException {
 		ClientEntity entity = mapper.toEntity(dto);
-		entity.setEndereco(address.findById(dto.getEndereco().getId()));
+		entity.setEndereco(service.findById(dto.getEndereco().getId()));
+
 		return mapper.toDto(repository.save(entity));
 	}
 
