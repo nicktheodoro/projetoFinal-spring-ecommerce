@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "CATEGORIA")
 public class CategoryEntity {
@@ -18,18 +20,10 @@ public class CategoryEntity {
 	private Long id;
 	private String nome;
 	private String descricao;
-
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "categoria")
 	private List<ProductEntity> products;
-
-	public CategoryEntity(Long id) {
-		super();
-		this.id = id;
-	}
-
-	public CategoryEntity() {
-		super();
-	}
 
 	public Long getId() {
 		return id;
@@ -54,4 +48,14 @@ public class CategoryEntity {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
+	public List<ProductEntity> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ProductEntity> products) {
+		this.products = products;
+	}
+
+
 }

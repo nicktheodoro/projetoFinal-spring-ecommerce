@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.UniqueElements;
 import org.hibernate.validator.constraints.br.CPF;
 import org.serratec.com.backend.ecommerce.entities.AddressEntity;
 
@@ -32,7 +31,6 @@ public class ClientDto {
 	private String nome;
 
 	@NotBlank(message = "{nome.not.blank}")
-	@UniqueElements
 	@CPF
 	private String cpf;
 

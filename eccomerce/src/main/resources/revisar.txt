@@ -1,0 +1,11 @@
+
+Verificar se é necessário o if do metodo delete do categoryservice
+
+
+Verificar se é permitido alterar os atributos do pedidoProduto;
+
+Alterar a logica update do produto;
+
+Perguntar no André sobre as restrições da classe cliente pra atualizar;
+
+Perguntar sobre o retorno da mensagem "Deletado com sucesso";

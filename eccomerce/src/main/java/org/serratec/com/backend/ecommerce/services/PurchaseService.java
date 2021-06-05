@@ -9,6 +9,7 @@ import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.PurchaseMapper;
 import org.serratec.com.backend.ecommerce.repositories.PurchaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,7 +34,7 @@ public class PurchaseService {
 	}
 
 	public PurchaseDto create(PurchaseDto purchase) {
-		repository.save(mapper.toModel(purchase));
+		repository.save(mapper.toEntity(purchase));
 		return purchase;
 	}
 
@@ -48,9 +49,15 @@ public class PurchaseService {
 		return mapper.toDto(repository.save(purchase));
 	}
 
-	public void delete(Long id) throws EntityNotFoundException {
-		if (this.findById(id) != null) {
-			repository.deleteById(id);
+	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
+		try {
+			if (this.findById(id) != null) {
+				repository.deleteById(id);
+			}
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException(
+					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
 		}
+
 	}
 }

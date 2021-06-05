@@ -21,6 +21,9 @@ public class ProductService {
 	@Autowired
 	ProductMapper mapper;
 
+	@Autowired
+	CategoryService service;
+
 	public List<ProductDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
@@ -29,13 +32,11 @@ public class ProductService {
 		return mapper.toDto(this.findById(id));
 	}
 
-	public ProductDto create(ProductDto product) {
-		try {
-			repository.save(mapper.toModel(product));
-			return product;
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityViolationException("Categoria: " + product.getCategoria().getId() + " não existe");
-		}
+	public ProductDto create(ProductDto dto) throws EntityNotFoundException {
+		ProductEntity entity = mapper.toEntity(dto);
+		entity.setCategoria(service.findById(dto.getCategoria().getId()));
+
+		return mapper.toDto(repository.save(entity));
 	}
 
 	public ProductDto update(Long id, ProductDto productUpdate) throws EntityNotFoundException {
@@ -56,15 +57,16 @@ public class ProductService {
 		return mapper.toDto(repository.save(product));
 	}
 
-	public void delete(Long id) throws EntityNotFoundException {
+	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
 		try {
 			if (this.findById(id) != null) {
 				repository.deleteById(id);
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(
-					"Produto com id: " + id + " está associado a um ou mais pedidos, favor verificar");
+					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
 		}
+
 	}
 
 	private ProductEntity findById(Long id) throws EntityNotFoundException {

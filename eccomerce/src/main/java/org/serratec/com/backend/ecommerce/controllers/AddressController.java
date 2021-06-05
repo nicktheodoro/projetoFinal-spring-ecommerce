@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.serratec.com.backend.ecommerce.entities.dto.AddressDto;
+import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,9 @@ public class AddressController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) {
-		return new ResponseEntity<String>(service.delete(id), HttpStatus.NO_CONTENT);
+	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
+		service.delete(id);
+		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.NO_CONTENT);
 	}
 
 }
