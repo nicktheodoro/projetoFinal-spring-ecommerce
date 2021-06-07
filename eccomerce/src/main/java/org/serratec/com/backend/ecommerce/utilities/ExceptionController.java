@@ -3,9 +3,6 @@ package org.serratec.com.backend.ecommerce.utilities;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.dao.DataIntegrityViolationException;
-
-import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,9 +31,4 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     public ResponseEntity<String> handlerDataIntegrityViolationException(DataIntegrityViolationException e) {
 		return ResponseEntity.badRequest().headers(this.header(e)).build();
     }
-
-
-		return header;
-	}
-
 }
