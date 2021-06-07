@@ -38,7 +38,7 @@ public class ClientService {
 
 	public ClientDto create(ClientDto dto) throws EntityNotFoundException {
 		ClientEntity entity = mapper.toEntity(dto);
-		service.create(addressMapper.listToDto(dto.getEnderecos());
+		service.create(addressMapper.listToDto(dto.getEnderecos()));
 	
 		return mapper.toDto(repository.save(entity));
 	}
