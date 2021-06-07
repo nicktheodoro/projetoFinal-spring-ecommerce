@@ -29,5 +29,4 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<String> handlerDataIntegrityViolationException(DataIntegrityViolationException e) {
 		return ResponseEntity.badRequest().headers(this.header(e)).build();
 	}
-
 }

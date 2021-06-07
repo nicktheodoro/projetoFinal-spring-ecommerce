@@ -20,9 +20,13 @@ public class ProductService {
 
 	@Autowired
 	ProductMapper mapper;
-
-	@Autowired
+  
+  @Autowired
 	CategoryService service;
+	
+	public ProductEntity findById(Long id) throws EntityNotFoundException {
+		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
+	}
 
 	public List<ProductDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
@@ -31,12 +35,18 @@ public class ProductService {
 	public ProductDto getById(Long id) throws EntityNotFoundException {
 		return mapper.toDto(this.findById(id));
 	}
-
-	public ProductDto create(ProductDto dto) throws EntityNotFoundException {
-		ProductEntity entity = mapper.toEntity(dto);
-		entity.setCategoria(service.findById(dto.getCategoria().getId()));
-
-		return mapper.toDto(repository.save(entity));
+	
+	public List<ProductDto> getByName(String nome) {
+		return mapper.listToDto(repository.findByNome(nome.toLowerCase()));
+	}
+	
+	public ProductDto create(ProductDto product) {
+		try {
+			product.setNome(product.getNome().toLowerCase());
+			return product;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException("Categoria: "+ product.getCategoria().getId() + " não existe");				
+		}
 	}
 
 	public ProductDto update(Long id, ProductDto productUpdate) throws EntityNotFoundException {
