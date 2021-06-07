@@ -1,5 +1,6 @@
 package org.serratec.com.backend.ecommerce.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.MapperFeature;
 
 @Service
 public class AddressService {
@@ -33,12 +36,12 @@ public class AddressService {
 		return mapper.toDto(this.findById(id));
 	}
 
-	public AddressDto create(AddressDto dto) {
-		AddressDto address = this.getCep(dto.getCep());
-		address.setNumero(dto.getNumero());
-		address.setComplemento(dto.getComplemento());
-
-		return mapper.toDto(repository.save(mapper.toEntity(address)));
+	public List<AddressDto> create(List<AddressDto> enderecosDto) throws EntityNotFoundException {
+		List<AddressEntity> enderecos = mapper.listToEntity(enderecosDto);
+		for (AddressEntity addressEntity : enderecos) {
+			repository.save(addressEntity);
+		}
+		return enderecosDto;
 	}
 
 	public AddressDto update(Long id, AddressDto addressUpdate) throws EntityNotFoundException {

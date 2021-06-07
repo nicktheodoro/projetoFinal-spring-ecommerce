@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.serratec.com.backend.ecommerce.entities.ClientEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ClientDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.mappers.AddressMapper;
 import org.serratec.com.backend.ecommerce.mappers.ClientMapper;
 import org.serratec.com.backend.ecommerce.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class ClientService {
 
 	@Autowired
 	AddressService service;
+	
+	@Autowired
+	AddressMapper addressMapper;
 
 	public List<ClientDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
@@ -34,8 +38,8 @@ public class ClientService {
 
 	public ClientDto create(ClientDto dto) throws EntityNotFoundException {
 		ClientEntity entity = mapper.toEntity(dto);
-		entity.setEndereco(service.findById(dto.getEndereco().getId()));
-
+		service.create(addressMapper.listToDto(dto.getEnderecos());
+	
 		return mapper.toDto(repository.save(entity));
 	}
 
@@ -48,7 +52,7 @@ public class ClientService {
 		client.setCpf(clientUpdate.getCpf());
 		client.setTelefone(clientUpdate.getTelefone());
 		client.setDataNascimento(clientUpdate.getDataNascimento());
-		client.setEndereco(service.findById(clientUpdate.getEndereco().getId()));
+		client.setEnderecos(clientUpdate.getEnderecos());
 
 		return mapper.toDto(repository.save(client));
 	}

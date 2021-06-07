@@ -1,12 +1,10 @@
 package org.serratec.com.backend.ecommerce.entities;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,8 +25,8 @@ public class AddressEntity {
 	private String estado;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "endereco")
-	private List<ClientEntity> clientes;
+	@ManyToOne
+	private ClientEntity cliente;
 
 	public Long getId() {
 		return id;
@@ -94,11 +92,12 @@ public class AddressEntity {
 		this.estado = estado;
 	}
 
-	public List<ClientEntity> getClientes() {
-		return clientes;
+	public ClientEntity getCliente() {
+		return cliente;
 	}
 
-	public void setClientes(List<ClientEntity> clientes) {
-		this.clientes = clientes;
+	public void setCliente(ClientEntity cliente) {
+		this.cliente = cliente;
 	}
+
 }
