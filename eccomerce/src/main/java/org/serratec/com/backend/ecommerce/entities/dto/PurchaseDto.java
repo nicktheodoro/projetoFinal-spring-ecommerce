@@ -1,53 +1,40 @@
 package org.serratec.com.backend.ecommerce.entities.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.serratec.com.backend.ecommerce.entities.ClientEntity;
-import org.serratec.com.backend.ecommerce.entities.ProductEntity;
 
 public class PurchaseDto {
-	
-	@NotBlank
-	private Long nrPedido;
 
-	private List<ProductEntity> listaProdutos;
-	
-	@NotBlank
+	@NotBlank(message = "{nome.not.blank}")
+	private Long numeroPedido;
+
+	@NotBlank(message = "{nome.not.blank}")
 	private Double valorTotal;
-	
-	
-	private LocalDate dtPedido;
-	
+
+	@NotNull
+	private LocalDate dataPedido;
+
+	@NotNull
 	@FutureOrPresent
-	private LocalDate dtEntrega;
-	
-	
+	private LocalDate dataEntrega;
+
+	@NotNull
 	private String status;
-	
-	
-	@NotBlank
+
+	@NotNull
 	private ClientEntity cliente;
 
-	
-
-	public void setNrPedido(Long nrPedido) {
-		this.nrPedido = nrPedido;
+	public Long getNumeroPedido() {
+		return numeroPedido;
 	}
 
-	public Long getNrPedido() {
-		return nrPedido;
-	}
-
-	public List<ProductEntity> getListaProdutos() {
-		return listaProdutos;
-	}
-
-	public void setListaProdutos(List<ProductEntity> listaProdutos) {
-		this.listaProdutos = listaProdutos;
+	public void setNumeroPedido(Long numeroPedido) {
+		this.numeroPedido = numeroPedido;
 	}
 
 	public Double getValorTotal() {
@@ -58,20 +45,20 @@ public class PurchaseDto {
 		this.valorTotal = valorTotal;
 	}
 
-	public LocalDate getDtPedido() {
-		return dtPedido;
+	public LocalDate getDataPedido() {
+		return dataPedido;
 	}
 
-	public void setDtPedido(LocalDate dtPedido) {
-		this.dtPedido = dtPedido;
+	public void setDataPedido(LocalDate dataPedido) {
+		this.dataPedido = dataPedido;
 	}
 
-	public LocalDate getDtEntrega() {
-		return dtEntrega;
+	public LocalDate getDataEntrega() {
+		return dataEntrega;
 	}
 
-	public void setDtEntrega(LocalDate dtEntrega) {
-		this.dtEntrega = dtEntrega;
+	public void setDataEntrega(LocalDate dataEntrega) {
+		this.dataEntrega = dataEntrega;
 	}
 
 	public String getStatus() {

@@ -8,36 +8,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "CATEGORIA")
 public class CategoryEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@NotBlank(message = "{nome.not.blank}")
-	@Size(max = 40)
 	private String nome;
-	
 	private String descricao;
-
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "categoria")
 	private List<ProductEntity> products;
-	
 
-	public CategoryEntity(Long id) {
-		super();
-		this.id = id;
-	}
-
-	public CategoryEntity() {
-		super();
-	}
-	
 	public Long getId() {
 		return id;
 	}
@@ -61,5 +48,14 @@ public class CategoryEntity {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
+	public List<ProductEntity> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ProductEntity> products) {
+		this.products = products;
+	}
+
 
 }

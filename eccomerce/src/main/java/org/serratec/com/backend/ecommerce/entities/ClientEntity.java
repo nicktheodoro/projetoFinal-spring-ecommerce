@@ -1,13 +1,15 @@
 package org.serratec.com.backend.ecommerce.entities;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -17,17 +19,25 @@ public class ClientEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(unique = true)
 	private String email;
+	
+	@Column(unique = true)
 	private String username;
 	private String senha;
 	private String nome;
+	
+	@Column(unique = true)
 	private String cpf;
 	private String telefone;
 	private LocalDate dataNascimento;
 
 	@ManyToOne
-	@JoinColumn(name = "id_endereco", referencedColumnName = "id")
 	private AddressEntity endereco;
+
+	@OneToMany(mappedBy = "cliente")
+	private List<PurchaseEntity> pedidos;
 
 	public Long getId() {
 		return id;
@@ -100,5 +110,4 @@ public class ClientEntity {
 	public void setEndereco(AddressEntity endereco) {
 		this.endereco = endereco;
 	}
-
 }

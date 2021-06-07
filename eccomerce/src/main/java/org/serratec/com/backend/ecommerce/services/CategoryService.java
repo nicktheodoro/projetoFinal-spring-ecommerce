@@ -17,18 +17,18 @@ public class CategoryService {
 
 	@Autowired
 	CategoryRepository repository;
-	
+
 	@Autowired
 	CategoryMapper mapper;
-	
-	private CategoryEntity findById(Long id) throws EntityNotFoundException {
+
+	public CategoryEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
-	
+
 	public List<CategoryDto> getAll() {
-		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList()); 
+		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
-	
+
 	public CategoryDto getById(Long id) throws EntityNotFoundException {
 		return mapper.toDto(this.findById(id));
 	}
@@ -41,31 +41,29 @@ public class CategoryService {
 	public CategoryDto create(CategoryDto category){
 		category.setNome(category.getNome().toLowerCase());
 		repository.save(mapper.toEntity(category));			
-		
+
 		return category;
 	}
-	
-	public CategoryDto update(Long id, CategoryDto dto) throws EntityNotFoundException {
+
+	public CategoryDto update(Long id, CategoryDto categoryUpdate) throws EntityNotFoundException {
 		CategoryEntity category = this.findById(id);
-			
-		if(dto.getNome() != null) {
-			category.setNome(dto.getNome());	
+		category.setNome(categoryUpdate.getNome());
+
+		if (categoryUpdate.getDescricao() != null) {
+			category.setDescricao(categoryUpdate.getDescricao());
 		}
-		if(dto.getDescricao() != null) {
-			category.setDescricao(dto.getDescricao());
-		}
-	
+
 		return mapper.toDto(repository.save(category));
 	}
-	
-	public void delete(Long id) throws EntityNotFoundException {
+
+	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
 		try {
-			if(this.findById(id) !=null) {
+			if (this.findById(id) != null) {
 				repository.deleteById(id);
 			}
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityViolationException("Categoria com id: "+ id +
-					" está associada a um ou mais produtos, favor verificar");
-		}		
+			throw new DataIntegrityViolationException(
+					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
+		}
 	}
 }

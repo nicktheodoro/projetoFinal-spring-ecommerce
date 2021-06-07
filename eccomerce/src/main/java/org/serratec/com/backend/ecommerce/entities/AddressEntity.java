@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "ENDERECO")
 public class AddressEntity {
@@ -24,6 +26,7 @@ public class AddressEntity {
 	private String complemento;
 	private String estado;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "endereco")
 	private List<ClientEntity> clientes;
 
@@ -98,5 +101,4 @@ public class AddressEntity {
 	public void setClientes(List<ClientEntity> clientes) {
 		this.clientes = clientes;
 	}
-
 }

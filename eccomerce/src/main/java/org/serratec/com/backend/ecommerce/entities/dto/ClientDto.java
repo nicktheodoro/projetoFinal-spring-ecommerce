@@ -2,41 +2,47 @@ package org.serratec.com.backend.ecommerce.entities.dto;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.br.CPF;
 import org.serratec.com.backend.ecommerce.entities.AddressEntity;
 
 public class ClientDto {
 
-	@NotEmpty(message = "Este campo não pode ser vazio")
+	@NotBlank(message = "{nome.not.blank}")
 	@Size(min = 5, max = 120)
+	@Email
 	private String email;
 
-	@NotEmpty(message = "Este campo não pode ser vazio")
+	@NotBlank(message = "{nome.not.blank}")
 	@Size(max = 32)
 	private String username;
 
-	@NotEmpty(message = "Este campo não pode ser vazio")
+	@NotBlank(message = "{nome.not.blank}")
 	@Size(min = 8, max = 128)
 	private String senha;
 
-	@NotEmpty(message = "Este campo não pode ser vazio")
+	@NotBlank(message = "{nome.not.blank}")
 	@Size(min = 3, max = 200)
 	private String nome;
 
-	@NotEmpty(message = "Este campo não pode ser vazio")
-	@Size(min = 11, max = 11)
+	@NotBlank(message = "{nome.not.blank}")
+	@CPF
 	private String cpf;
 
-	@NotEmpty(message = "Este campo não pode ser vazio")
+	@NotBlank(message = "{nome.not.blank}")
 	@Size(min = 10, max = 11)
 	private String telefone;
 
 	@NotNull
+	@Past
 	private LocalDate dataNascimento;
 
+	@NotNull
 	private AddressEntity endereco;
 
 	public String getEmail() {
