@@ -33,16 +33,21 @@ public class CategoryService {
 		return mapper.toDto(this.findById(id));
 	}
 	
+	public List<CategoryDto> getByName(String nome) {
+		return mapper.listToDto(repository.findByNome(nome));
+	}
+	
+	
 	public CategoryDto create(CategoryDto category){
-		repository.save(mapper.toModel(category));			
+		category.setNome(category.getNome().toLowerCase());
+		repository.save(mapper.toEntity(category));			
 		
 		return category;
 	}
 	
 	public CategoryDto update(Long id, CategoryDto dto) throws EntityNotFoundException {
 		CategoryEntity category = this.findById(id);
-		
-				
+			
 		if(dto.getNome() != null) {
 			category.setNome(dto.getNome());	
 		}
@@ -61,7 +66,6 @@ public class CategoryService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException("Categoria com id: "+ id +
 					" está associada a um ou mais produtos, favor verificar");
-		}
-		
+		}		
 	}
 }

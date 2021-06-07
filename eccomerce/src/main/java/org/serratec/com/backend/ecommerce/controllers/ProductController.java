@@ -6,7 +6,6 @@ import org.serratec.com.backend.ecommerce.entities.dto.ProductDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,6 +34,10 @@ public class ProductController {
 	public ResponseEntity<ProductDto> getById(@PathVariable Long id) throws EntityNotFoundException {
 		return new ResponseEntity<ProductDto>(service.getById(id), HttpStatus.OK);
 	}
+	@GetMapping("/nome")
+	public ResponseEntity<List<ProductDto>> getByName(@RequestParam String nome) {
+		return new ResponseEntity<List<ProductDto>>(service.getByName(nome), HttpStatus.OK);
+	}
 	
 	@PostMapping
 	public ResponseEntity<ProductDto> create(@RequestBody ProductDto category) {
@@ -42,12 +46,12 @@ public class ProductController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<ProductDto> update(@PathVariable Long id, @RequestBody ProductDto category) throws EntityNotFoundException {
-		return new ResponseEntity<ProductDto>(service.update(id, category), HttpStatus.OK);
+		return new ResponseEntity<ProductDto>(service.update(id, category), HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException {
 		service.delete(id);
-		return new ResponseEntity<String>("Categoria com " +id +" deletada com sucesso!", HttpStatus.OK);
+		return new ResponseEntity<String>("Categoria com " +id +" deletada com sucesso!", HttpStatus.NO_CONTENT);
 	}
 }
