@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.serratec.com.backend.ecommerce.entities.CategoryEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.CategoryDto;
+import org.serratec.com.backend.ecommerce.exceptions.CategoryException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.CategoryMapper;
 import org.serratec.com.backend.ecommerce.repositories.CategoryRepository;
@@ -38,11 +39,16 @@ public class CategoryService {
 	}
 	
 	
-	public CategoryDto create(CategoryDto category){
-		category.setNome(category.getNome().toLowerCase());
-		repository.save(mapper.toEntity(category));			
-
-		return category;
+	public CategoryDto create(CategoryDto category) throws CategoryException{
+		if(category.getNome().isBlank()) {
+			throw new CategoryException("O nome da categoria é obrigatório");
+		}else{
+			category.setNome(category.getNome().toLowerCase());
+			repository.save(mapper.toEntity(category));			
+			
+			return category;
+			
+		}
 	}
 
 	public CategoryDto update(Long id, CategoryDto categoryUpdate) throws EntityNotFoundException {

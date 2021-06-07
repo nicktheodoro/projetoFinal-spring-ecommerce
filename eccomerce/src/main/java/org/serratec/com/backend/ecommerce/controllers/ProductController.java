@@ -41,9 +41,8 @@ public class ProductController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProductDto> create(@RequestBody ProductDto category) throws EntityNotFoundException {
-		System.out.println(category);
-		return new ResponseEntity<ProductDto>(service.create(category),HttpStatus.CREATED);
+	public ResponseEntity<ProductDto> create(@RequestBody ProductDto product) throws EntityNotFoundException {
+		return new ResponseEntity<ProductDto>(service.create(product),HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")

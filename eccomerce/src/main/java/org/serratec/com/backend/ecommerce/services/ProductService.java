@@ -45,11 +45,15 @@ public class ProductService {
 			product.setNome(product.getNome().toLowerCase());
 			ProductEntity entity = mapper.toEntity(product);
 			entity.setCategoria(service.findById(product.getCategoria()));
+			
 			return mapper.toDto(repository.save(entity));
 			
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException("Categoria: "+ product.getCategoria() + " não existe");				
+		} catch(EntityNotFoundException e) {
+			throw new EntityNotFoundException("Categoria com id: " + product.getCategoria() +" não existe");
 		}
+		
 	}
 
 	public ProductDto update(Long id, ProductDto productUpdate) throws EntityNotFoundException {
@@ -77,7 +81,7 @@ public class ProductService {
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(
-					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
+					"Produto com id: " + id + " está associado a um ou mais pedidos, favor verificar");
 		}
 	}
 }

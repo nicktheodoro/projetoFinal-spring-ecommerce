@@ -2,7 +2,7 @@ package org.serratec.com.backend.ecommerce.entities.dto;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -11,20 +11,20 @@ public class ProductDto {
 	@NotNull
 	private LocalDate dataCadastro = LocalDate.now();
 
-	@NotEmpty
+	@NotBlank
 	@Size(max = 40)
 	private String nome;
 
 	@Size(max = 250)
 	private String descricao;
 
-	@NotEmpty
+	@NotBlank
 	private Double preco;
 
-	@NotEmpty
+	@NotBlank
 	private Integer quantidadeEstoque;
 
-	@NotEmpty
+	@NotBlank
 	private Long categoria;
 
 	public LocalDate getDataCadastro() {
