@@ -51,6 +51,6 @@ public class ClientController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
 		service.delete(id);
-		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<String>("Cliente com " + id +" deletado com sucesso!", HttpStatus.OK);
 	}
 }

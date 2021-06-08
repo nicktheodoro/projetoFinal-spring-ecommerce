@@ -1,6 +1,7 @@
 package org.serratec.com.backend.ecommerce.entities.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -43,7 +44,7 @@ public class ClientDto {
 	private LocalDate dataNascimento;
 
 	@NotNull
-	private AddressEntity endereco;
+	private List<AddressEntity> enderecos;
 
 	public String getEmail() {
 		return email;
@@ -101,11 +102,12 @@ public class ClientDto {
 		this.dataNascimento = dataNascimento;
 	}
 
-	public AddressEntity getEndereco() {
-		return endereco;
+	public List<AddressEntity> getEnderecos() {
+		return enderecos;
 	}
 
-	public void setEndereco(AddressEntity endereco) {
-		this.endereco = endereco;
+	public void setEnderecos(List<AddressEntity> enderecos) {
+		this.enderecos = enderecos;
 	}
+
 }

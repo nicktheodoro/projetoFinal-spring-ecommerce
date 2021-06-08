@@ -47,14 +47,14 @@ public class CategoryController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<CategoryDto> update(@PathVariable Long id, @RequestBody CategoryDto category) throws EntityNotFoundException {
+	public ResponseEntity<CategoryDto> update(@PathVariable Long id, @RequestBody CategoryDto category)
+			throws EntityNotFoundException {
 		return new ResponseEntity<CategoryDto>(service.update(id, category), HttpStatus.ACCEPTED);
-  }
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, CategoryException {
 		service.delete(id);
-
 		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.OK);
 	}
 }
