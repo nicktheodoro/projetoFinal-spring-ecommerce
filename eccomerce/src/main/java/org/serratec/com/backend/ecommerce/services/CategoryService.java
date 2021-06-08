@@ -10,7 +10,6 @@ import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.CategoryMapper;
 import org.serratec.com.backend.ecommerce.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +20,9 @@ public class CategoryService {
 
 	@Autowired
 	CategoryMapper mapper;
+	
+	@Autowired
+	ProductService productService;
 
 	public CategoryEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
@@ -47,7 +49,6 @@ public class CategoryService {
 			repository.save(mapper.toEntity(category));			
 			
 			return category;
-			
 		}
 	}
 
@@ -62,14 +63,13 @@ public class CategoryService {
 		return mapper.toDto(repository.save(category));
 	}
 
-	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
-		try {
-			if (this.findById(id) != null) {
+	public void delete(Long id) throws EntityNotFoundException, CategoryException {
+		if (this.findById(id) != null) {
+			if(productService.findByCategoriaId(id).isEmpty()){
 				repository.deleteById(id);
+			}else {
+				throw new CategoryException("Categoria com id: " + id + " já vinculada a um ou mais produtos, favor verificar!");
 			}
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityViolationException(
-					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
 		}
 	}
 }
