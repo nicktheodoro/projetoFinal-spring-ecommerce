@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.serratec.com.backend.ecommerce.entities.ClientEntity;
+
 public class AddressDto {
 
 	@NotBlank(message = "{nome.not.blank}")
@@ -27,6 +29,8 @@ public class AddressDto {
 	@Size(min = 2, max = 2)
 	@Column(name = "estado")
 	private String uf;
+
+	private ClientEntity cliente;
 
 	public String getCep() {
 		return cep;
@@ -83,4 +87,13 @@ public class AddressDto {
 	public void setUf(String uf) {
 		this.uf = uf;
 	}
+
+	public ClientEntity getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClientEntity cliente) {
+		this.cliente = cliente;
+	}
+	
 }

@@ -3,6 +3,7 @@ package org.serratec.com.backend.ecommerce.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.serratec.com.backend.ecommerce.entities.AddressEntity;
 import org.serratec.com.backend.ecommerce.entities.ClientEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ClientDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
@@ -20,27 +21,32 @@ public class ClientService {
 	ClientRepository repository;
 
 	@Autowired
-	ClientMapper mapper;
+	AddressService service;
 
 	@Autowired
-	AddressService service;
-	
+	ClientMapper clientMapper;
+
 	@Autowired
 	AddressMapper addressMapper;
 
 	public List<ClientDto> getAll() {
-		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+		return repository.findAll().stream().map(clientMapper::toDto).collect(Collectors.toList());
 	}
 
 	public ClientDto getById(Long id) throws EntityNotFoundException {
-		return mapper.toDto(this.findById(id));
+		return clientMapper.toDto(this.findById(id));
 	}
 
 	public ClientDto create(ClientDto dto) throws EntityNotFoundException {
-		ClientEntity entity = mapper.toEntity(dto);
-		service.create(addressMapper.listToDto(dto.getEnderecos()));
-	
-		return mapper.toDto(repository.save(entity));
+		ClientEntity entity = clientMapper.toEntity(dto);
+		ClientEntity savedEntity = repository.save(entity);
+
+//		ClientEntity savedEntity = repository.findByCpf(entity.getCpf());
+
+		List<AddressEntity> enderecos = addressMapper
+				.listToEntity(service.create(addressMapper.listToDto(dto.getEnderecos()), savedEntity.getId()));
+		savedEntity.setEnderecos(enderecos);
+		return clientMapper.toDto(savedEntity);
 	}
 
 	public ClientDto update(Long id, ClientDto clientUpdate) throws EntityNotFoundException {
@@ -52,19 +58,20 @@ public class ClientService {
 		client.setCpf(clientUpdate.getCpf());
 		client.setTelefone(clientUpdate.getTelefone());
 		client.setDataNascimento(clientUpdate.getDataNascimento());
-		client.setEnderecos(clientUpdate.getEnderecos());
+//		client.setEnderecos(clientUpdate.getEnderecos());
 
-		return mapper.toDto(repository.save(client));
+		return clientMapper.toDto(repository.save(client));
 	}
 
 	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
 		try {
 			if (this.findById(id) != null) {
+				// service.delete(service.findById());
 				repository.deleteById(id);
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(
-					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
+					"Endereço com id: " + id + " está associada a um ou mais clientes favor verificar");
 		}
 
 	}

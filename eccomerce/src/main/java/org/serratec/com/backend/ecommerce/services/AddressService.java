@@ -1,6 +1,5 @@
 package org.serratec.com.backend.ecommerce.services;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-
 @Service
 public class AddressService {
 
@@ -28,6 +25,9 @@ public class AddressService {
 	@Autowired
 	AddressMapper mapper;
 
+	@Autowired
+	ClientService clientService;
+
 	public List<AddressDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
@@ -36,12 +36,17 @@ public class AddressService {
 		return mapper.toDto(this.findById(id));
 	}
 
-	public List<AddressDto> create(List<AddressDto> enderecosDto) throws EntityNotFoundException {
-		List<AddressEntity> enderecos = mapper.listToEntity(enderecosDto);
-		for (AddressEntity addressEntity : enderecos) {
-			repository.save(addressEntity);
+	public List<AddressDto> create(List<AddressDto> enderecosDto, Long clientId) throws EntityNotFoundException { // mudar para entity
+
+		for (AddressDto addressDto : enderecosDto) {
+			AddressDto address = this.getCep(addressDto.getCep());
+			address.setNumero(addressDto.getNumero());
+			address.setComplemento(addressDto.getComplemento());
+			address.setCliente(clientService.findById(clientId));
+			repository.save(mapper.toEntity(address));
 		}
-		return enderecosDto;
+		
+		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
 
 	public AddressDto update(Long id, AddressDto addressUpdate) throws EntityNotFoundException {

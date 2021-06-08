@@ -101,7 +101,7 @@ public class ClientEntity {
 	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
-
+	
 	public List<AddressEntity> getEnderecos() {
 		return enderecos;
 	}
@@ -118,4 +118,10 @@ public class ClientEntity {
 		this.pedidos = pedidos;
 	}
 
+	@Override
+	public String toString() {
+		return "ClientEntity [id=" + id + ", email=" + email + ", username=" + username + ", senha=" + senha + ", nome="
+				+ nome + ", cpf=" + cpf + ", telefone=" + telefone + ", dataNascimento=" + dataNascimento
+				+ ", enderecos=" + enderecos + "]";
+	}
 }

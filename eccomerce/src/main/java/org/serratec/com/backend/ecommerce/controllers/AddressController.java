@@ -38,8 +38,8 @@ public class AddressController {
 	}
 
 	@PostMapping
-	public ResponseEntity<List<AddressDto>> create(@Valid @RequestBody List<AddressDto> dto) throws EntityNotFoundException {
-		return new ResponseEntity<List<AddressDto>>(service.create(dto), HttpStatus.CREATED);
+	public ResponseEntity<List<AddressDto>> create(@Valid @RequestBody List<AddressDto> dto, Long id) throws EntityNotFoundException {
+		return new ResponseEntity<List<AddressDto>>(service.create(dto, id), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
@@ -51,7 +51,7 @@ public class AddressController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
 		service.delete(id);
-		return new ResponseEntity<String>("Endereço com id: " + id +" deletada com sucesso!", HttpStatus.OK);
+		return new ResponseEntity<String>("Endereço com " + id +" deletado com sucesso!", HttpStatus.OK);
 	}
 
 }

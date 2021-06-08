@@ -26,31 +26,32 @@ public class CategoryController {
 
 	@Autowired
 	CategoryService service;
-	
-	
+
 	@GetMapping
-	public ResponseEntity<List<CategoryDto>> getAll(){
+	public ResponseEntity<List<CategoryDto>> getAll() {
 		return new ResponseEntity<List<CategoryDto>>(service.getAll(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<CategoryDto> getById(@PathVariable Long id) throws EntityNotFoundException {
 		return new ResponseEntity<CategoryDto>(service.getById(id), HttpStatus.OK);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<CategoryDto> create(@RequestBody @Valid CategoryDto category){
+	public ResponseEntity<CategoryDto> create(@RequestBody @Valid CategoryDto category) {
 		return new ResponseEntity<CategoryDto>(service.create(category), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<CategoryDto> update(@PathVariable Long id, @RequestBody CategoryDto category) throws EntityNotFoundException {
+	public ResponseEntity<CategoryDto> update(@PathVariable Long id, @RequestBody CategoryDto category)
+			throws EntityNotFoundException {
 		return new ResponseEntity<CategoryDto>(service.update(id, category), HttpStatus.ACCEPTED);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
+	public ResponseEntity<String> delete(@PathVariable Long id)
+			throws EntityNotFoundException, DataIntegrityViolationException {
 		service.delete(id);
-		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<String>("Categoria com id: " + id + " deletada com sucesso!", HttpStatus.NO_CONTENT);
 	}
 }

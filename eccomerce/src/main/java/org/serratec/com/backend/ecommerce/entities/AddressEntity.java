@@ -100,4 +100,10 @@ public class AddressEntity {
 		this.cliente = cliente;
 	}
 
+	@Override
+	public String toString() {
+		return "AddressEntity [id=" + id + ", cep=" + cep + ", rua=" + rua + ", bairro=" + bairro + ", cidade=" + cidade
+				+ ", numero=" + numero + ", complemento=" + complemento + ", estado=" + estado + ", cliente=" + cliente
+				+ "]";
+	}
 }

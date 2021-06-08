@@ -20,6 +20,7 @@ public class AddressMapper {
 		entity.setNumero(dto.getNumero());
 		entity.setComplemento(dto.getComplemento());
 		entity.setEstado(dto.getUf());
+		entity.setCliente(dto.getCliente());
 
 		return entity;
 	}
@@ -33,6 +34,7 @@ public class AddressMapper {
 		dto.setNumero(entity.getNumero());
 		dto.setComplemento(entity.getComplemento());
 		dto.setUf(entity.getEstado());
+		dto.setCliente(entity.getCliente());
 
 		return dto;
 	}
