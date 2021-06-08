@@ -20,9 +20,13 @@ public class ProductService {
 
 	@Autowired
 	ProductMapper mapper;
-
+  
 	@Autowired
 	CategoryService service;
+	
+	public ProductEntity findById(Long id) throws EntityNotFoundException {
+		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
+	}
 
 	public List<ProductDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
@@ -31,12 +35,25 @@ public class ProductService {
 	public ProductDto getById(Long id) throws EntityNotFoundException {
 		return mapper.toDto(this.findById(id));
 	}
-
-	public ProductDto create(ProductDto dto) throws EntityNotFoundException {
-		ProductEntity entity = mapper.toEntity(dto);
-		entity.setCategoria(service.findById(dto.getCategoria().getId()));
-
-		return mapper.toDto(repository.save(entity));
+	
+	public List<ProductDto> getByName(String nome) {
+		return mapper.listToDto(repository.findByNome(nome.toLowerCase()));
+	}
+	
+	public ProductDto create(ProductDto product) throws EntityNotFoundException {
+		try {
+			product.setNome(product.getNome().toLowerCase());
+			ProductEntity entity = mapper.toEntity(product);
+			entity.setCategoria(service.findById(product.getCategoria()));
+			
+			return mapper.toDto(repository.save(entity));
+			
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException("Categoria: "+ product.getCategoria() + " não existe");				
+		} catch(EntityNotFoundException e) {
+			throw new EntityNotFoundException("Categoria com id: " + product.getCategoria() +" não existe");
+		}
+		
 	}
 
 	public ProductDto update(Long id, ProductDto productUpdate) throws EntityNotFoundException {
@@ -44,7 +61,7 @@ public class ProductService {
 		product.setNome(productUpdate.getNome());
 		product.setPreco(productUpdate.getPreco());
 		product.setQuantidadeEstoque(productUpdate.getQuantidadeEstoque());
-		product.setCategoria(productUpdate.getCategoria());
+		product.setCategoria(service.findById(productUpdate.getCategoria()));
 
 		if (productUpdate.getDescricao() != null) {
 			product.setDescricao(productUpdate.getDescricao());
@@ -64,12 +81,7 @@ public class ProductService {
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(
-					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
+					"Produto com id: " + id + " está associado a um ou mais pedidos, favor verificar");
 		}
-
-	}
-
-	private ProductEntity findById(Long id) throws EntityNotFoundException {
-		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
 }

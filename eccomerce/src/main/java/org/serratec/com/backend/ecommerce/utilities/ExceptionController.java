@@ -1,7 +1,9 @@
 package org.serratec.com.backend.ecommerce.utilities;
 
-import javax.persistence.EntityNotFoundException;
 
+
+import org.serratec.com.backend.ecommerce.exceptions.CategoryException;
+import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +31,14 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<String> handlerDataIntegrityViolationException(DataIntegrityViolationException e) {
 		return ResponseEntity.badRequest().headers(this.header(e)).build();
 	}
-
+	
+	@ExceptionHandler(NullPointerException.class)
+	public ResponseEntity<String> handlerNullPointerException(NullPointerException e) {
+		return ResponseEntity.badRequest().headers(this.header(e)).build();
+	}
+	
+	@ExceptionHandler(CategoryException.class)
+	public ResponseEntity<String> handlerCategoryException(CategoryException e) {
+		return ResponseEntity.badRequest().headers(this.header(e)).build();
+	}
 }

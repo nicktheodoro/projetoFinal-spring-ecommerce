@@ -18,4 +18,17 @@ public class EntityNotFoundException extends Exception {
 	public String getMsg() {
 		return msg;
 	}
+
+	public EntityNotFoundException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	public EntityNotFoundException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public EntityNotFoundException(Throwable cause) {
+		super(cause);
+	}
 }
