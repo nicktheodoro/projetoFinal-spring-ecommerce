@@ -39,7 +39,7 @@ public class PurchasesProductsService {
 		return mapper.toDto(this.findById(id));
 	}
 	
-	public PurchasesProductsDto create(PurchasesProductsDto dto) {
+	public PurchasesProductsDto create(PurchasesProductsDto dto) throws EntityNotFoundException {
 		return mapper.toDto(repository.save(mapper.toEntity(dto)));
 	}
 	

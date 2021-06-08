@@ -36,8 +36,8 @@ public class ProductController {
 		return new ResponseEntity<ProductDto>(service.getById(id), HttpStatus.OK);
 	}
 	@GetMapping("/nome")
-	public ResponseEntity<List<ProductDto>> getByName(@RequestParam String nome) {
-		return new ResponseEntity<List<ProductDto>>(service.getByName(nome), HttpStatus.OK);
+	public ResponseEntity<ProductDto> getByName(@RequestParam String nome) throws EntityNotFoundException {
+		return new ResponseEntity<ProductDto>(service.getByName(nome), HttpStatus.OK);
 	}
 	
 	@PostMapping

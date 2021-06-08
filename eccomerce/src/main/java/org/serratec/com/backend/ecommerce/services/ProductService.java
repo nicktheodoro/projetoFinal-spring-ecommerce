@@ -40,8 +40,8 @@ public class ProductService {
 		return mapper.toDto(this.findById(id));
 	}
 
-	public List<ProductDto> getByName(String nome) {
-		return mapper.listToDto(repository.findByNome(nome.toLowerCase()));
+	public ProductDto getByName(String nome) throws EntityNotFoundException{
+		return mapper.toDto(repository.findByNome(nome.toLowerCase()));
 	}
 
 	public ProductDto create(ProductDto product) throws EntityNotFoundException, ProductException {

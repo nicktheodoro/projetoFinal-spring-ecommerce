@@ -9,6 +9,10 @@ public class PurchasesProductsDto {
 
 	@NotNull
 	private Integer quantidade;
+	
+	private Long produto;
+	
+	private Long pedido;
 
 	public Double getPreco() {
 		return preco;
@@ -24,5 +28,21 @@ public class PurchasesProductsDto {
 
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
+	}
+
+	public Long getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Long produto) {
+		this.produto = produto;
+	}
+
+	public Long getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(Long pedido) {
+		this.pedido = pedido;
 	}
 }

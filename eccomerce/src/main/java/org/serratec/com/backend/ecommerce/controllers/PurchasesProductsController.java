@@ -38,7 +38,7 @@ public class PurchasesProductsController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<PurchasesProductsDto> create(@Valid @RequestBody PurchasesProductsDto dto){
+	public ResponseEntity<PurchasesProductsDto> create(@Valid @RequestBody PurchasesProductsDto dto) throws EntityNotFoundException{
 		return new ResponseEntity<PurchasesProductsDto>(service.create(dto),HttpStatus.CREATED);
 	}
 	

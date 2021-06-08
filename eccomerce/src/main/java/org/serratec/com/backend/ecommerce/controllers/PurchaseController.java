@@ -3,6 +3,7 @@ package org.serratec.com.backend.ecommerce.controllers;
 import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.dto.PurchaseDto;
+import org.serratec.com.backend.ecommerce.entities.dto.PurchasesProductsDto;
 import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.PurchaseService;
@@ -36,8 +37,8 @@ public class PurchaseController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<PurchaseDto> create(@RequestBody PurchaseDto purchase) {
-		return new ResponseEntity<PurchaseDto>(service.create(purchase),HttpStatus.CREATED);
+	public ResponseEntity<List<PurchasesProductsDto>> create(@RequestBody PurchaseDto purchase) throws EntityNotFoundException {
+		return new ResponseEntity<List<PurchasesProductsDto>>(service.order(purchase),HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")

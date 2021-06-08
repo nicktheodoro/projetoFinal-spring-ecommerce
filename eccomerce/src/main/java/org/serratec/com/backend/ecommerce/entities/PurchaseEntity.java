@@ -3,42 +3,37 @@ package org.serratec.com.backend.ecommerce.entities;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.serratec.com.backend.ecommerce.enums.PurchasesStatus;
 
 @Entity
 @Table(name = "PEDIDOS")
 public class PurchaseEntity {
 	
-	// Add Lista de Produtos do Pedido
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long numeroPedido;
+	private String numeroPedido;
 	private Double valorTotal;
 	private LocalDate dataPedido;
 	private LocalDate dataEntrega;
-	private String status;
+	private PurchasesStatus status;
 
 	@ManyToOne
 	private ClientEntity cliente;
 
-	@ManyToMany
-	@JoinTable(name = "produto_pedido",
-	joinColumns = @JoinColumn(referencedColumnName = "id"),
-	inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
-	@Column(name = "produtos_id")
-	private List<ProductEntity> produtos;
+	@OneToMany(mappedBy="pedidos")    
+	private List<PurchasesProductsEntity> carrinhos;
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -47,11 +42,11 @@ public class PurchaseEntity {
 		this.id = id;
 	}
 
-	public Long getNumeroPedido() {
+	public String getNumeroPedido() {
 		return numeroPedido;
 	}
 
-	public void setNumeroPedido(Long numeroPedido) {
+	public void setNumeroPedido(String numeroPedido) {
 		this.numeroPedido = numeroPedido;
 	}
 
@@ -79,11 +74,11 @@ public class PurchaseEntity {
 		this.dataEntrega = dataEntrega;
 	}
 
-	public String getStatus() {
+	public PurchasesStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(PurchasesStatus status) {
 		this.status = status;
 	}
 
@@ -95,11 +90,11 @@ public class PurchaseEntity {
 		this.cliente = cliente;
 	}
 
-	public List<ProductEntity> getProdutos() {
-		return produtos;
+	public List<PurchasesProductsEntity> getCarts() {
+		return carrinhos;
 	}
 
-	public void setProdutos(List<ProductEntity> produtos) {
-		this.produtos = produtos;
+	public void setCarts(List<PurchasesProductsEntity> carts) {
+		this.carrinhos = carts;
 	}
 }

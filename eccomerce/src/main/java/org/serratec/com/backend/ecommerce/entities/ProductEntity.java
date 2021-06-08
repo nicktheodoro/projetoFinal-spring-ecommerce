@@ -3,13 +3,12 @@ package org.serratec.com.backend.ecommerce.entities;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -28,10 +27,10 @@ public class ProductEntity {
 	@ManyToOne
 	private CategoryEntity categoria;
 
-	@ManyToMany(mappedBy = "produtos")
-	@Column(name = "pedidos_id")
-	private List<PurchaseEntity> pedidos;
+	@OneToMany(mappedBy="produtos")    
+	private List<PurchasesProductsEntity> carrinhos;
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -88,14 +87,13 @@ public class ProductEntity {
 		this.categoria = categoria;
 	}
 
-	public List<PurchaseEntity> getPedidos() {
-		return pedidos;
+	public List<PurchasesProductsEntity> getCarrinhos() {
+		return carrinhos;
 	}
 
-	public void setPedidos(List<PurchaseEntity> pedidos) {
-		this.pedidos = pedidos;
+	public void setCarts(List<PurchasesProductsEntity> carrinhos) {
+		this.carrinhos = carrinhos;
 	}
-
 	// Adicionar imagens
 	// private String imagem;
 }

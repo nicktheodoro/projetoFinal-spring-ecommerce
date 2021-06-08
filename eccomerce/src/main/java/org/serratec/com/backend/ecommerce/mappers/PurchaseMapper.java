@@ -2,17 +2,23 @@ package org.serratec.com.backend.ecommerce.mappers;
 
 import org.serratec.com.backend.ecommerce.entities.PurchaseEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.PurchaseDto;
+import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.services.ClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PurchaseMapper {
-
-	public PurchaseEntity toEntity(PurchaseDto dto) {
+	
+	@Autowired
+	ClientService service;
+	
+	public PurchaseEntity toEntity(PurchaseDto dto) throws EntityNotFoundException {
 		PurchaseEntity purchase = new PurchaseEntity();
 		purchase.setNumeroPedido(dto.getNumeroPedido());
 		purchase.setDataEntrega(dto.getDataEntrega());
 		purchase.setDataPedido(dto.getDataPedido());
-		purchase.setCliente(dto.getCliente());
+		purchase.setCliente(service.findById(dto.getCliente()));
 		purchase.setStatus(dto.getStatus());
 		purchase.setValorTotal(dto.getValorTotal());
 
@@ -24,7 +30,7 @@ public class PurchaseMapper {
 		dto.setNumeroPedido(purchase.getNumeroPedido());
 		dto.setDataEntrega(purchase.getDataEntrega());
 		dto.setDataPedido(purchase.getDataPedido());
-		dto.setCliente(purchase.getCliente());
+		dto.setCliente(purchase.getCliente().getId());
 		dto.setStatus(purchase.getStatus());
 		dto.setValorTotal(purchase.getValorTotal());
 
