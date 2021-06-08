@@ -74,7 +74,7 @@ public class AddressService {
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(
-					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
+					"Endereço com id: " + id + " está associada a um ou mais produtos, favor verificar");
 		}
 
 	}

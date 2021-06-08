@@ -17,6 +17,10 @@ public class PurchasesProductsEntity {
 	private Double preco;
 	
 	private Integer quantidade;
+	
+	private Long pedidos_id;
+	
+	private Long produtos_id;
 
 	public Long getId() {
 		return id;
@@ -40,5 +44,21 @@ public class PurchasesProductsEntity {
 
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
+	}
+
+	public Long getPedidos_id() {
+		return pedidos_id;
+	}
+
+	public void setPedidos_id(Long pedidos_id) {
+		this.pedidos_id = pedidos_id;
+	}
+
+	public Long getProdutos_id() {
+		return produtos_id;
+	}
+
+	public void setProdutos_id(Long produtos_id) {
+		this.produtos_id = produtos_id;
 	}
 }

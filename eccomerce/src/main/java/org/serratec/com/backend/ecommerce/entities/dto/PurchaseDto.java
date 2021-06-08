@@ -1,39 +1,39 @@
 package org.serratec.com.backend.ecommerce.entities.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.Column;
 import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.serratec.com.backend.ecommerce.entities.ClientEntity;
+import org.serratec.com.backend.ecommerce.entities.ProductEntity;
+import org.serratec.com.backend.ecommerce.enums.PurchasesStatus;
 
 public class PurchaseDto {
 
-	@NotBlank(message = "{nome.not.blank}")
-	private Long numeroPedido;
+	@Column(unique=true)
+	private String numeroPedido;
 
-	@NotBlank(message = "{nome.not.blank}")
-	private Double valorTotal;
+	private Double valorTotal = 0D;
 
-	@NotNull
 	private LocalDate dataPedido;
 
-	@NotNull
 	@FutureOrPresent
 	private LocalDate dataEntrega;
 
-	@NotNull
-	private String status;
+	private PurchasesStatus status;
 
 	@NotNull
-	private ClientEntity cliente;
+	private Long cliente;
+	
+	private List<ProductDto> produtos;
 
-	public Long getNumeroPedido() {
+	public String getNumeroPedido() {
 		return numeroPedido;
 	}
 
-	public void setNumeroPedido(Long numeroPedido) {
+	public void setNumeroPedido(String numeroPedido) {
 		this.numeroPedido = numeroPedido;
 	}
 
@@ -61,19 +61,20 @@ public class PurchaseDto {
 		this.dataEntrega = dataEntrega;
 	}
 
-	public String getStatus() {
+	public PurchasesStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(PurchasesStatus status) {
 		this.status = status;
 	}
 
-	public ClientEntity getCliente() {
+	public Long getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(ClientEntity cliente) {
+	public void setCliente(Long cliente) {
 		this.cliente = cliente;
 	}
+
 }

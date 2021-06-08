@@ -1,9 +1,11 @@
 package org.serratec.com.backend.ecommerce.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.serratec.com.backend.ecommerce.entities.ProductEntity;
+import org.serratec.com.backend.ecommerce.entities.dto.AddressDto;
 import org.serratec.com.backend.ecommerce.entities.dto.ProductDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.exceptions.ProductException;
@@ -61,6 +63,17 @@ public class ProductService {
 			throw new EntityNotFoundException("Categoria com id: " + product.getCategoria() + " não existe");
 		}
 	}
+	
+//	public List<ProductDto> createList(List<ProductDto> productDto){ // mudar para entity
+//		List<ProductEntity> listProducts= new ArrayList<>();
+//		for (ProductDto product : productDto) {
+//			if(repository.findByNome(product.getNome())!=null) {
+//				listProducts.add(null)
+//			}
+//		}
+//		
+//		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+//	}
 
 	public ProductDto update(Long id, ProductDto productUpdate) throws EntityNotFoundException {
 		ProductEntity product = this.findById(id);

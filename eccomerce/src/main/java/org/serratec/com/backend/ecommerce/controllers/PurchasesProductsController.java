@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.serratec.com.backend.ecommerce.entities.PurchasesProductsEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.PurchasesProductsDto;
 import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
@@ -38,8 +39,8 @@ public class PurchasesProductsController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<PurchasesProductsDto> create(@Valid @RequestBody PurchasesProductsDto dto){
-		return new ResponseEntity<PurchasesProductsDto>(service.create(dto),HttpStatus.CREATED);
+	public ResponseEntity<PurchasesProductsEntity> create(@Valid @RequestBody PurchasesProductsEntity entity){
+		return new ResponseEntity<PurchasesProductsEntity>(service.create(entity),HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
