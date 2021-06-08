@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import org.serratec.com.backend.ecommerce.entities.ProductEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ProductDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.exceptions.ProductException;
 import org.serratec.com.backend.ecommerce.mappers.ProductMapper;
 import org.serratec.com.backend.ecommerce.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,12 +20,16 @@ public class ProductService {
 
 	@Autowired
 	ProductMapper mapper;
-  
+
 	@Autowired
 	CategoryService service;
-	
+
 	public ProductEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
+	}
+
+	public List<ProductEntity> findByCategoriaId(Long idCategoria) {
+		return repository.findByCategoriaId(idCategoria);
 	}
 
 	public List<ProductDto> getAll() {
@@ -35,25 +39,27 @@ public class ProductService {
 	public ProductDto getById(Long id) throws EntityNotFoundException {
 		return mapper.toDto(this.findById(id));
 	}
-	
+
 	public List<ProductDto> getByName(String nome) {
 		return mapper.listToDto(repository.findByNome(nome.toLowerCase()));
 	}
-	
-	public ProductDto create(ProductDto product) throws EntityNotFoundException {
+
+	public ProductDto create(ProductDto product) throws EntityNotFoundException, ProductException {
 		try {
-			product.setNome(product.getNome().toLowerCase());
-			ProductEntity entity = mapper.toEntity(product);
-			entity.setCategoria(service.findById(product.getCategoria()));
-			
-			return mapper.toDto(repository.save(entity));
-			
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityViolationException("Categoria: "+ product.getCategoria() + " não existe");				
-		} catch(EntityNotFoundException e) {
-			throw new EntityNotFoundException("Categoria com id: " + product.getCategoria() +" não existe");
+			if (product.getNome().isBlank() || product.getPreco() == null || product.getQuantidadeEstoque() == null
+					|| product.getCategoria() == null) {
+				throw new ProductException("Os campos Nome, Preço, Quantidade em estoque e categoria são obrigatórios!");
+			}
+			else {
+				product.setNome(product.getNome().toLowerCase());
+				ProductEntity entity = mapper.toEntity(product);
+				entity.setCategoria(service.findById(product.getCategoria()));
+				
+				return mapper.toDto(repository.save(entity));
+			}	
+		} catch (EntityNotFoundException e) {
+			throw new EntityNotFoundException("Categoria com id: " + product.getCategoria() + " não existe");
 		}
-		
 	}
 
 	public ProductDto update(Long id, ProductDto productUpdate) throws EntityNotFoundException {
@@ -74,14 +80,13 @@ public class ProductService {
 		return mapper.toDto(repository.save(product));
 	}
 
-	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
-		try {
-			if (this.findById(id) != null) {
-				repository.deleteById(id);
-			}
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityViolationException(
-					"Produto com id: " + id + " está associado a um ou mais pedidos, favor verificar");
+	public void delete(Long id) throws EntityNotFoundException, ProductException {
+		if (this.findById(id) != null) {
+			repository.deleteById(id);
+		} else {
+			throw new ProductException(
+					"Produto com id: " + id + " já vinculado a um ou mais pedidos, favor verificar!");
 		}
+
 	}
 }

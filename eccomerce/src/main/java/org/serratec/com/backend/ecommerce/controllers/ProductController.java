@@ -3,8 +3,8 @@ package org.serratec.com.backend.ecommerce.controllers;
 import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.dto.ProductDto;
-import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.exceptions.ProductException;
 import org.serratec.com.backend.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +41,7 @@ public class ProductController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProductDto> create(@RequestBody ProductDto product) throws EntityNotFoundException {
+	public ResponseEntity<ProductDto> create(@RequestBody ProductDto product) throws EntityNotFoundException, ProductException {
 		return new ResponseEntity<ProductDto>(service.create(product),HttpStatus.CREATED);
 	}
 	
@@ -51,7 +51,7 @@ public class ProductController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
+	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, ProductException {
 		service.delete(id);
 
 		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.OK);

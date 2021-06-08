@@ -8,8 +8,6 @@ import javax.validation.constraints.Size;
 
 public class ProductDto {
 
-	@NotNull
-	private LocalDate dataCadastro = LocalDate.now();
 
 	@NotBlank
 	@Size(max = 40)
@@ -18,22 +16,19 @@ public class ProductDto {
 	@Size(max = 250)
 	private String descricao;
 
-	@NotBlank
+	@NotNull
 	private Double preco;
 
-	@NotBlank
+	@NotNull
 	private Integer quantidadeEstoque;
 
-	@NotBlank
+	@NotNull
 	private Long categoria;
 
-	public LocalDate getDataCadastro() {
-		return dataCadastro;
-	}
-
-	public void setDataCadastro(LocalDate dataCadastro) {
-		this.dataCadastro = dataCadastro;
-	}
+	@NotNull
+	private LocalDate dataCadastro = LocalDate.now();
+	// Adicionar imagens
+	// private String imagem;
 
 	public String getNome() {
 		return nome;
@@ -74,6 +69,13 @@ public class ProductDto {
 	public void setCategoria(Long categoria) {
 		this.categoria = categoria;
 	}
+	public LocalDate getDataCadastro() {
+		return dataCadastro;
+	}
+	
+	public void setDataCadastro(LocalDate dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
 
 	@Override
 	public String toString() {
@@ -81,7 +83,6 @@ public class ProductDto {
 				+ preco + ", quantidadeEstoque=" + quantidadeEstoque + ", categoria=" + categoria + "]";
 	}
 	
-	// Adicionar imagens
-	// private String imagem;
+	
 	
 }

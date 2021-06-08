@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.dto.CategoryDto;
 import org.serratec.com.backend.ecommerce.exceptions.CategoryException;
-import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +53,7 @@ public class CategoryController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id)
-			throws EntityNotFoundException, DataIntegrityViolationException {
+	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, CategoryException {
 		service.delete(id);
 		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.OK);
 	}

@@ -3,7 +3,7 @@ package org.serratec.com.backend.ecommerce.exceptions;
 public class ProductException extends Exception {
 
 	private static final long serialVersionUID = 3443302053542415025L;
-
+    
 	public ProductException() {
 		super();
 
@@ -27,6 +27,5 @@ public class ProductException extends Exception {
 	public ProductException(Throwable cause) {
 		super(cause);
 
-	}
-
+	}  
 }
