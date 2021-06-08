@@ -25,6 +25,9 @@ public class AddressService {
 	@Autowired
 	AddressMapper mapper;
 
+	@Autowired
+	ClientService clientService;
+
 	public List<AddressDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
@@ -33,12 +36,17 @@ public class AddressService {
 		return mapper.toDto(this.findById(id));
 	}
 
-	public AddressDto create(AddressDto dto) {
-		AddressDto address = this.getCep(dto.getCep());
-		address.setNumero(dto.getNumero());
-		address.setComplemento(dto.getComplemento());
+	public List<AddressDto> create(List<AddressDto> enderecosDto, Long clientId) throws EntityNotFoundException { // mudar para entity
 
-		return mapper.toDto(repository.save(mapper.toEntity(address)));
+		for (AddressDto addressDto : enderecosDto) {
+			AddressDto address = this.getCep(addressDto.getCep());
+			address.setNumero(addressDto.getNumero());
+			address.setComplemento(addressDto.getComplemento());
+			address.setCliente(clientService.findById(clientId));
+			repository.save(mapper.toEntity(address));
+		}
+		
+		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
 
 	public AddressDto update(Long id, AddressDto addressUpdate) throws EntityNotFoundException {

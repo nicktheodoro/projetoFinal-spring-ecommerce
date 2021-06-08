@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -19,22 +18,22 @@ public class ClientEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(unique = true)
 	private String email;
-	
+
 	@Column(unique = true)
 	private String username;
 	private String senha;
 	private String nome;
-	
+
 	@Column(unique = true)
 	private String cpf;
 	private String telefone;
 	private LocalDate dataNascimento;
 
-	@ManyToOne
-	private AddressEntity endereco;
+	@OneToMany(mappedBy = "cliente")
+	private List<AddressEntity> enderecos;
 
 	@OneToMany(mappedBy = "cliente")
 	private List<PurchaseEntity> pedidos;
@@ -102,12 +101,27 @@ public class ClientEntity {
 	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
-
-	public AddressEntity getEndereco() {
-		return endereco;
+	
+	public List<AddressEntity> getEnderecos() {
+		return enderecos;
 	}
 
-	public void setEndereco(AddressEntity endereco) {
-		this.endereco = endereco;
+	public void setEnderecos(List<AddressEntity> enderecos) {
+		this.enderecos = enderecos;
+	}
+
+	public List<PurchaseEntity> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<PurchaseEntity> pedidos) {
+		this.pedidos = pedidos;
+	}
+
+	@Override
+	public String toString() {
+		return "ClientEntity [id=" + id + ", email=" + email + ", username=" + username + ", senha=" + senha + ", nome="
+				+ nome + ", cpf=" + cpf + ", telefone=" + telefone + ", dataNascimento=" + dataNascimento
+				+ ", enderecos=" + enderecos + "]";
 	}
 }
