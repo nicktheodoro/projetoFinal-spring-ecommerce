@@ -25,6 +25,7 @@ public class CategoryEntity {
 	@OneToMany(mappedBy = "categoria")
 	private List<ProductEntity> products;
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -56,6 +57,4 @@ public class CategoryEntity {
 	public void setProducts(List<ProductEntity> products) {
 		this.products = products;
 	}
-
-
 }

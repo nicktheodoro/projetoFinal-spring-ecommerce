@@ -2,32 +2,30 @@ package org.serratec.com.backend.ecommerce.entities.dto;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.serratec.com.backend.ecommerce.entities.CategoryEntity;
 
 public class ProductDto {
 
 	@NotNull
 	private LocalDate dataCadastro = LocalDate.now();
 
-	@NotEmpty
+	@NotBlank
 	@Size(max = 40)
 	private String nome;
 
 	@Size(max = 250)
 	private String descricao;
 
-	@NotEmpty
+	@NotBlank
 	private Double preco;
 
-	@NotEmpty
+	@NotBlank
 	private Integer quantidadeEstoque;
 
-	@NotEmpty
-	private CategoryEntity categoria;
+	@NotBlank
+	private Long categoria;
 
 	public LocalDate getDataCadastro() {
 		return dataCadastro;
@@ -69,14 +67,21 @@ public class ProductDto {
 		this.quantidadeEstoque = quantidadeEstoque;
 	}
 
-	public CategoryEntity getCategoria() {
+	public Long getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(CategoryEntity categoria) {
+	public void setCategoria(Long categoria) {
 		this.categoria = categoria;
+	}
+
+	@Override
+	public String toString() {
+		return "ProductDto [dataCadastro=" + dataCadastro + ", nome=" + nome + ", descricao=" + descricao + ", preco="
+				+ preco + ", quantidadeEstoque=" + quantidadeEstoque + ", categoria=" + categoria + "]";
 	}
 	
 	// Adicionar imagens
 	// private String imagem;
+	
 }

@@ -5,19 +5,25 @@ import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.ProductEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ProductDto;
+import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.services.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMapper {
 
-  public ProductEntity toEntity(ProductDto dto) {
+	@Autowired
+	CategoryService service;
+	
+  public ProductEntity toEntity(ProductDto dto) throws EntityNotFoundException {
 		ProductEntity product = new ProductEntity();
 		product.setNome(dto.getNome());
 		product.setDescricao(dto.getDescricao());
 		product.setPreco(dto.getPreco());
 		product.setQuantidadeEstoque(dto.getQuantidadeEstoque());
 		product.setDataCadastro(dto.getDataCadastro());
-		product.setCategoria(dto.getCategoria());
+		product.setCategoria(service.findById(dto.getCategoria()));
 //		product.setImagem(dto.getImagem());
 
 		return product;
@@ -30,7 +36,7 @@ public class ProductMapper {
 		dto.setPreco(product.getPreco());
 		dto.setQuantidadeEstoque(product.getQuantidadeEstoque());
 		dto.setDataCadastro(product.getDataCadastro());
-		dto.setCategoria(product.getCategoria());
+		dto.setCategoria(product.getCategoria().getId());
 //		product.setImagem(dto.getImagem());
 
 		return dto;
@@ -44,7 +50,7 @@ public class ProductMapper {
 		}
 		return list;
 	}
-	public List<ProductEntity> listToEntity(List<ProductDto> produtos) {
+	public List<ProductEntity> listToEntity(List<ProductDto> produtos) throws EntityNotFoundException {
 		List<ProductEntity> list = new ArrayList<>();
 		for (ProductDto dto : produtos) {
 			ProductEntity entity = this.toEntity(dto);

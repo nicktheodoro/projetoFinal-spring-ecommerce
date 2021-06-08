@@ -2,9 +2,8 @@ package org.serratec.com.backend.ecommerce.controllers;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.serratec.com.backend.ecommerce.entities.dto.CategoryDto;
+import org.serratec.com.backend.ecommerce.exceptions.CategoryException;
 import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.CategoryService;
@@ -44,7 +43,7 @@ public class CategoryController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CategoryDto> create(@RequestBody @Valid CategoryDto category) {
+	public ResponseEntity<CategoryDto> create(@RequestBody CategoryDto category) throws CategoryException {
 		return new ResponseEntity<CategoryDto>(service.create(category), HttpStatus.CREATED);
 	}
 
@@ -57,6 +56,6 @@ public class CategoryController {
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
 		service.delete(id);
 
-		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.OK);
 	}
 }
