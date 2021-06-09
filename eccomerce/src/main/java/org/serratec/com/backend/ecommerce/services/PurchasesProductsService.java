@@ -42,6 +42,7 @@ public class PurchasesProductsService {
 	}
 
 	public List<PurchasesProductsEntity> findAll() {
+
 		return repository.findAll();
 	}
 
@@ -64,7 +65,7 @@ public class PurchasesProductsService {
 
 		return mapper.toDto(repository.save(purchasesProducts));
 	}
-
+  
 	public void removerProdutoCarrinho(List<PurchasesProductsDto> carrinhos)
 			throws EntityNotFoundException, CarrinhoException {
 		if (carrinhos.isEmpty()) {

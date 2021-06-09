@@ -36,6 +36,7 @@
 //		return new ResponseEntity<PurchasesProductsDto>(service.getById(id), HttpStatus.OK);
 //	}
 //	
+
 //	@PostMapping
 //	public ResponseEntity<PurchasesProductsDto> create(@Valid @RequestBody PurchasesProductsDto dto) throws EntityNotFoundException{
 //		return new ResponseEntity<PurchasesProductsDto>(service.create(dto),HttpStatus.CREATED);
@@ -52,3 +53,4 @@
 //		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.NO_CONTENT);
 //	}
 //}
+

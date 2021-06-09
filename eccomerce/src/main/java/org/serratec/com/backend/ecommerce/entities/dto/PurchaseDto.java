@@ -3,29 +3,29 @@ package org.serratec.com.backend.ecommerce.entities.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 
 import org.serratec.com.backend.ecommerce.entities.PurchasesProductsEntity;
+
 import org.serratec.com.backend.ecommerce.enums.PurchasesStatus;
 
 public class PurchaseDto {
 
-	private String numeroPedido;
+  private String numeroPedido;
 
-	private Double valorTotal;
+  private Double valorTotal;
 
-	@NotNull
-	private LocalDate dataPedido;
+  private LocalDate dataPedido;
 
-	@NotNull
-	@FutureOrPresent
-	private LocalDate dataEntrega;
+  @FutureOrPresent
+  private LocalDate dataEntrega;
 
-	private PurchasesStatus status;
+  private PurchasesStatus status;
 
-	@NotNull
-	private Long cliente;
+  @NotNull
+  private Long cliente;
 	
 	private List<PurchasesProductsEntity> carrinhos;
 	
@@ -102,6 +102,4 @@ public class PurchaseDto {
 				+ carrinhos + ", produto=" + produto + "]";
 	}
 	
-	
-
 }
