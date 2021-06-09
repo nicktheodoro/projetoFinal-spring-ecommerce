@@ -1,10 +1,13 @@
 package org.serratec.com.backend.ecommerce.entities.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.serratec.com.backend.ecommerce.entities.PurchasesProductsEntity;
 
 public class ProductDto {
 
@@ -30,6 +33,10 @@ public class ProductDto {
 	// Adicionar imagens
 	// private String imagem;
 
+	private List<PurchasesProductsEntity> carrinhos;
+
+	private Integer quantidade;
+	
 	public String getNome() {
 		return nome;
 	}
@@ -76,13 +83,20 @@ public class ProductDto {
 	public void setDataCadastro(LocalDate dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
-
-	@Override
-	public String toString() {
-		return "ProductDto [dataCadastro=" + dataCadastro + ", nome=" + nome + ", descricao=" + descricao + ", preco="
-				+ preco + ", quantidadeEstoque=" + quantidadeEstoque + ", categoria=" + categoria + "]";
+	
+	public List<PurchasesProductsEntity> getCarrinhos() {
+		return carrinhos;
 	}
-	
-	
-	
+
+	public void setCarrinhos(List<PurchasesProductsEntity> carrinhos) {
+		this.carrinhos = carrinhos;
+	}
+
+	public Integer getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
 }

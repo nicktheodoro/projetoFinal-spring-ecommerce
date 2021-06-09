@@ -1,19 +1,18 @@
 package org.serratec.com.backend.ecommerce.entities.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.serratec.com.backend.ecommerce.entities.ClientEntity;
+import org.serratec.com.backend.ecommerce.entities.PurchasesProductsEntity;
+import org.serratec.com.backend.ecommerce.enums.PurchasesStatus;
 
 public class PurchaseDto {
 
-	@NotBlank(message = "{nome.not.blank}")
-	private Long numeroPedido;
+	private String numeroPedido;
 
-	@NotBlank(message = "{nome.not.blank}")
 	private Double valorTotal;
 
 	@NotNull
@@ -23,17 +22,20 @@ public class PurchaseDto {
 	@FutureOrPresent
 	private LocalDate dataEntrega;
 
-	@NotNull
-	private String status;
+	private PurchasesStatus status;
 
 	@NotNull
-	private ClientEntity cliente;
-
-	public Long getNumeroPedido() {
+	private Long cliente;
+	
+	private List<PurchasesProductsEntity> carrinhos;
+	
+	private List<ProductOrderDto> produto;
+	
+	public String getNumeroPedido() {
 		return numeroPedido;
 	}
 
-	public void setNumeroPedido(Long numeroPedido) {
+	public void setNumeroPedido(String numeroPedido) {
 		this.numeroPedido = numeroPedido;
 	}
 
@@ -61,19 +63,45 @@ public class PurchaseDto {
 		this.dataEntrega = dataEntrega;
 	}
 
-	public String getStatus() {
+	public PurchasesStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(PurchasesStatus status) {
 		this.status = status;
 	}
 
-	public ClientEntity getCliente() {
+	public Long getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(ClientEntity cliente) {
+	public void setCliente(Long cliente) {
 		this.cliente = cliente;
 	}
+
+	public List<PurchasesProductsEntity> getCarrinhos() {
+		return carrinhos;
+	}
+
+	public void setCarrinhos(List<PurchasesProductsEntity> carrinhos) {
+		this.carrinhos = carrinhos;
+	}
+
+	public List<ProductOrderDto> getProduto() {
+		return produto;
+	}
+
+	public void setProduto(List<ProductOrderDto> produto) {
+		this.produto = produto;
+	}
+	
+	@Override
+	public String toString() {
+		return "PurchaseDto [numeroPedido=" + numeroPedido + ", valorTotal=" + valorTotal + ", dataPedido=" + dataPedido
+				+ ", dataEntrega=" + dataEntrega + ", status=" + status + ", cliente=" + cliente + ", carrinhos="
+				+ carrinhos + ", produto=" + produto + "]";
+	}
+	
+	
+
 }
