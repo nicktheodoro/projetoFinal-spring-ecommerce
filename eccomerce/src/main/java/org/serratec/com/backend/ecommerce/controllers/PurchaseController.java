@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.dto.ProductOrderDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PurchaseDto;
+import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
 import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.PurchaseService;
@@ -25,35 +26,46 @@ public class PurchaseController {
 
 	@Autowired
 	PurchaseService service;
-	
+
 	@GetMapping
-	public ResponseEntity<List<PurchaseDto>> getAll(){
+	public ResponseEntity<List<PurchaseDto>> getAll() {
 		return new ResponseEntity<List<PurchaseDto>>(service.getAll(), HttpStatus.OK);
 	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<PurchaseDto> getById(@PathVariable Long id) throws EntityNotFoundException {
-		return new ResponseEntity<PurchaseDto>(service.getById(id), HttpStatus.OK);
+
+	@GetMapping("/{numeroPedido}")
+	public ResponseEntity<PurchaseDto> getById(@PathVariable String numeroPedido) throws EntityNotFoundException {
+		return new ResponseEntity<PurchaseDto>(service.getByNumeroPedido(numeroPedido), HttpStatus.OK);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity <PurchaseDto> create(@RequestBody PurchaseDto purchase) throws EntityNotFoundException {
-		return new ResponseEntity<PurchaseDto>(service.order(purchase),HttpStatus.CREATED);
+	public ResponseEntity<PurchaseDto> create(@RequestBody PurchaseDto purchase) throws EntityNotFoundException {
+		return new ResponseEntity<PurchaseDto>(service.order(purchase), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<PurchaseDto> update(@PathVariable Long id, @RequestBody PurchaseDto purchase) throws EntityNotFoundException {
+	public ResponseEntity<PurchaseDto> update(@PathVariable Long id, @RequestBody PurchaseDto purchase)
+			throws EntityNotFoundException {
 		return new ResponseEntity<PurchaseDto>(service.update(id, purchase), HttpStatus.ACCEPTED);
 	}
-	
-	@PutMapping("/adicionar/{id}")
-	public ResponseEntity<PurchaseDto> adionarProduto(@PathVariable Long id, @RequestBody List<ProductOrderDto> productOrderDto) throws EntityNotFoundException{
+
+	@PutMapping("/atualizar/{id}")
+	public ResponseEntity<PurchaseDto> adionarProduto(@PathVariable Long id,
+			@RequestBody List<ProductOrderDto> productOrderDto) throws EntityNotFoundException {
 		return new ResponseEntity<PurchaseDto>(service.updateOrder(id, productOrderDto), HttpStatus.ACCEPTED);
 	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
-		service.delete(id);
-		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.NO_CONTENT);
+
+	@PutMapping("/remover-produto-pedido/{numeroPedido}")
+	public ResponseEntity<PurchaseDto> delete(@PathVariable String numeroPedido,
+			@RequestBody List<ProductOrderDto> productOrderDto) throws EntityNotFoundException, CarrinhoException {
+		service.deletarProdutoOrder(numeroPedido, productOrderDto);
+		return new ResponseEntity<PurchaseDto>(service.deletarProdutoOrder(numeroPedido, productOrderDto), HttpStatus.OK);
 	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> delete(@PathVariable Long id)
+			throws EntityNotFoundException, DataIntegrityViolationException {
+		service.delete(id);
+		return new ResponseEntity<String>("Categoria com id: " + id + " deletada com sucesso!", HttpStatus.NO_CONTENT);
+	}
+
 }

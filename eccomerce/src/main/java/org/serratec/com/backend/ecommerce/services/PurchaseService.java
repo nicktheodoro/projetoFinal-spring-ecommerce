@@ -11,6 +11,7 @@ import org.serratec.com.backend.ecommerce.entities.dto.ProductOrderDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PurchaseDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PurchasesProductsDto;
 import org.serratec.com.backend.ecommerce.enums.PurchasesStatus;
+import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.ProductMapper;
 import org.serratec.com.backend.ecommerce.mappers.PurchaseMapper;
@@ -51,6 +52,9 @@ public class PurchaseService {
 
 	public PurchaseDto getById(Long id) throws EntityNotFoundException {
 		return mapper.toDto(this.findById(id));
+	}
+	public PurchaseDto getByNumeroPedido(String numeroPedido) throws EntityNotFoundException {
+		return mapper.toDto(repository.findByNumeroPedido(numeroPedido));
 	}
 
 	public PurchaseEntity create(PurchaseDto purchase) throws EntityNotFoundException {
@@ -164,24 +168,29 @@ public class PurchaseService {
 		return mapper.toDto(entity);	
 	}
 	
-//	public PurchaseDto deletarProdutoOrder(Long id, List<ProductOrderDto> produtosCarrinho) throws EntityNotFoundException {
-//		List<PurchasesProductsDto> carrinhos = new ArrayList<>();
-//		List<ProductDto> produtos = new ArrayList<>();
-//		
-//		for (ProductOrderDto productOrderDto : produtosCarrinho) {
-//			ProductDto dto = productService.getByName(productOrderDto.getNome());
-//			dto.setQuantidade(productOrderDto.getQuantidade());
-//			
-//			produtos.add(dto);
-//		}
-//		
-//		for (ProductDto productDto : produtos) {
-//			PurchasesProductsDto produto = new PurchasesProductsDto();
-//			produto.setPedido(id);
-//			produto.setQuantidade(productDto.getQuantidade());
-//			produto.setProduto(productService.findByName(productDto.getNome()).getId());
-//			
-//			carrinhos.add(produto);
-//		}
-//	}
+	public PurchaseDto deletarProdutoOrder(String numeroPedido, List<ProductOrderDto> produtosCarrinho) throws EntityNotFoundException, CarrinhoException {
+		List<PurchasesProductsDto> carrinhos = new ArrayList<>();
+		List<ProductDto> produtos = new ArrayList<>();
+		
+		for (ProductOrderDto productOrderDto : produtosCarrinho) {
+			produtos.add(productService.getByName(productOrderDto.getNome()));
+		}
+		
+		for (ProductDto productDto : produtos) {
+			PurchasesProductsDto carrinho = new PurchasesProductsDto();
+			carrinho.setPedido(repository.findByNumeroPedido(numeroPedido).getId());
+			carrinho.setProduto(productService.findByName(productDto.getNome()).getId());
+			
+			carrinhos.add(carrinho);
+		}
+		
+		cartService.removerProdutoCarrinho(carrinhos);
+		
+		PurchaseEntity entity = repository.findByNumeroPedido(numeroPedido);
+		entity.setValorTotal(cartService.calcularTotal(repository.findByNumeroPedido(numeroPedido).getId()));
+		
+		repository.save(entity);
+		
+		return mapper.toDto(entity);	
+	}
 }
