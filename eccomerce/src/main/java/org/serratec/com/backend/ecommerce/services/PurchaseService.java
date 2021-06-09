@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.serratec.com.backend.ecommerce.entities.ProductEntity;
 import org.serratec.com.backend.ecommerce.entities.PurchaseEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ProductDto;
 import org.serratec.com.backend.ecommerce.entities.dto.ProductOrderDto;
@@ -41,6 +40,7 @@ public class PurchaseService {
 	@Autowired
 	PurchasesProductsService cartService;
 
+	
 	public PurchaseEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
@@ -66,16 +66,13 @@ public class PurchaseService {
 
 	public PurchaseDto update(Long id, PurchaseDto purchaseUpdate) throws EntityNotFoundException {
 		PurchaseEntity purchase = this.findById(id);
-		if (purchase.getStatus().equals(PurchasesStatus.NAO_FINALIZADO)) {
-			purchase.setValorTotal(purchaseUpdate.getValorTotal());
-			purchase.setDataPedido(purchaseUpdate.getDataPedido());
-			purchase.setDataEntrega(purchaseUpdate.getDataEntrega());
+		purchase.setNumeroPedido(purchaseUpdate.getNumeroPedido());
+		purchase.setValorTotal(purchaseUpdate.getValorTotal());
+		purchase.setDataPedido(purchaseUpdate.getDataPedido());
+		purchase.setDataEntrega(purchaseUpdate.getDataEntrega());
+		purchase.setStatus(purchaseUpdate.getStatus());
 
-			return mapper.toDto(repository.save(purchase));
-
-		}
-
-		return null;
+		return mapper.toDto(repository.save(purchase));
 	}
 
 	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
@@ -85,32 +82,7 @@ public class PurchaseService {
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(
-					"Pedido com id: " + id + " está associada a um ou mais produtos, favor verificar");
-		}
-
-	}
-
-//	public void finishOrder(Long id) throws EntityNotFoundException {
-//		PurchaseEntity purchase = this.findById(id);
-//		purchase.setStatus(PurchasesStatus.FINALIZADO);
-//		repository.save(purchase);
-//	}
-//
-//	public void totalOrder(PurchaseEntity purchase, Double total) {
-//		purchase.setValorTotal(purchase.getValorTotal() + total);
-//	}
-
-	public void order(PurchaseEntity purchase) throws EntityNotFoundException {
-		this.create(mapper.toDto(purchase));
-		List<ProductEntity> products = purchase.getProdutos();
-		if (products.size() > 0) {
-			for (ProductEntity entity : products) {
-				PurchasesProductsEntity purchaseEntity= new PurchasesProductsEntity();
-				purchaseEntity.setProdutos_id(entity.getId());
-				purchaseEntity.setPedidos_id(purchase.getId());
-				
-				pService.create(purchaseEntity);
-			}
+					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
 		}
 
 	}
