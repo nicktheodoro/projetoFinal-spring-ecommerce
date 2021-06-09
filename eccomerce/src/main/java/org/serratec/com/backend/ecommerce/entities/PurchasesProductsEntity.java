@@ -67,6 +67,5 @@ public class PurchasesProductsEntity {
 	public void setPedidos(PurchaseEntity pedidos) {
 		this.pedidos = pedidos;
 	}
-	
-	
+
 }

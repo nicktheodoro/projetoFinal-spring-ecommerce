@@ -71,7 +71,7 @@ public class ClientService {
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(
-					"Endereço com id: " + id + " está associada a um ou mais clientes favor verificar");
+					"Cliente com id: " + id + " está associada a um ou mais clientes favor verificar");
 		}
 
 	}

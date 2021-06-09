@@ -18,4 +18,5 @@ public enum PurchasesStatus {
 	public String getDescricao() {
 		return descricao;
 	}
+  
 }

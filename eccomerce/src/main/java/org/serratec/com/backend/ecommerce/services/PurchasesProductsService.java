@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PurchasesProductsService {
-	
+
 	@Autowired
 	PurchasesProductsRepository repository;
-	
+
 	@Autowired
 	PurchasesProductsMapper mapper;
-	
+
 	@Autowired
 	PurchaseMapper purchaseMapper;
 	
@@ -32,15 +32,14 @@ public class PurchasesProductsService {
 	@Autowired
 	ProductService productService;
 	
-	
 	public PurchasesProductsEntity findById(Long id) throws EntityNotFoundException {
-		return repository.findById(id).orElseThrow(()->new EntityNotFoundException(id + " não encontrado."));
+		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
-	
-	public List <PurchasesProductsDto> getAll(){
+
+	public List<PurchasesProductsDto> getAll() {
 		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
 	}
-	
+  
 	public List <PurchasesProductsEntity> findAll(){
 		return repository.findAll();
 	}
@@ -55,15 +54,16 @@ public class PurchasesProductsService {
 			repository.save(mapper.toEntity(purchasesProductsDto));
 		}		
 	}
-	
-	public PurchasesProductsDto update(Long id, PurchasesProductsDto purchasesProductsUpdate ) throws EntityNotFoundException {
+
+	public PurchasesProductsDto update(Long id, PurchasesProductsDto purchasesProductsUpdate)
+			throws EntityNotFoundException {
 		PurchasesProductsEntity purchasesProducts = this.findById(id);
 		purchasesProducts.setPreco(purchasesProductsUpdate.getPreco());
 		purchasesProducts.setQuantidade(purchasesProductsUpdate.getQuantidade());
 		
 		return mapper.toDto(repository.save(purchasesProducts));	
 	}
-	
+
 	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
 		try {
 			if (this.findById(id) != null) {
@@ -71,7 +71,7 @@ public class PurchasesProductsService {
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(
-					"Categoria com id: " + id + " está associada a um ou mais produtos, favor verificar");
+					"PedidoProduto com id: " + id + " está associada a um ou mais produtos, favor verificar");
 		}
 
 	}

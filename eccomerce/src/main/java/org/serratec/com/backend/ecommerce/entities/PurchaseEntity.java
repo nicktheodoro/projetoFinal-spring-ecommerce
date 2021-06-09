@@ -16,7 +16,6 @@ import org.serratec.com.backend.ecommerce.enums.PurchasesStatus;
 @Entity
 @Table(name = "PEDIDOS")
 public class PurchaseEntity {
-	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +31,6 @@ public class PurchaseEntity {
 
 	@OneToMany(mappedBy="pedidos")    
 	private List<PurchasesProductsEntity> carrinhos;
-
 	
 	public Long getId() {
 		return id;
@@ -97,4 +95,5 @@ public class PurchaseEntity {
 	public void setCarts(List<PurchasesProductsEntity> carts) {
 		this.carrinhos = carts;
 	}
+
 }
