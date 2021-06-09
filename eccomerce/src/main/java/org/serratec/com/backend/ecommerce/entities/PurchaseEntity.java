@@ -3,15 +3,12 @@ package org.serratec.com.backend.ecommerce.entities;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.serratec.com.backend.ecommerce.enums.PurchasesStatus;
@@ -32,11 +29,9 @@ public class PurchaseEntity {
 	@ManyToOne
 	private ClientEntity cliente;
 
-	@ManyToMany
-	@JoinTable(name = "produto_pedido", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
-	@Column(name = "produtos_id")
-	private List<ProductEntity> produtos;
-
+	@OneToMany(mappedBy="pedidos")    
+	private List<PurchasesProductsEntity> carrinhos;
+	
 	public Long getId() {
 		return id;
 	}
@@ -93,12 +88,12 @@ public class PurchaseEntity {
 		this.cliente = cliente;
 	}
 
-	public List<ProductEntity> getProdutos() {
-		return produtos;
+	public List<PurchasesProductsEntity> getCarts() {
+		return carrinhos;
 	}
 
-	public void setProdutos(List<ProductEntity> produtos) {
-		this.produtos = produtos;
+	public void setCarts(List<PurchasesProductsEntity> carts) {
+		this.carrinhos = carts;
 	}
 
 }

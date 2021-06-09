@@ -7,28 +7,30 @@ import javax.persistence.Column;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 
-import org.serratec.com.backend.ecommerce.entities.ProductEntity;
+import org.serratec.com.backend.ecommerce.entities.PurchasesProductsEntity;
+
 import org.serratec.com.backend.ecommerce.enums.PurchasesStatus;
 
 public class PurchaseDto {
 
-	@Column(unique=true)
-	private String numeroPedido;
+  private String numeroPedido;
 
-	private Double valorTotal = 0D;
+  private Double valorTotal;
 
-	private LocalDate dataPedido;
+  private LocalDate dataPedido;
 
-	@FutureOrPresent
-	private LocalDate dataEntrega;
+  @FutureOrPresent
+  private LocalDate dataEntrega;
 
-	private PurchasesStatus status;
+  private PurchasesStatus status;
 
-	@NotNull
-	private Long cliente;
+  @NotNull
+  private Long cliente;
 	
-	private List<ProductDto> produtos;
-
+	private List<PurchasesProductsEntity> carrinhos;
+	
+	private List<ProductOrderDto> produto;
+	
 	public String getNumeroPedido() {
 		return numeroPedido;
 	}
@@ -77,4 +79,27 @@ public class PurchaseDto {
 		this.cliente = cliente;
 	}
 
+	public List<PurchasesProductsEntity> getCarrinhos() {
+		return carrinhos;
+	}
+
+	public void setCarrinhos(List<PurchasesProductsEntity> carrinhos) {
+		this.carrinhos = carrinhos;
+	}
+
+	public List<ProductOrderDto> getProduto() {
+		return produto;
+	}
+
+	public void setProduto(List<ProductOrderDto> produto) {
+		this.produto = produto;
+	}
+	
+	@Override
+	public String toString() {
+		return "PurchaseDto [numeroPedido=" + numeroPedido + ", valorTotal=" + valorTotal + ", dataPedido=" + dataPedido
+				+ ", dataEntrega=" + dataEntrega + ", status=" + status + ", cliente=" + cliente + ", carrinhos="
+				+ carrinhos + ", produto=" + produto + "]";
+	}
+	
 }

@@ -1,15 +1,19 @@
 package org.serratec.com.backend.ecommerce.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.serratec.com.backend.ecommerce.entities.ProductEntity;
 import org.serratec.com.backend.ecommerce.entities.PurchaseEntity;
-import org.serratec.com.backend.ecommerce.entities.PurchasesProductsEntity;
+import org.serratec.com.backend.ecommerce.entities.dto.ProductDto;
+import org.serratec.com.backend.ecommerce.entities.dto.ProductOrderDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PurchaseDto;
+import org.serratec.com.backend.ecommerce.entities.dto.PurchasesProductsDto;
 import org.serratec.com.backend.ecommerce.enums.PurchasesStatus;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.mappers.ProductMapper;
 import org.serratec.com.backend.ecommerce.mappers.PurchaseMapper;
 import org.serratec.com.backend.ecommerce.repositories.PurchaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +28,18 @@ public class PurchaseService {
 
 	@Autowired
 	PurchaseMapper mapper;
-
+	
 	@Autowired
-	ClientService cService;
-
+	ProductMapper productMapper;
+	
 	@Autowired
-	PurchasesProductsService pService;
+	ClientService clientService;
+	
+	@Autowired
+	ProductService productService;
+	
+	@Autowired
+	PurchasesProductsService cartService;
 
 	public PurchaseEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
@@ -43,17 +53,15 @@ public class PurchaseService {
 		return mapper.toDto(this.findById(id));
 	}
 
-	public PurchaseDto create(PurchaseDto purchase) throws EntityNotFoundException {
+	public PurchaseEntity create(PurchaseDto purchase) throws EntityNotFoundException {
 		PurchaseEntity entity = mapper.toEntity(purchase);
-		entity.setCliente(cService.findById(purchase.getCliente()));
+		entity.setCliente(clientService.findById(purchase.getCliente()));
 
 		purchase.setStatus(PurchasesStatus.NAO_FINALIZADO);
 
 		purchase.setNumeroPedido(this.generateNumber());
 
-		repository.save(mapper.toEntity(purchase));
-
-		return purchase;
+		return repository.save(mapper.toEntity(purchase));
 	}
 
 	public PurchaseDto update(Long id, PurchaseDto purchaseUpdate) throws EntityNotFoundException {
@@ -106,13 +114,102 @@ public class PurchaseService {
 		}
 
 	}
-
+	
 	private String generateNumber() {
 		String numeroPedido = "";
 		Random number = new Random();
 		for (int i = 1; i <= 8; i++) {
-			numeroPedido += number.nextInt(9);
+			numeroPedido = numeroPedido + number.nextInt(9);
 		}
 		return numeroPedido;
 	}
+	
+	public PurchaseDto order(PurchaseDto purchase) throws EntityNotFoundException {
+		Long idPedido = this.create(purchase).getId();
+		
+		List<ProductDto> produtos = new ArrayList<>();
+		List<PurchasesProductsDto> carrinhos = new ArrayList<>();
+		
+		List<ProductOrderDto> productOrder = purchase.getProduto();
+
+		for (ProductOrderDto productOrderDto : productOrder) {
+			ProductDto dto = productService.getByName(productOrderDto.getNome());
+			dto.setQuantidade(productOrderDto.getQuantidade());
+			
+			produtos.add(dto);
+		}
+		
+		for (ProductDto dto : produtos) {
+			PurchasesProductsDto carrinho= new PurchasesProductsDto();
+			carrinho.setPreco(dto.getPreco());
+			
+			carrinho.setProduto(productService.findByName(dto.getNome()).getId());
+			
+			
+			carrinho.setQuantidade(dto.getQuantidade());
+			carrinho.setPedido(idPedido);
+			carrinhos.add(carrinho);
+		}
+		
+		cartService.create(carrinhos);
+		
+		
+		PurchaseEntity entity = this.findById(idPedido);
+		entity.setValorTotal(cartService.calcularTotal(idPedido));
+		
+		repository.save(entity);
+		return mapper.toDto(entity);
+	}
+	
+	
+	public PurchaseDto updateOrder(Long id, List<ProductOrderDto> produtosCarrinho) throws EntityNotFoundException {
+		
+		List<PurchasesProductsDto> carrinhos = new ArrayList<>();
+		List<ProductDto> produtos = new ArrayList<>();
+		
+		for (ProductOrderDto productOrderDto : produtosCarrinho) {
+			ProductDto dto = productService.getByName(productOrderDto.getNome());
+			dto.setQuantidade(productOrderDto.getQuantidade());
+			
+			produtos.add(dto);
+		}
+		
+		for (ProductDto productDto : produtos) {
+			PurchasesProductsDto produto = new PurchasesProductsDto();
+			produto.setPedido(id);
+			produto.setQuantidade(productDto.getQuantidade());
+			produto.setProduto(productService.findByName(productDto.getNome()).getId());
+			
+			carrinhos.add(produto);
+		}
+		cartService.adicionarProduto(carrinhos);
+		
+		PurchaseEntity entity = this.findById(id);
+		entity.setValorTotal(cartService.calcularTotal(id));
+		
+		repository.save(entity);
+		
+		return mapper.toDto(entity);	
+	}
+	
+//	public PurchaseDto deletarProdutoOrder(Long id, List<ProductOrderDto> produtosCarrinho) throws EntityNotFoundException {
+//		List<PurchasesProductsDto> carrinhos = new ArrayList<>();
+//		List<ProductDto> produtos = new ArrayList<>();
+//		
+//		for (ProductOrderDto productOrderDto : produtosCarrinho) {
+//			ProductDto dto = productService.getByName(productOrderDto.getNome());
+//			dto.setQuantidade(productOrderDto.getQuantidade());
+//			
+//			produtos.add(dto);
+//		}
+//		
+//		for (ProductDto productDto : produtos) {
+//			PurchasesProductsDto produto = new PurchasesProductsDto();
+//			produto.setPedido(id);
+//			produto.setQuantidade(productDto.getQuantidade());
+//			produto.setProduto(productService.findByName(productDto.getNome()).getId());
+//			
+//			carrinhos.add(produto);
+//		}
+//	}
 }

@@ -37,8 +37,8 @@ public class CategoryController {
 	}
 
 	@GetMapping("/nome")
-	public ResponseEntity<List<CategoryDto>> getByName(@RequestParam String nome) {
-		return new ResponseEntity<List<CategoryDto>>(service.getByName(nome), HttpStatus.OK);
+	public ResponseEntity<CategoryDto> getByName(@RequestParam String nome) {
+		return new ResponseEntity<CategoryDto>(service.getByName(nome), HttpStatus.OK);
 	}
 
 	@PostMapping
