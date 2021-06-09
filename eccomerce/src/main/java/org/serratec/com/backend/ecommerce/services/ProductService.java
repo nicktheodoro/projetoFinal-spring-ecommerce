@@ -44,6 +44,10 @@ public class ProductService {
 		return mapper.toDto(repository.findByNome(nome.toLowerCase()));
 	}
 
+	public ProductEntity findByName(String nome) throws EntityNotFoundException{
+		return repository.findByNome(nome.toLowerCase());
+	}
+	
 	public ProductDto create(ProductDto product) throws EntityNotFoundException, ProductException {
 		try {
 			if (product.getNome().isBlank() || product.getPreco() == null || product.getQuantidadeEstoque() == null

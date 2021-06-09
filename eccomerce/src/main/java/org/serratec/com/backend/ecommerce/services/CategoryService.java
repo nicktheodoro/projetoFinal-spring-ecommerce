@@ -36,8 +36,8 @@ public class CategoryService {
 		return mapper.toDto(this.findById(id));
 	}
 	
-	public List<CategoryDto> getByName(String nome) {
-		return mapper.listToDto(repository.findByNome(nome));
+	public CategoryDto getByName(String nome) {
+		return mapper.toDto(repository.findByNome(nome));
 	}
 	
 	

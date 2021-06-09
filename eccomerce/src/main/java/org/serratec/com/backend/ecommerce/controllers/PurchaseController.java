@@ -2,8 +2,8 @@ package org.serratec.com.backend.ecommerce.controllers;
 
 import java.util.List;
 
+import org.serratec.com.backend.ecommerce.entities.dto.ProductOrderDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PurchaseDto;
-import org.serratec.com.backend.ecommerce.entities.dto.PurchasesProductsDto;
 import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.PurchaseService;
@@ -37,13 +37,18 @@ public class PurchaseController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<List<PurchasesProductsDto>> create(@RequestBody PurchaseDto purchase) throws EntityNotFoundException {
-		return new ResponseEntity<List<PurchasesProductsDto>>(service.order(purchase),HttpStatus.CREATED);
+	public ResponseEntity <PurchaseDto> create(@RequestBody PurchaseDto purchase) throws EntityNotFoundException {
+		return new ResponseEntity<PurchaseDto>(service.order(purchase),HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<PurchaseDto> update(@PathVariable Long id, @RequestBody PurchaseDto purchase) throws EntityNotFoundException {
 		return new ResponseEntity<PurchaseDto>(service.update(id, purchase), HttpStatus.ACCEPTED);
+	}
+	
+	@PutMapping("/adicionar/{id}")
+	public ResponseEntity<PurchaseDto> adionarProduto(@PathVariable Long id, @RequestBody List<ProductOrderDto> productOrderDto) throws EntityNotFoundException{
+		return new ResponseEntity<PurchaseDto>(service.updateOrder(id, productOrderDto), HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/{id}")

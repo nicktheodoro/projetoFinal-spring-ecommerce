@@ -36,7 +36,11 @@ public class PurchaseService {
 	
 	@Autowired
 	ProductService productService;
+	
+	@Autowired
+	PurchasesProductsService cartService;
 
+	
 	public PurchaseEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
@@ -92,7 +96,7 @@ public class PurchaseService {
 		return numeroPedido;
 	}
 	
-	public List<PurchasesProductsDto> order(PurchaseDto purchase) throws EntityNotFoundException {
+	public PurchaseDto order(PurchaseDto purchase) throws EntityNotFoundException {
 		Long idPedido = this.create(purchase).getId();
 		
 		List<ProductDto> produtos = new ArrayList<>();
@@ -101,38 +105,83 @@ public class PurchaseService {
 		List<ProductOrderDto> productOrder = purchase.getProduto();
 
 		for (ProductOrderDto productOrderDto : productOrder) {
-			produtos.add(productService.getByName(productOrderDto.getNome()));
+			ProductDto dto = productService.getByName(productOrderDto.getNome());
+			dto.setQuantidade(productOrderDto.getQuantidade());
+			
+			produtos.add(dto);
 		}
 		
 		for (ProductDto dto : produtos) {
 			PurchasesProductsDto carrinho= new PurchasesProductsDto();
 			carrinho.setPreco(dto.getPreco());
-			carrinho.setProduto(productService.mapper.toEntity(dto).getId());
 			
-//			carrinho.setQuantidade(qtd);
+			carrinho.setProduto(productService.findByName(dto.getNome()).getId());
+			
+			
+			carrinho.setQuantidade(dto.getQuantidade());
 			carrinho.setPedido(idPedido);
 			carrinhos.add(carrinho);
 		}
 		
-		return carrinhos;
+		cartService.create(carrinhos);
+		
+		
+		PurchaseEntity entity = this.findById(idPedido);
+		entity.setValorTotal(cartService.calcularTotal(idPedido));
+		
+		repository.save(entity);
+		return mapper.toDto(entity);
 	}
 	
 	
+	public PurchaseDto updateOrder(Long id, List<ProductOrderDto> produtosCarrinho) throws EntityNotFoundException {
+		
+		List<PurchasesProductsDto> carrinhos = new ArrayList<>();
+		List<ProductDto> produtos = new ArrayList<>();
+		
+		for (ProductOrderDto productOrderDto : produtosCarrinho) {
+			ProductDto dto = productService.getByName(productOrderDto.getNome());
+			dto.setQuantidade(productOrderDto.getQuantidade());
+			
+			produtos.add(dto);
+		}
+		
+		for (ProductDto productDto : produtos) {
+			PurchasesProductsDto produto = new PurchasesProductsDto();
+			produto.setPedido(id);
+			produto.setQuantidade(productDto.getQuantidade());
+			produto.setProduto(productService.findByName(productDto.getNome()).getId());
+			
+			carrinhos.add(produto);
+		}
+		cartService.adicionarProduto(carrinhos);
+		
+		PurchaseEntity entity = this.findById(id);
+		entity.setValorTotal(cartService.calcularTotal(id));
+		
+		repository.save(entity);
+		
+		return mapper.toDto(entity);	
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+//	public PurchaseDto deletarProdutoOrder(Long id, List<ProductOrderDto> produtosCarrinho) throws EntityNotFoundException {
+//		List<PurchasesProductsDto> carrinhos = new ArrayList<>();
+//		List<ProductDto> produtos = new ArrayList<>();
+//		
+//		for (ProductOrderDto productOrderDto : produtosCarrinho) {
+//			ProductDto dto = productService.getByName(productOrderDto.getNome());
+//			dto.setQuantidade(productOrderDto.getQuantidade());
+//			
+//			produtos.add(dto);
+//		}
+//		
+//		for (ProductDto productDto : produtos) {
+//			PurchasesProductsDto produto = new PurchasesProductsDto();
+//			produto.setPedido(id);
+//			produto.setQuantidade(productDto.getQuantidade());
+//			produto.setProduto(productService.findByName(productDto.getNome()).getId());
+//			
+//			carrinhos.add(produto);
+//		}
+//	}
 }
