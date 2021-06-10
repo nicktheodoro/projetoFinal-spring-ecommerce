@@ -3,22 +3,22 @@ package org.serratec.com.backend.ecommerce.mappers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.serratec.com.backend.ecommerce.entities.CategoryEntity;
-import org.serratec.com.backend.ecommerce.entities.dto.CategoryDto;
+import org.serratec.com.backend.ecommerce.entities.CategoriaEntity;
+import org.serratec.com.backend.ecommerce.entities.dto.CategoriaDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CategoryMapper {
-	public CategoryEntity toEntity(CategoryDto dto) {
-		CategoryEntity category = new CategoryEntity();
+	public CategoriaEntity toEntity(CategoriaDto dto) {
+		CategoriaEntity category = new CategoriaEntity();
 		category.setNome(dto.getNome());
 		category.setDescricao(dto.getDescricao());
 
 		return category;
 	}
 
-	public CategoryDto toDto(CategoryEntity category) {
-		CategoryDto dto = new CategoryDto();
+	public CategoriaDto toDto(CategoriaEntity category) {
+		CategoriaDto dto = new CategoriaDto();
 		
 		dto.setNome(category.getNome());
 		dto.setDescricao(category.getDescricao());
@@ -26,18 +26,18 @@ public class CategoryMapper {
 		return dto;
 	}
 	
-	public List<CategoryDto> listToDto(List<CategoryEntity> categorias) {
-		List<CategoryDto> list = new ArrayList<>();
-		for (CategoryEntity entity : categorias) {
-			CategoryDto dto = this.toDto(entity);
+	public List<CategoriaDto> listToDto(List<CategoriaEntity> categorias) {
+		List<CategoriaDto> list = new ArrayList<>();
+		for (CategoriaEntity entity : categorias) {
+			CategoriaDto dto = this.toDto(entity);
 			list.add(dto);
 		}
 		return list;
 	}
-	public List<CategoryEntity> listToEntity(List<CategoryDto> categorias) {
-		List<CategoryEntity> list = new ArrayList<>();
-		for (CategoryDto dto : categorias) {
-			CategoryEntity entity = this.toEntity(dto);
+	public List<CategoriaEntity> listToEntity(List<CategoriaDto> categorias) {
+		List<CategoriaEntity> list = new ArrayList<>();
+		for (CategoriaDto dto : categorias) {
+			CategoriaEntity entity = this.toEntity(dto);
 			list.add(entity);
 		}
 		return list;
