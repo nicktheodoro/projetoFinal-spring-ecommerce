@@ -1,14 +1,19 @@
 package org.serratec.com.backend.ecommerce.mappers;
 
-import org.serratec.com.backend.ecommerce.entities.ClientEntity;
-import org.serratec.com.backend.ecommerce.entities.dto.ClientDto;
+import org.serratec.com.backend.ecommerce.entities.ClienteEntity;
+import org.serratec.com.backend.ecommerce.entities.dto.ClienteDto;
+import org.serratec.com.backend.ecommerce.entities.dto.ClienteSimplesDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ClientMapper {
+	
+	@Autowired
+	EnderecoMapper enderecoMapper;
 
-	public ClientEntity toEntity(ClientDto dto) {
-		ClientEntity entity = new ClientEntity();
+	public ClienteEntity toEntity(ClienteDto dto) {
+		ClienteEntity entity = new ClienteEntity();
 		entity.setEmail(dto.getEmail());
 		entity.setUsername(dto.getUsername());
 		entity.setSenha(dto.getSenha());
@@ -21,8 +26,8 @@ public class ClientMapper {
 		return entity;
 	}
 
-	public ClientDto toDto(ClientEntity entity) {
-		ClientDto dto = new ClientDto();
+	public ClienteDto toDto(ClienteEntity entity) {
+		ClienteDto dto = new ClienteDto();
 		dto.setEmail(entity.getEmail());
 		dto.setUsername(entity.getUsername());
 		dto.setSenha(entity.getSenha());
@@ -32,6 +37,20 @@ public class ClientMapper {
 		dto.setDataNascimento(entity.getDataNascimento());
 		dto.setEnderecos(entity.getEnderecos());
 
+		return dto;
+	}
+	
+	public ClienteSimplesDto toSimplesDto(ClienteEntity entity) {
+		ClienteSimplesDto dto = new ClienteSimplesDto();
+		dto.setEmail(entity.getEmail());
+		dto.setUsername(entity.getUsername());
+		dto.setSenha(entity.getSenha());
+		dto.setNome(entity.getNome());
+		dto.setCpf(entity.getCpf());
+		dto.setTelefone(entity.getTelefone());
+		dto.setDataNascimento(entity.getDataNascimento());
+		dto.setEnderecos(enderecoMapper.toListaSimplficadoDto(entity.getEnderecos()));
+		
 		return dto;
 	}
 }
