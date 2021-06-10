@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.ProdutoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ProdutoDto;
+import org.serratec.com.backend.ecommerce.entities.dto.ProdutosPedidosDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,13 @@ public class ProdutoMapper {
 		dto.setCategoria(product.getCategoria().getId());
 //		product.setImagem(dto.getImagem());
 
+		return dto;
+	}
+	
+	public ProdutosPedidosDto toProdutosPedidos(ProdutoEntity entity) {
+		ProdutosPedidosDto dto = new ProdutosPedidosDto();
+		dto.setNome(entity.getNome());
+		
 		return dto;
 	}
 

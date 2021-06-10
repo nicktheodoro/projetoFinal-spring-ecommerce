@@ -63,7 +63,7 @@ public class PedidoController {
 	}
 	
 	@PutMapping("/finalizar-pedido/{numeroPedido}")
-	public ResponseEntity<PedidoDto> finalizarPedido ( @PathVariable String numeroPedido){
+	public ResponseEntity<PedidoDto> finalizarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException{
 		return new ResponseEntity<PedidoDto>(service.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
 	}
 	

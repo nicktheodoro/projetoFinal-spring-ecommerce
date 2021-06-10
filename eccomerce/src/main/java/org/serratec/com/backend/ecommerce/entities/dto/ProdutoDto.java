@@ -37,6 +37,8 @@ public class ProdutoDto {
 
 	@JsonIgnore
 	private Integer quantidade;
+	
+	private String url;
 
 	public String getNome() {
 		return nome;
@@ -100,5 +102,13 @@ public class ProdutoDto {
 
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

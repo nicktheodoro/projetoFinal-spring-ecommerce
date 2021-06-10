@@ -1,5 +1,7 @@
 package org.serratec.com.backend.ecommerce.services;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +13,8 @@ import org.serratec.com.backend.ecommerce.mappers.ProdutoMapper;
 import org.serratec.com.backend.ecommerce.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class ProdutoService {
@@ -23,6 +27,9 @@ public class ProdutoService {
 
 	@Autowired
 	CategoriaService service;
+	
+	@Autowired
+	ImagemService imagemService;
 
 	public ProdutoEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
@@ -48,7 +55,7 @@ public class ProdutoService {
 		return repository.findByNome(nome.toLowerCase());
 	}
 
-	public ProdutoDto create(ProdutoDto product) throws EntityNotFoundException, ProdutoException {
+	public ProdutoDto create(ProdutoDto product, MultipartFile file) throws EntityNotFoundException, ProdutoException, IOException {
 		try {
 			if (product.getNome().isBlank() || product.getPreco() == null || product.getQuantidadeEstoque() == null
 					|| product.getCategoria() == null) {
@@ -58,8 +65,15 @@ public class ProdutoService {
 				product.setNome(product.getNome().toLowerCase());
 				ProdutoEntity entity = mapper.toEntity(product);
 				entity.setCategoria(service.findById(product.getCategoria()));
-
-				return mapper.toDto(repository.save(entity));
+				
+				entity = repository.save(entity);
+				imagemService.create(entity,file);
+				ProdutoDto dto = mapper.toDto(entity);
+				dto.setUrl(criarImagem(entity.getId()));
+				
+				return dto;
+				
+				
 			}
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException("Categoria com id: " + product.getCategoria() + " não existe");
@@ -108,5 +122,12 @@ public class ProdutoService {
 		produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + quantidade);
 		repository.save(produto);
 
+	}
+
+	public String criarImagem(Long id) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("produto/{produtoId}/imagem")
+				.buildAndExpand(id).toUri();
+		return uri.toString();
+		
 	}
 }

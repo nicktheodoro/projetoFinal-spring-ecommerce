@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.serratec.com.backend.ecommerce.configs.MailConfig;
+import org.serratec.com.backend.ecommerce.entities.CarrinhoEntity;
 import org.serratec.com.backend.ecommerce.entities.PedidoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.CarrinhoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PedidoDto;
@@ -17,6 +18,7 @@ import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
 import org.serratec.com.backend.ecommerce.mappers.PedidoMapper;
 import org.serratec.com.backend.ecommerce.mappers.ProdutoMapper;
+import org.serratec.com.backend.ecommerce.repositories.CarrinhoRepository;
 import org.serratec.com.backend.ecommerce.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +29,9 @@ public class PedidoService {
 
 	@Autowired
 	PedidoRepository repository;
+
+	@Autowired
+	CarrinhoRepository carrinhoRepository;
 
 	@Autowired
 	PedidoMapper mapper;
@@ -42,7 +47,7 @@ public class PedidoService {
 
 	@Autowired
 	CarrinhoService cartService;
-	
+
 	@Autowired
 	MailConfig mailconfig;
 
@@ -209,15 +214,28 @@ public class PedidoService {
 		return pedido;
 	}
 
-	public PedidoDto finalizarPedido(String numeroPedido) {
+	public PedidoDto finalizarPedido(String numeroPedido) throws EntityNotFoundException {
 		PedidoEntity entity = repository.findByNumeroPedido(numeroPedido);
+		List<ProdutosPedidosDto> produtos = new ArrayList<>();
+		List<CarrinhoEntity> carrinho = carrinhoRepository.findByPedidos(entity);
+		for (CarrinhoEntity carrinhoEntity : carrinho) {
+			ProdutosPedidosDto produto = productMapper
+					.toProdutosPedidos(productService.findByName(carrinhoEntity.getProdutos().getNome()));
+			produto.setQuantidade(carrinhoEntity.getQuantidade());
+
+			produtos.add(produto);
+		}
 
 		entity.setStatus(StatusCompra.FINALIZADO);
-		
-		String msg="Recebemos seu pedido";
-		
-		mailconfig.sendMail("tgthurler@gmail.com", "Pedido recebido com sucesso", msg);
 
-		return mapper.toDto(repository.save(entity));
+		String msg = "Recebemos seu pedido";
+
+		mailconfig.sendMail(entity.getCliente().getEmail(), "Pedido recebido com sucesso", msg);
+
+		PedidoDto pedido = mapper.toDto(entity);
+		pedido.setProduto(produtos);
+
+		repository.save(entity);
+		return (pedido);
 	}
 }
