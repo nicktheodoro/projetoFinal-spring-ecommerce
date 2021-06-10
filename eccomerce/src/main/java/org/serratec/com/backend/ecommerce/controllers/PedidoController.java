@@ -7,6 +7,7 @@ import org.serratec.com.backend.ecommerce.entities.dto.PedidoDto;
 import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
 import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
 import org.serratec.com.backend.ecommerce.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class PedidoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PedidoDto> create(@RequestBody PedidoDto purchase) throws EntityNotFoundException {
+	public ResponseEntity<PedidoDto> create(@RequestBody PedidoDto purchase) throws EntityNotFoundException, ProdutoException {
 		return new ResponseEntity<PedidoDto>(service.order(purchase), HttpStatus.CREATED);
 	}
 
@@ -48,10 +49,10 @@ public class PedidoController {
 		return new ResponseEntity<PedidoDto>(service.update(id, purchase), HttpStatus.ACCEPTED);
 	}
 
-	@PutMapping("/atualizar/{id}")
-	public ResponseEntity<PedidoDto> adionarProduto(@PathVariable Long id,
+	@PutMapping("/atualizar/{numeroPedido}")
+	public ResponseEntity<PedidoDto> adionarProduto(@PathVariable String numeroPedido,
 			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException {
-		return new ResponseEntity<PedidoDto>(service.updateOrder(id, productOrderDto), HttpStatus.ACCEPTED);
+		return new ResponseEntity<PedidoDto>(service.updateOrder(numeroPedido, productOrderDto), HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/remover-produto-pedido/{numeroPedido}")

@@ -9,6 +9,7 @@ import org.serratec.com.backend.ecommerce.entities.CarrinhoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.CarrinhoDto;
 import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
 import org.serratec.com.backend.ecommerce.mappers.PedidoMapper;
 import org.serratec.com.backend.ecommerce.mappers.CarrinhoMapper;
 import org.serratec.com.backend.ecommerce.repositories.CarrinhoRepository;
@@ -31,7 +32,7 @@ public class CarrinhoService {
 	PedidoService purchaseService;
 
 	@Autowired
-	ProdutoService productService;
+	ProdutoService produtoService;
 
 	public CarrinhoEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
@@ -50,9 +51,10 @@ public class CarrinhoService {
 		return mapper.toDto(this.findById(id));
 	}
 
-	public void create(List<CarrinhoDto> carrinhos) throws EntityNotFoundException {
+	public void create(List<CarrinhoDto> carrinhos) throws EntityNotFoundException, ProdutoException {
 
 		for (CarrinhoDto purchasesProductsDto : carrinhos) {
+			produtoService.removerEstoque(purchasesProductsDto.getProduto(), purchasesProductsDto.getQuantidade());
 			repository.save(mapper.toEntity(purchasesProductsDto));
 		}
 	}

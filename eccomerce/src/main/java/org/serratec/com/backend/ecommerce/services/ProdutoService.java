@@ -40,42 +40,31 @@ public class ProdutoService {
 		return mapper.toDto(this.findById(id));
 	}
 
-	public ProdutoDto getByName(String nome) throws EntityNotFoundException{
+	public ProdutoDto getByName(String nome) throws EntityNotFoundException {
 		return mapper.toDto(repository.findByNome(nome.toLowerCase()));
 	}
 
-	public ProdutoEntity findByName(String nome) throws EntityNotFoundException{
+	public ProdutoEntity findByName(String nome) throws EntityNotFoundException {
 		return repository.findByNome(nome.toLowerCase());
 	}
-	
+
 	public ProdutoDto create(ProdutoDto product) throws EntityNotFoundException, ProdutoException {
 		try {
 			if (product.getNome().isBlank() || product.getPreco() == null || product.getQuantidadeEstoque() == null
 					|| product.getCategoria() == null) {
-				throw new ProdutoException("Os campos Nome, Preço, Quantidade em estoque e categoria são obrigatórios!");
-			}
-			else {
+				throw new ProdutoException(
+						"Os campos Nome, Preço, Quantidade em estoque e categoria são obrigatórios!");
+			} else {
 				product.setNome(product.getNome().toLowerCase());
 				ProdutoEntity entity = mapper.toEntity(product);
 				entity.setCategoria(service.findById(product.getCategoria()));
-				
+
 				return mapper.toDto(repository.save(entity));
-			}	
+			}
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException("Categoria com id: " + product.getCategoria() + " não existe");
 		}
 	}
-	
-//	public List<ProductDto> createList(List<ProductDto> productDto){ // mudar para entity
-//		List<ProductEntity> listProducts= new ArrayList<>();
-//		for (ProductDto product : productDto) {
-//			if(repository.findByNome(product.getNome())!=null) {
-//				listProducts.add(null)
-//			}
-//		}
-//		
-//		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
-//	}
 
 	public ProdutoDto update(Long id, ProdutoDto productUpdate) throws EntityNotFoundException {
 		ProdutoEntity product = this.findById(id);
@@ -88,10 +77,6 @@ public class ProdutoService {
 			product.setDescricao(productUpdate.getDescricao());
 		}
 
-		// Update de imagem
-//		if(dto.getImagem() != null) {
-//			product.setImagem(dto.getImagem());
-//		}	
 		return mapper.toDto(repository.save(product));
 	}
 
@@ -102,6 +87,26 @@ public class ProdutoService {
 			throw new ProdutoException(
 					"Produto com id: " + id + " já vinculado a um ou mais pedidos, favor verificar!");
 		}
+
+	}
+
+	public void removerEstoque(Long idProduto, Integer quantidade) throws EntityNotFoundException, ProdutoException {
+		ProdutoEntity produto = this.findById(idProduto);
+
+		if (quantidade < produto.getQuantidadeEstoque()) {
+			produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - quantidade);
+			repository.save(produto);
+		} else {
+			throw new ProdutoException("Estoque indisponível");
+		}
+
+	}
+
+	public void devolverEstoque(Long idProduto, Integer quantidade) throws EntityNotFoundException, ProdutoException {
+		ProdutoEntity produto = this.findById(idProduto);
+
+		produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + quantidade);
+		repository.save(produto);
 
 	}
 }
