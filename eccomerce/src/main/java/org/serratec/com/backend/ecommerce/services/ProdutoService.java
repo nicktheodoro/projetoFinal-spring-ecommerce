@@ -1,5 +1,7 @@
 package org.serratec.com.backend.ecommerce.services;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,9 +10,17 @@ import org.serratec.com.backend.ecommerce.entities.dto.ProdutoDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
 import org.serratec.com.backend.ecommerce.mappers.ProdutoMapper;
+import org.serratec.com.backend.ecommerce.repositories.CarrinhoRepository;
+import org.serratec.com.backend.ecommerce.repositories.ImagemRepository;
 import org.serratec.com.backend.ecommerce.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+
+
+
 
 @Service
 public class ProdutoService {
@@ -23,6 +33,16 @@ public class ProdutoService {
 
 	@Autowired
 	CategoriaService service;
+
+	@Autowired
+	ImagemService imagemService;
+
+
+	@Autowired
+	ImagemRepository imagemRepository;
+
+	@Autowired
+	CarrinhoRepository carrinhoRepository;
 
 	public ProdutoEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
@@ -48,18 +68,31 @@ public class ProdutoService {
 		return repository.findByNome(nome.toLowerCase());
 	}
 
-	public ProdutoDto create(ProdutoDto product) throws EntityNotFoundException, ProdutoException {
+
+	public ProdutoDto create(ProdutoDto product, MultipartFile file)
+			throws EntityNotFoundException, ProdutoException, IOException {
+
 		try {
 			if (product.getNome().isBlank() || product.getPreco() == null || product.getQuantidadeEstoque() == null
 					|| product.getCategoria() == null) {
 				throw new ProdutoException(
 						"Os campos Nome, Preço, Quantidade em estoque e categoria são obrigatórios!");
 			} else {
-				product.setNome(product.getNome().toLowerCase());
-				ProdutoEntity entity = mapper.toEntity(product);
-				entity.setCategoria(service.findById(product.getCategoria()));
+				if (this.findByName(product.getNome()) != null) {
+					throw new ProdutoException("Produto com o nome: " + product.getNome() + " já cadastrado.");
+				} else {
+					product.setNome(product.getNome().toLowerCase());
+					ProdutoEntity entity = mapper.toEntity(product);
+					entity.setCategoria(service.findById(product.getCategoria()));
 
-				return mapper.toDto(repository.save(entity));
+					entity = repository.save(entity);
+					imagemService.create(entity, file);
+					ProdutoDto dto = mapper.toDto(entity);
+					dto.setUrl(criarImagem(entity.getId()));
+
+					return dto;
+				}
+
 			}
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException("Categoria com id: " + product.getCategoria() + " não existe");
@@ -82,10 +115,15 @@ public class ProdutoService {
 
 	public void delete(Long id) throws EntityNotFoundException, ProdutoException {
 		if (this.findById(id) != null) {
-			repository.deleteById(id);
+			if (carrinhoRepository.findByProdutos(this.findById(id)).isEmpty()) {
+				imagemService.deletarImagemProduto(id);
+				repository.deleteById(id);
+			} else {
+				throw new ProdutoException(
+						"Produto com id: " + id + " já vinculado a um ou mais pedidos, favor verificar!");
+			}
 		} else {
-			throw new ProdutoException(
-					"Produto com id: " + id + " já vinculado a um ou mais pedidos, favor verificar!");
+			throw new EntityNotFoundException("Produto com id: " + id + "não encontrado!");
 		}
 
 	}
@@ -107,6 +145,14 @@ public class ProdutoService {
 
 		produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + quantidade);
 		repository.save(produto);
+
+	}
+
+
+	public String criarImagem(Long id) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("produto/{produtoId}/imagem")
+				.buildAndExpand(id).toUri();
+		return uri.toString();
 
 	}
 }

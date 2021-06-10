@@ -1,5 +1,6 @@
 package org.serratec.com.backend.ecommerce.controllers;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.dto.ProdutoDto;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/produto")
@@ -41,8 +44,9 @@ public class ProdutoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProdutoDto> create(@RequestBody ProdutoDto product) throws EntityNotFoundException, ProdutoException {
-		return new ResponseEntity<ProdutoDto>(service.create(product),HttpStatus.CREATED);
+	public ResponseEntity<ProdutoDto> create(@RequestParam MultipartFile file, @RequestPart ProdutoDto product)
+			throws EntityNotFoundException, ProdutoException, IOException {
+		return new ResponseEntity<ProdutoDto>(service.create(product, file), HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
@@ -53,7 +57,8 @@ public class ProdutoController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, ProdutoException {
 		service.delete(id);
+		
+		return new ResponseEntity<String>("Categoria com id: " + id + " deletada com sucesso!", HttpStatus.OK);
 
-		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.OK);
 	}
 }

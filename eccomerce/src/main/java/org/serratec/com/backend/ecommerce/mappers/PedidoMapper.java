@@ -1,6 +1,7 @@
 package org.serratec.com.backend.ecommerce.mappers;
 
 import org.serratec.com.backend.ecommerce.entities.PedidoEntity;
+import org.serratec.com.backend.ecommerce.entities.dto.CadastroPedidoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PedidoDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.ClienteService;
@@ -36,4 +37,15 @@ public class PedidoMapper {
 
 		return dto;
 	}
+	
+	public CadastroPedidoDto toCadastroPedidoDto(PedidoDto pedido) {
+		CadastroPedidoDto cadastroPedido = new CadastroPedidoDto();
+		cadastroPedido.setNumeroPedido(pedido.getNumeroPedido());
+		cadastroPedido.setCliente(pedido.getCliente());
+		cadastroPedido.setStatus(pedido.getStatus());
+		cadastroPedido.setValorTotal(pedido.getValorTotal());
+		
+		return cadastroPedido;
+	}
+	
 }

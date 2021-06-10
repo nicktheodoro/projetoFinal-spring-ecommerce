@@ -2,11 +2,12 @@ package org.serratec.com.backend.ecommerce.controllers;
 
 import java.util.List;
 
-import org.serratec.com.backend.ecommerce.entities.dto.ProdutosPedidosDto;
+import org.serratec.com.backend.ecommerce.entities.dto.CadastroPedidoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PedidoDto;
+import org.serratec.com.backend.ecommerce.entities.dto.ProdutosPedidosDto;
 import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
-import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.exceptions.PedidoException;
 import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
 import org.serratec.com.backend.ecommerce.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +40,15 @@ public class PedidoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PedidoDto> create(@RequestBody PedidoDto purchase) throws EntityNotFoundException, ProdutoException {
-		return new ResponseEntity<PedidoDto>(service.order(purchase), HttpStatus.CREATED);
+	public ResponseEntity<CadastroPedidoDto> create(@RequestBody PedidoDto purchase) throws EntityNotFoundException, ProdutoException {
+		return new ResponseEntity<CadastroPedidoDto>(service.order(purchase), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<PedidoDto> update(@PathVariable Long id, @RequestBody PedidoDto purchase)
-			throws EntityNotFoundException {
-		return new ResponseEntity<PedidoDto>(service.update(id, purchase), HttpStatus.ACCEPTED);
-	}
+//	@PutMapping("/{id}")
+//	public ResponseEntity<PedidoDto> update(@PathVariable Long id, @RequestBody PedidoDto purchase)
+//			throws EntityNotFoundException {
+//		return new ResponseEntity<PedidoDto>(service.update(id, purchase), HttpStatus.ACCEPTED);
+//	}
 
 	@PutMapping("/atualizar/{numeroPedido}")
 	public ResponseEntity<PedidoDto> adionarProduto(@PathVariable String numeroPedido,
@@ -64,9 +65,9 @@ public class PedidoController {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id)
-			throws EntityNotFoundException, DataIntegrityViolationException {
+			throws EntityNotFoundException, PedidoException {
 		service.delete(id);
-		return new ResponseEntity<String>("Categoria com id: " + id + " deletada com sucesso!", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<String>("Pedido com id: " + id + " deletado com sucesso!", HttpStatus.OK);
 	}
 
 }

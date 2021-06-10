@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 
 import org.serratec.com.backend.ecommerce.entities.CarrinhoEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ProdutoDto {
 
 	@NotBlank
@@ -29,13 +31,15 @@ public class ProdutoDto {
 
 	@NotNull
 	private LocalDate dataCadastro = LocalDate.now();
-	// Adicionar imagens
-	// private String imagem;
 
+	@JsonIgnore
 	private List<CarrinhoEntity> carrinhos;
 
+	@JsonIgnore
 	private Integer quantidade;
 	
+	private String url;
+
 	public String getNome() {
 		return nome;
 	}
@@ -75,14 +79,15 @@ public class ProdutoDto {
 	public void setCategoria(Long categoria) {
 		this.categoria = categoria;
 	}
+
 	public LocalDate getDataCadastro() {
 		return dataCadastro;
 	}
-	
+
 	public void setDataCadastro(LocalDate dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
-	
+
 	public List<CarrinhoEntity> getCarrinhos() {
 		return carrinhos;
 	}
@@ -97,5 +102,13 @@ public class ProdutoDto {
 
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }
