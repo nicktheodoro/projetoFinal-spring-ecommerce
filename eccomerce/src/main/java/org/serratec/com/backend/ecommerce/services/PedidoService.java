@@ -5,17 +5,18 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.serratec.com.backend.ecommerce.configs.MailConfig;
 import org.serratec.com.backend.ecommerce.entities.PedidoEntity;
+import org.serratec.com.backend.ecommerce.entities.dto.CarrinhoDto;
+import org.serratec.com.backend.ecommerce.entities.dto.PedidoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.ProdutoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.ProdutosPedidosDto;
-import org.serratec.com.backend.ecommerce.entities.dto.PedidoDto;
-import org.serratec.com.backend.ecommerce.entities.dto.CarrinhoDto;
 import org.serratec.com.backend.ecommerce.enums.StatusCompra;
 import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
-import org.serratec.com.backend.ecommerce.mappers.ProdutoMapper;
 import org.serratec.com.backend.ecommerce.mappers.PedidoMapper;
+import org.serratec.com.backend.ecommerce.mappers.ProdutoMapper;
 import org.serratec.com.backend.ecommerce.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -41,6 +42,9 @@ public class PedidoService {
 
 	@Autowired
 	CarrinhoService cartService;
+	
+	@Autowired
+	MailConfig mailconfig;
 
 	public PedidoEntity findById(Long id) throws EntityNotFoundException {
 		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
@@ -133,7 +137,11 @@ public class PedidoService {
 		entity.setValorTotal(cartService.calcularTotal(idPedido));
 
 		repository.save(entity);
-		return mapper.toDto(entity);
+
+		PedidoDto pedido = mapper.toDto(entity);
+		pedido.setProduto(purchase.getProduto());
+
+		return pedido;
 	}
 
 	public PedidoDto updateOrder(String numeroPedido, List<ProdutosPedidosDto> produtosCarrinho)
@@ -164,7 +172,11 @@ public class PedidoService {
 
 		repository.save(entity);
 
-		return mapper.toDto(entity);
+		PedidoDto pedido = mapper.toDto(entity);
+		pedido.setProduto(produtosCarrinho);
+
+		return pedido;
+
 	}
 
 	public PedidoDto deletarProdutoOrder(String numeroPedido, List<ProdutosPedidosDto> produtosCarrinho)
@@ -191,6 +203,21 @@ public class PedidoService {
 
 		repository.save(entity);
 
-		return mapper.toDto(entity);
+		PedidoDto pedido = mapper.toDto(entity);
+		pedido.setProduto(produtosCarrinho);
+
+		return pedido;
+	}
+
+	public PedidoDto finalizarPedido(String numeroPedido) {
+		PedidoEntity entity = repository.findByNumeroPedido(numeroPedido);
+
+		entity.setStatus(StatusCompra.FINALIZADO);
+		
+		String msg="Recebemos seu pedido";
+		
+		mailconfig.sendMail("tgthurler@gmail.com", "Pedido recebido com sucesso", msg);
+
+		return mapper.toDto(repository.save(entity));
 	}
 }

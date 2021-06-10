@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class ClienteSimplesDto {
-	
+
 	private String email;
 	private String username;
 	private String senha;
@@ -12,7 +12,7 @@ public class ClienteSimplesDto {
 	private String cpf;
 	private String telefone;
 	private LocalDate dataNascimento;
-	private List<EnderecoSimplesDto> enderecos;
+	private List<CadastroUsuarioDto> enderecos;
 
 	public String getEmail() {
 		return email;
@@ -70,11 +70,11 @@ public class ClienteSimplesDto {
 		this.dataNascimento = dataNascimento;
 	}
 
-	public List<EnderecoSimplesDto> getEnderecos() {
+	public List<CadastroUsuarioDto> getEnderecos() {
 		return enderecos;
 	}
 
-	public void setEnderecos(List<EnderecoSimplesDto> enderecos) {
+	public void setEnderecos(List<CadastroUsuarioDto> enderecos) {
 		this.enderecos = enderecos;
 	}
 

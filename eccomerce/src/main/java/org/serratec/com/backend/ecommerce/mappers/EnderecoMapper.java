@@ -3,7 +3,9 @@ package org.serratec.com.backend.ecommerce.mappers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.serratec.com.backend.ecommerce.entities.ClienteEntity;
 import org.serratec.com.backend.ecommerce.entities.EnderecoEntity;
+import org.serratec.com.backend.ecommerce.entities.dto.CadastroUsuarioDto;
 import org.serratec.com.backend.ecommerce.entities.dto.EnderecoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.EnderecoSimplesDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
@@ -53,7 +55,7 @@ public class EnderecoMapper {
 
 		return dto;
 	}
-	
+
 	public EnderecoEntity simplesDtoToEntity(EnderecoSimplesDto enderecoSimples) {
 		EnderecoEntity entity = new EnderecoEntity();
 		entity.setCep(enderecoSimples.getCep());
@@ -66,12 +68,36 @@ public class EnderecoMapper {
 
 		return entity;
 	}
+	
+	public CadastroUsuarioDto entityToCadastro(EnderecoEntity entity) {
+		CadastroUsuarioDto dto = new CadastroUsuarioDto();
+		dto.setBairro(entity.getBairro());
+		dto.setCep(entity.getCep());
+		dto.setComplemento(entity.getComplemento());
+		dto.setLocalidade(entity.getCidade());
+		dto.setLogradouro(entity.getRua());
+		dto.setNumero(entity.getNumero());
+		dto.setUf(entity.getEstado());
+		
+		return dto;
+	}
 
 	public List<EnderecoSimplesDto> toListaSimplficadoDto(List<EnderecoEntity> enderecos) {
 		List<EnderecoSimplesDto> lista = new ArrayList<>();
 
 		for (EnderecoEntity enderecoEntity : enderecos) {
 			EnderecoSimplesDto dto = this.toSimplificadoDto(enderecoEntity);
+			lista.add(dto);
+		}
+
+		return lista;
+	}
+	
+	public List<CadastroUsuarioDto> toListCadastroDto(List<EnderecoEntity> enderecos) {
+		List<CadastroUsuarioDto> lista = new ArrayList<>();
+
+		for (EnderecoEntity enderecoEntity : enderecos) {
+			CadastroUsuarioDto dto = this.entityToCadastro(enderecoEntity);
 			lista.add(dto);
 		}
 
@@ -99,15 +125,16 @@ public class EnderecoMapper {
 
 		return list;
 	}
-	
+
 	public List<EnderecoEntity> listaSimplficadaToEntity(List<EnderecoSimplesDto> enderecoSimples) {
 		List<EnderecoEntity> list = new ArrayList<>();
-		
+
 		for (EnderecoSimplesDto enderecoDto : enderecoSimples) {
 			EnderecoEntity entity = this.simplesDtoToEntity(enderecoDto);
 			list.add(entity);
 		}
-		
+
 		return list;
 	}
+
 }

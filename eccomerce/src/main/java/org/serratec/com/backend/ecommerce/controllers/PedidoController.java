@@ -55,12 +55,18 @@ public class PedidoController {
 		return new ResponseEntity<PedidoDto>(service.updateOrder(numeroPedido, productOrderDto), HttpStatus.ACCEPTED);
 	}
 
-	@PutMapping("/remover-produto-pedido/{numeroPedido}")
-	public ResponseEntity<PedidoDto> delete(@PathVariable String numeroPedido,
+	@PutMapping("/remover-produto/{numeroPedido}")
+	public ResponseEntity<PedidoDto> remover(@PathVariable String numeroPedido,
 			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException, CarrinhoException {
 		service.deletarProdutoOrder(numeroPedido, productOrderDto);
 		return new ResponseEntity<PedidoDto>(service.deletarProdutoOrder(numeroPedido, productOrderDto), HttpStatus.OK);
 	}
+	
+	@PutMapping("/finalizar-pedido/{numeroPedido}")
+	public ResponseEntity<PedidoDto> finalizarPedido ( @PathVariable String numeroPedido){
+		return new ResponseEntity<PedidoDto>(service.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
+	}
+	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id)
