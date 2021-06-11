@@ -1,5 +1,6 @@
 package org.serratec.com.backend.ecommerce.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,23 +72,51 @@ public class EnderecoService {
 		ClienteEntity cliente = clienteRepository.findByUsername(username);
 		List<EnderecoEntity> listaEnderecos = cliente.getEnderecos();
 
-		for (EnderecoEntity endereco : listaEnderecos) {
+		List<EnderecoEntity> listaRetorno = new ArrayList<>();
 
-			for (EnderecoDto enderecoDto : enderecoAtualizado) {
-				if (endereco.getCep().equals(enderecoDto.getCep())) {
-					endereco.setNumero(enderecoDto.getNumero());
-					endereco.setComplemento(enderecoDto.getComplemento());
-					enderecoRepository.save(endereco);
-					listaEnderecos.add(endereco);
+		if (enderecoAtualizado.size() > 0) {
+			for (EnderecoDto dto : enderecoAtualizado) {
+
+				if (listaEnderecos.size() > 0) {
+
+					for (EnderecoEntity enderecoEntity : listaEnderecos) {
+
+						if (enderecoRepository.findByCepAndClienteId(dto.getCep(), cliente.getId()) == null) {
+							EnderecoDto enderecoDto = this.getCep(dto.getCep());
+							enderecoDto.setComplemento(dto.getComplemento());
+							enderecoDto.setCliente(cliente);
+							enderecoDto.setNumero(dto.getNumero());
+
+							enderecoRepository.save(enderecoMapper.toEntity(enderecoDto));
+							listaRetorno.add(enderecoEntity);
+						}
+
+						if (enderecoEntity.getCep().equals(dto.getCep())) {
+							enderecoEntity.setComplemento(dto.getComplemento());
+							enderecoEntity.setNumero(dto.getNumero());
+							enderecoRepository.save(enderecoEntity);
+
+							if (!listaRetorno.contains(enderecoEntity)) {
+								listaRetorno.add(enderecoEntity);
+							}
+						}
+
+					}
+
+				} else {
+					EnderecoDto enderecoDto = this.getCep(dto.getCep());
+					enderecoDto.setComplemento(dto.getComplemento());
+					enderecoDto.setNumero(dto.getNumero());
+					enderecoDto.setCliente(cliente);
+
+					enderecoRepository.save(enderecoMapper.toEntity(enderecoDto));
+					listaRetorno.add(enderecoMapper.toEntity(enderecoDto));
 				}
-			}
 
-			enderecoRepository
-					.save(enderecoMapper.toEntity(this.setEndereco(enderecoMapper.toDto(endereco), cliente.getId())));
-			listaEnderecos.add(endereco);
+			}
 		}
 
-		return enderecoMapper.listToDto(listaEnderecos);
+		return enderecoMapper.listToDto(listaRetorno);
 
 	}
 
