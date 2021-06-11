@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.dto.CadastroPedidoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PedidoDto;
+import org.serratec.com.backend.ecommerce.entities.dto.PedidoFinalizadoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.ProdutosPedidosDto;
 import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
@@ -61,8 +62,8 @@ public class PedidoController {
 	}
 	
 	@PutMapping("/finalizar-pedido/{numeroPedido}")
-	public ResponseEntity<PedidoDto> finalizarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException{
-		return new ResponseEntity<PedidoDto>(pedidoService.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
+	public ResponseEntity<PedidoFinalizadoDto> finalizarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException{
+		return new ResponseEntity<PedidoFinalizadoDto>(pedidoService.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
 	}
 	
 
