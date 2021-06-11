@@ -6,6 +6,8 @@ import javax.validation.constraints.Size;
 
 import org.serratec.com.backend.ecommerce.entities.ClienteEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class EnderecoDto {
 
 	@NotBlank(message = "{nome.not.blank}")
@@ -30,6 +32,7 @@ public class EnderecoDto {
 	@Column(name = "estado")
 	private String uf;
 
+	@JsonIgnore
 	private ClienteEntity cliente;
 
 	public String getCep() {

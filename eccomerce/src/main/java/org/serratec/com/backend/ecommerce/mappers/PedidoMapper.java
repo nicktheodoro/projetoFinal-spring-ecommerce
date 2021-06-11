@@ -3,6 +3,7 @@ package org.serratec.com.backend.ecommerce.mappers;
 import org.serratec.com.backend.ecommerce.entities.PedidoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.CadastroPedidoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PedidoDto;
+import org.serratec.com.backend.ecommerce.entities.dto.PedidoFinalizadoDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,6 @@ public class PedidoMapper {
 	public PedidoEntity toEntity(PedidoDto dto) throws EntityNotFoundException {
 		PedidoEntity entity = new PedidoEntity();
 		entity.setNumeroPedido(dto.getNumeroPedido());
-		entity.setDataEntrega(dto.getDataEntrega());
-		entity.setDataPedido(dto.getDataPedido());
 		entity.setCliente(clienteService.findById(dto.getCliente()));
 		entity.setStatus(dto.getStatus());
 		entity.setValorTotal(dto.getValorTotal());
@@ -29,8 +28,6 @@ public class PedidoMapper {
 	public PedidoDto toDto(PedidoEntity entity) {
 		PedidoDto dto = new PedidoDto();
 		dto.setNumeroPedido(entity.getNumeroPedido());
-		dto.setDataEntrega(entity.getDataEntrega());
-		dto.setDataPedido(entity.getDataPedido());
 		dto.setCliente(entity.getCliente().getId());
 		dto.setStatus(entity.getStatus());
 		dto.setValorTotal(entity.getValorTotal());
@@ -46,6 +43,18 @@ public class PedidoMapper {
 		cadastroPedidoDto.setValorTotal(pedidoDto.getValorTotal());
 		
 		return cadastroPedidoDto;
+	}
+	
+	public PedidoFinalizadoDto toPedidoFinalizadoDto(PedidoEntity pedido) {
+		PedidoFinalizadoDto dto = new PedidoFinalizadoDto();
+		dto.setNumeroPedido(pedido.getNumeroPedido());
+		dto.setDataPedido(pedido.getDataPedido());
+		dto.setDataEntrega(pedido.getDataEntrega());
+		dto.setCliente(pedido.getCliente().getId());
+		dto.setStatus(pedido.getStatus());
+		dto.setValorTotal(pedido.getValorTotal());
+
+		return dto;
 	}
 	
 }

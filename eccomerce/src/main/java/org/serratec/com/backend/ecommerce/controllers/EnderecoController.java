@@ -43,10 +43,10 @@ public class EnderecoController {
 		return new ResponseEntity<EnderecoSimplesDto>(enderecoService.create(dto, id), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<EnderecoDto> update(@PathVariable Long id, @Valid @RequestBody EnderecoDto dto)
+	@PutMapping("/{username}")
+	public ResponseEntity<List<EnderecoDto>> update(@PathVariable String username, @Valid @RequestBody List<EnderecoDto> dto)
 			throws EntityNotFoundException {
-		return new ResponseEntity<EnderecoDto>(enderecoService.update(id, dto), HttpStatus.ACCEPTED);
+		return new ResponseEntity<List<EnderecoDto>>(enderecoService.update(username, dto), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/{id}")

@@ -10,6 +10,7 @@ import org.serratec.com.backend.ecommerce.entities.dto.EnderecoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.EnderecoSimplesDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.EnderecoMapper;
+import org.serratec.com.backend.ecommerce.repositories.ClienteRepository;
 import org.serratec.com.backend.ecommerce.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,13 @@ public class EnderecoService {
 	@Autowired
 	ClienteService clienteService;
 
+	@Autowired
+	ClienteRepository clienteRepository;
+
 	public List<EnderecoSimplesDto> getAll() {
 		return enderecoMapper.toListaSimplficadoDto(enderecoRepository.findAll());
 	}
-	
+
 	public EnderecoEntity findById(Long id) throws EntityNotFoundException {
 		return enderecoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
@@ -55,44 +59,54 @@ public class EnderecoService {
 			enderecoRepository.save(enderecoMapper.toEntity(endDto));
 		}
 
-		return enderecoMapper.toListaSimplficadoDto(enderecoRepository.findAll());
+		enderecoMapper.toListaSimplficadoDto(enderecoRepository.findByCliente(clienteService.findById(idCliente)));
+
+		return enderecoMapper
+				.toListaSimplficadoDto(enderecoRepository.findByCliente(clienteService.findById(idCliente)));
 	}
 
-	public EnderecoDto update(Long id, EnderecoDto enderecoUpdate) throws EntityNotFoundException {
-		EnderecoEntity enderecoEntity = this.findById(id);
-		enderecoEntity.setNumero(enderecoUpdate.getNumero());
+	public List<EnderecoDto> update(String username, List<EnderecoDto> enderecoAtualizado) // terminar update
+			throws EntityNotFoundException {
 
-		if (enderecoUpdate != null) {
-			enderecoEntity.setComplemento(enderecoUpdate.getComplemento());
+		ClienteEntity cliente = clienteRepository.findByUsername(username);
+		List<EnderecoEntity> listaEnderecos = cliente.getEnderecos();
+
+		for (EnderecoEntity endereco : listaEnderecos) {
+
+			for (EnderecoDto enderecoDto : enderecoAtualizado) {
+				if (endereco.getCep().equals(enderecoDto.getCep())) {
+					endereco.setNumero(enderecoDto.getNumero());
+					endereco.setComplemento(enderecoDto.getComplemento());
+					enderecoRepository.save(endereco);
+					listaEnderecos.add(endereco);
+				}
+			}
+
+			enderecoRepository
+					.save(enderecoMapper.toEntity(this.setEndereco(enderecoMapper.toDto(endereco), cliente.getId())));
+			listaEnderecos.add(endereco);
 		}
 
-		enderecoUpdate = this.getCep(enderecoUpdate.getCep());
-		enderecoEntity.setCep(enderecoUpdate.getCep());
-		enderecoEntity.setBairro(enderecoUpdate.getBairro());
-		enderecoEntity.setCidade(enderecoUpdate.getLocalidade());
-		enderecoEntity.setEstado(enderecoUpdate.getUf());
-		enderecoEntity.setRua(enderecoUpdate.getLogradouro());
+		return enderecoMapper.listToDto(listaEnderecos);
 
-		return enderecoMapper.toDto(enderecoRepository.save(enderecoEntity));
 	}
 
 	public void delete(Long id) throws EntityNotFoundException {
-		
-		if (this.findById(id) != null) {	
+
+		if (this.findById(id) != null) {
 			enderecoRepository.deleteById(id);
 		}
 
 	}
-	
+
 	public void deleteAll(ClienteEntity clienteEntity) {
 		List<EnderecoEntity> enderecosEntity = enderecoRepository.findByCliente(clienteEntity);
-		
+
 		for (EnderecoEntity enderecoEntity : enderecosEntity) {
 			enderecoRepository.delete(enderecoEntity);
 		}
-		
-	}
 
+	}
 
 	public EnderecoDto setEndereco(EnderecoDto enderecoDto, Long idCliente) throws EntityNotFoundException {
 		EnderecoDto endDto = this.getCep(enderecoDto.getCep());

@@ -1,9 +1,7 @@
 package org.serratec.com.backend.ecommerce.entities.dto;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 
 import org.serratec.com.backend.ecommerce.entities.CarrinhoEntity;
@@ -13,25 +11,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PedidoDto {
 
-  private String numeroPedido;
+	private String numeroPedido;
 
-  private Double valorTotal;
+	private Double valorTotal;
 
-  private LocalDate dataPedido;
+	private StatusCompra status;
 
-  @FutureOrPresent
-  private LocalDate dataEntrega;
+	@NotNull
+	private Long cliente;
 
-  private StatusCompra status;
-
-  @NotNull
-  private Long cliente;
-	
-  	@JsonIgnore
+	@JsonIgnore
 	private List<CarrinhoEntity> carrinhos;
-	
+
 	private List<ProdutosPedidosDto> produto;
-	
+
 	public String getNumeroPedido() {
 		return numeroPedido;
 	}
@@ -46,22 +39,6 @@ public class PedidoDto {
 
 	public void setValorTotal(Double valorTotal) {
 		this.valorTotal = valorTotal;
-	}
-
-	public LocalDate getDataPedido() {
-		return dataPedido;
-	}
-
-	public void setDataPedido(LocalDate dataPedido) {
-		this.dataPedido = dataPedido;
-	}
-
-	public LocalDate getDataEntrega() {
-		return dataEntrega;
-	}
-
-	public void setDataEntrega(LocalDate dataEntrega) {
-		this.dataEntrega = dataEntrega;
 	}
 
 	public StatusCompra getStatus() {
@@ -95,5 +72,5 @@ public class PedidoDto {
 	public void setProduto(List<ProdutosPedidosDto> produto) {
 		this.produto = produto;
 	}
-	
+
 }

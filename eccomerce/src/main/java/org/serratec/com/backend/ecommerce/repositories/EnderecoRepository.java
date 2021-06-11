@@ -6,8 +6,8 @@ import org.serratec.com.backend.ecommerce.entities.ClienteEntity;
 import org.serratec.com.backend.ecommerce.entities.EnderecoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Long>{
-	
+public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Long> {
+
 	List<EnderecoEntity> findByCliente(ClienteEntity clienteEntity);
-	
+
 }

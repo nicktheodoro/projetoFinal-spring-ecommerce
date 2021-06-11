@@ -7,12 +7,12 @@ import org.serratec.com.backend.ecommerce.entities.ClienteEntity;
 import org.serratec.com.backend.ecommerce.entities.EnderecoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ClienteDto;
 import org.serratec.com.backend.ecommerce.entities.dto.ClienteSimplesDto;
+import org.serratec.com.backend.ecommerce.exceptions.ClienteException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.ClienteMapper;
 import org.serratec.com.backend.ecommerce.mappers.EnderecoMapper;
 import org.serratec.com.backend.ecommerce.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +23,9 @@ public class ClienteService {
 
 	@Autowired
 	EnderecoService enderecoService;
+
+	@Autowired
+	PedidoService pedidoService;
 
 	@Autowired
 	ClienteMapper clienteMapper;
@@ -38,15 +41,21 @@ public class ClienteService {
 		return clienteMapper.toDto(this.findById(id));
 	}
 
-	public ClienteSimplesDto create(ClienteDto clienteDto) throws EntityNotFoundException {
-		ClienteEntity clienteEntity = clienteMapper.toEntity(clienteDto);
-		ClienteEntity savedClienteEntity = clienteRepository.save(clienteEntity);
+	public ClienteSimplesDto create(ClienteDto clienteDto) throws EntityNotFoundException, ClienteException {
+		if (this.findByCpf(clienteDto.getCpf()) != null
+				|| clienteRepository.findByEmail(clienteDto.getEmail()).size() != 0
+				|| clienteRepository.findByUsername(clienteDto.getUsername()) != null) {
+			throw new ClienteException("CPF ou Email ou UserName já cadastrado");
+		} else {
+			ClienteEntity clienteEntity = clienteMapper.toEntity(clienteDto);
+			ClienteEntity savedClienteEntity = clienteRepository.save(clienteEntity);
 
-		List<EnderecoEntity> listaEnderecosEntity = enderecoMapper.listaSimplficadaToEntity(enderecoService
-				.criarPeloCliente(enderecoMapper.listToDto(clienteDto.getEnderecos()), savedClienteEntity.getId()));
-		savedClienteEntity.setEnderecos(listaEnderecosEntity);
+			List<EnderecoEntity> listaEnderecosEntity = enderecoMapper.listaSimplficadaToEntity(enderecoService
+					.criarPeloCliente(enderecoMapper.listToDto(clienteDto.getEnderecos()), savedClienteEntity.getId()));
+			savedClienteEntity.setEnderecos(listaEnderecosEntity);
 
-		return clienteMapper.toSimplesDto(savedClienteEntity);
+			return clienteMapper.toSimplesDto(savedClienteEntity);
+		}
 	}
 
 	public ClienteDto update(Long id, ClienteDto clienteUpdate) throws EntityNotFoundException {
@@ -62,18 +71,26 @@ public class ClienteService {
 		return clienteMapper.toDto(clienteRepository.save(clienteEntity));
 	}
 
-	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
+	public void delete(String cpf) throws EntityNotFoundException, ClienteException {
 
-		if (this.findById(id) != null) {
-			enderecoService.deleteAll(this.findById(id));
+		if (this.findByCpf(cpf) != null) {
+			if (pedidoService.getByCliente(this.findByCpf(cpf)).isEmpty()) {
+				Long id = this.findByCpf(cpf).getId();
+				enderecoService.deleteAll(this.findById(id));
+				clienteRepository.deleteById(id);
+			} else {
+				throw new ClienteException("O cliente com cpf " + cpf + "possui pedidos vinculados. Favor verificar");
+			}
 		}
-
-		clienteRepository.deleteById(id);
-
 	}
 
 	public ClienteEntity findById(Long id) throws EntityNotFoundException {
-		return clienteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
+		return clienteRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Cliente com id: " + id + " não encontrado."));
+	}
+
+	public ClienteEntity findByCpf(String cpf) {
+		return clienteRepository.findByCpf(cpf);
 	}
 
 }

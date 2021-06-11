@@ -6,7 +6,7 @@ import javax.validation.Valid;
 
 import org.serratec.com.backend.ecommerce.entities.dto.ClienteDto;
 import org.serratec.com.backend.ecommerce.entities.dto.ClienteSimplesDto;
-import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
+import org.serratec.com.backend.ecommerce.exceptions.ClienteException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class ClienteController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ClienteSimplesDto> create(@Valid @RequestBody ClienteDto dto) throws EntityNotFoundException {
+	public ResponseEntity<ClienteSimplesDto> create(@Valid @RequestBody ClienteDto dto) throws EntityNotFoundException, ClienteException {
 		return new ResponseEntity<ClienteSimplesDto>(clienteService.create(dto), HttpStatus.CREATED);
 	}
 
@@ -49,9 +49,9 @@ public class ClienteController {
 		return new ResponseEntity<ClienteDto>(clienteService.update(id, dto), HttpStatus.ACCEPTED);
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
-		clienteService.delete(id);
-		return new ResponseEntity<String>("Cliente com " + id +" deletado com sucesso!", HttpStatus.OK);
+	@DeleteMapping("/{cpf}")
+	public ResponseEntity<String> delete(@PathVariable String cpf) throws EntityNotFoundException, ClienteException {
+		clienteService.delete(cpf);
+		return new ResponseEntity<String>("Cliente com CPF" + cpf +" deletado com sucesso!", HttpStatus.OK);
 	}
 }
