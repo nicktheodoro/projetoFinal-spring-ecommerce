@@ -59,7 +59,10 @@ public class EnderecoService {
 			enderecoRepository.save(enderecoMapper.toEntity(endDto));
 		}
 
-		return enderecoMapper.toListaSimplficadoDto(enderecoRepository.findAll());
+		enderecoMapper.toListaSimplficadoDto(enderecoRepository.findByCliente(clienteService.findById(idCliente)));
+
+		return enderecoMapper
+				.toListaSimplficadoDto(enderecoRepository.findByCliente(clienteService.findById(idCliente)));
 	}
 
 	public List<EnderecoDto> update(String username, List<EnderecoDto> enderecoAtualizado) // terminar update
@@ -71,13 +74,12 @@ public class EnderecoService {
 		for (EnderecoEntity endereco : listaEnderecos) {
 
 			for (EnderecoDto enderecoDto : enderecoAtualizado) {
-				if (endereco.getCep() == enderecoDto.getCep()) {
-					endereco.setComplemento(enderecoDto.getComplemento());
+				if (endereco.getCep().equals(enderecoDto.getCep())) {
 					endereco.setNumero(enderecoDto.getNumero());
-
+					endereco.setComplemento(enderecoDto.getComplemento());
 					enderecoRepository.save(endereco);
+					listaEnderecos.add(endereco);
 				}
-
 			}
 
 			enderecoRepository
