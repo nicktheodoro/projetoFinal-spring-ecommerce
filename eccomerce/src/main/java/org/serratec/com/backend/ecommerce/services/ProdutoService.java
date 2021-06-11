@@ -18,25 +18,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
-
-
-
 @Service
 public class ProdutoService {
 
 	@Autowired
-	ProdutoRepository repository;
+	ProdutoRepository produtoRepository;
 
 	@Autowired
-	ProdutoMapper mapper;
+	ProdutoMapper produtoMapper;
 
 	@Autowired
-	CategoriaService service;
+	CategoriaService categoriaService;
 
 	@Autowired
 	ImagemService imagemService;
-
 
 	@Autowired
 	ImagemRepository imagemRepository;
@@ -45,79 +40,78 @@ public class ProdutoService {
 	CarrinhoRepository carrinhoRepository;
 
 	public ProdutoEntity findById(Long id) throws EntityNotFoundException {
-		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
+		return produtoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
 
 	public List<ProdutoEntity> findByCategoriaId(Long idCategoria) {
-		return repository.findByCategoriaId(idCategoria);
+		return produtoRepository.findByCategoriaId(idCategoria);
 	}
 
 	public List<ProdutoDto> getAll() {
-		return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+		return produtoRepository.findAll().stream().map(produtoMapper::toDto).collect(Collectors.toList());
 	}
 
 	public ProdutoDto getById(Long id) throws EntityNotFoundException {
-		return mapper.toDto(this.findById(id));
+		return produtoMapper.toDto(this.findById(id));
 	}
 
 	public ProdutoDto getByName(String nome) throws EntityNotFoundException {
-		return mapper.toDto(repository.findByNome(nome.toLowerCase()));
+		return produtoMapper.toDto(produtoRepository.findByNome(nome.toLowerCase()));
 	}
 
 	public ProdutoEntity findByName(String nome) throws EntityNotFoundException {
-		return repository.findByNome(nome.toLowerCase());
+		return produtoRepository.findByNome(nome.toLowerCase());
 	}
 
-
-	public ProdutoDto create(ProdutoDto product, MultipartFile file)
+	public ProdutoDto create(ProdutoDto produtoDto, MultipartFile file)
 			throws EntityNotFoundException, ProdutoException, IOException {
 
 		try {
-			if (product.getNome().isBlank() || product.getPreco() == null || product.getQuantidadeEstoque() == null
-					|| product.getCategoria() == null) {
+			if (produtoDto.getNome().isBlank() || produtoDto.getPreco() == null || produtoDto.getQuantidadeEstoque() == null
+					|| produtoDto.getCategoria() == null) {
 				throw new ProdutoException(
 						"Os campos Nome, Preço, Quantidade em estoque e categoria são obrigatórios!");
 			} else {
-				if (this.findByName(product.getNome()) != null) {
-					throw new ProdutoException("Produto com o nome: " + product.getNome() + " já cadastrado.");
+				if (this.findByName(produtoDto.getNome()) != null) {
+					throw new ProdutoException("Produto com o nome: " + produtoDto.getNome() + " já cadastrado.");
 				} else {
-					product.setNome(product.getNome().toLowerCase());
-					ProdutoEntity entity = mapper.toEntity(product);
-					entity.setCategoria(service.findById(product.getCategoria()));
+					produtoDto.setNome(produtoDto.getNome().toLowerCase());
+					ProdutoEntity produtoEntity = produtoMapper.toEntity(produtoDto);
+					produtoEntity.setCategoria(categoriaService.findById(produtoDto.getCategoria()));
 
-					entity = repository.save(entity);
-					imagemService.create(entity, file);
-					ProdutoDto dto = mapper.toDto(entity);
-					dto.setUrl(criarImagem(entity.getId()));
+					produtoEntity = produtoRepository.save(produtoEntity);
+					imagemService.create(produtoEntity, file);
+					ProdutoDto pDto = produtoMapper.toDto(produtoEntity);
+					pDto.setUrl(criarImagem(produtoEntity.getId()));
 
-					return dto;
+					return pDto;
 				}
 
 			}
 		} catch (EntityNotFoundException e) {
-			throw new EntityNotFoundException("Categoria com id: " + product.getCategoria() + " não existe");
+			throw new EntityNotFoundException("Categoria com id: " + produtoDto.getCategoria() + " não existe");
 		}
 	}
 
-	public ProdutoDto update(Long id, ProdutoDto productUpdate) throws EntityNotFoundException {
-		ProdutoEntity product = this.findById(id);
-		product.setNome(productUpdate.getNome());
-		product.setPreco(productUpdate.getPreco());
-		product.setQuantidadeEstoque(productUpdate.getQuantidadeEstoque());
-		product.setCategoria(service.findById(productUpdate.getCategoria()));
+	public ProdutoDto update(Long id, ProdutoDto produtoUpdate) throws EntityNotFoundException {
+		ProdutoEntity produtoEntity = this.findById(id);
+		produtoEntity.setNome(produtoUpdate.getNome());
+		produtoEntity.setPreco(produtoUpdate.getPreco());
+		produtoEntity.setQuantidadeEstoque(produtoUpdate.getQuantidadeEstoque());
+		produtoEntity.setCategoria(categoriaService.findById(produtoUpdate.getCategoria()));
 
-		if (productUpdate.getDescricao() != null) {
-			product.setDescricao(productUpdate.getDescricao());
+		if (produtoUpdate.getDescricao() != null) {
+			produtoEntity.setDescricao(produtoUpdate.getDescricao());
 		}
 
-		return mapper.toDto(repository.save(product));
+		return produtoMapper.toDto(produtoRepository.save(produtoEntity));
 	}
 
 	public void delete(Long id) throws EntityNotFoundException, ProdutoException {
 		if (this.findById(id) != null) {
 			if (carrinhoRepository.findByProdutos(this.findById(id)).isEmpty()) {
 				imagemService.deletarImagemProduto(id);
-				repository.deleteById(id);
+				produtoRepository.deleteById(id);
 			} else {
 				throw new ProdutoException(
 						"Produto com id: " + id + " já vinculado a um ou mais pedidos, favor verificar!");
@@ -129,11 +123,11 @@ public class ProdutoService {
 	}
 
 	public void removerEstoque(Long idProduto, Integer quantidade) throws EntityNotFoundException, ProdutoException {
-		ProdutoEntity produto = this.findById(idProduto);
+		ProdutoEntity produtoEntity = this.findById(idProduto);
 
-		if (quantidade < produto.getQuantidadeEstoque()) {
-			produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - quantidade);
-			repository.save(produto);
+		if (quantidade < produtoEntity.getQuantidadeEstoque()) {
+			produtoEntity.setQuantidadeEstoque(produtoEntity.getQuantidadeEstoque() - quantidade);
+			produtoRepository.save(produtoEntity);
 		} else {
 			throw new ProdutoException("Estoque indisponível");
 		}
@@ -141,13 +135,12 @@ public class ProdutoService {
 	}
 
 	public void devolverEstoque(Long idProduto, Integer quantidade) throws EntityNotFoundException, ProdutoException {
-		ProdutoEntity produto = this.findById(idProduto);
+		ProdutoEntity produtoEntity = this.findById(idProduto);
 
-		produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + quantidade);
-		repository.save(produto);
+		produtoEntity.setQuantidadeEstoque(produtoEntity.getQuantidadeEstoque() + quantidade);
+		produtoRepository.save(produtoEntity);
 
 	}
-
 
 	public String criarImagem(Long id) {
 		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("produto/{produtoId}/imagem")

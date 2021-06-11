@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 public class CarrinhoMapper {
 	
 	@Autowired
-	ProdutoService productService;
+	ProdutoService produtoService;
 	
 	@Autowired
-	PedidoService purchaseService;
+	PedidoService pedidoService;
 	
 	public CarrinhoEntity toEntity(CarrinhoDto dto) throws EntityNotFoundException {
 		CarrinhoEntity entity = new CarrinhoEntity();
 		entity.setPreco(dto.getPreco());
 		entity.setQuantidade(dto.getQuantidade());
-		entity.setProdutos(productService.findById(dto.getProduto()));
-		entity.setPedidos(purchaseService.findById(dto.getPedido()));
+		entity.setProdutos(produtoService.findById(dto.getProduto()));
+		entity.setPedidos(pedidoService.findById(dto.getPedido()));
 
 		return entity;
 	}

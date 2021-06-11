@@ -8,7 +8,7 @@ import org.serratec.com.backend.ecommerce.entities.EnderecoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ClienteDto;
 import org.serratec.com.backend.ecommerce.entities.dto.ClienteSimplesDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
-import org.serratec.com.backend.ecommerce.mappers.ClientMapper;
+import org.serratec.com.backend.ecommerce.mappers.ClienteMapper;
 import org.serratec.com.backend.ecommerce.mappers.EnderecoMapper;
 import org.serratec.com.backend.ecommerce.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,62 +19,61 @@ import org.springframework.stereotype.Service;
 public class ClienteService {
 
 	@Autowired
-	ClienteRepository repository;
+	ClienteRepository clienteRepository;
 
 	@Autowired
 	EnderecoService enderecoService;
 
 	@Autowired
-	ClientMapper clientMapper;
+	ClienteMapper clienteMapper;
 
 	@Autowired
-	EnderecoMapper addressMapper;
+	EnderecoMapper enderecoMapper;
 
 	public List<ClienteDto> getAll() {
-		return repository.findAll().stream().map(clientMapper::toDto).collect(Collectors.toList());
+		return clienteRepository.findAll().stream().map(clienteMapper::toDto).collect(Collectors.toList());
 	}
 
 	public ClienteDto getById(Long id) throws EntityNotFoundException {
-		return clientMapper.toDto(this.findById(id));
+		return clienteMapper.toDto(this.findById(id));
 	}
 
-	//verificar retorno null ClienteSimplesDto
-	public ClienteSimplesDto create(ClienteDto dto) throws EntityNotFoundException {
-		ClienteEntity entity = clientMapper.toEntity(dto);
-		ClienteEntity savedEntity = repository.save(entity);
+	public ClienteSimplesDto create(ClienteDto clienteDto) throws EntityNotFoundException {
+		ClienteEntity clienteEntity = clienteMapper.toEntity(clienteDto);
+		ClienteEntity savedClienteEntity = clienteRepository.save(clienteEntity);
 
-		List<EnderecoEntity> enderecos = addressMapper.listaSimplficadaToEntity(
-				enderecoService.criarPeloCliente(addressMapper.listToDto(dto.getEnderecos()), savedEntity.getId()));
-		savedEntity.setEnderecos(enderecos);
-		
-		return clientMapper.toSimplesDto(savedEntity);
+		List<EnderecoEntity> listaEnderecosEntity = enderecoMapper.listaSimplficadaToEntity(enderecoService
+				.criarPeloCliente(enderecoMapper.listToDto(clienteDto.getEnderecos()), savedClienteEntity.getId()));
+		savedClienteEntity.setEnderecos(listaEnderecosEntity);
+
+		return clienteMapper.toSimplesDto(savedClienteEntity);
 	}
 
-	public ClienteDto update(Long id, ClienteDto clientUpdate) throws EntityNotFoundException {
-		ClienteEntity client = this.findById(id);
+	public ClienteDto update(Long id, ClienteDto clienteUpdate) throws EntityNotFoundException {
+		ClienteEntity clienteEntity = this.findById(id);
 
-		client.setUsername(clientUpdate.getUsername());
-		client.setSenha(clientUpdate.getSenha());
-		client.setNome(clientUpdate.getNome());
-		client.setCpf(clientUpdate.getCpf());
-		client.setTelefone(clientUpdate.getTelefone());
-		client.setDataNascimento(clientUpdate.getDataNascimento());
+		clienteEntity.setUsername(clienteUpdate.getUsername());
+		clienteEntity.setSenha(clienteUpdate.getSenha());
+		clienteEntity.setNome(clienteUpdate.getNome());
+		clienteEntity.setCpf(clienteUpdate.getCpf());
+		clienteEntity.setTelefone(clienteUpdate.getTelefone());
+		clienteEntity.setDataNascimento(clienteUpdate.getDataNascimento());
 
-		return clientMapper.toDto(repository.save(client));
+		return clienteMapper.toDto(clienteRepository.save(clienteEntity));
 	}
 
 	public void delete(Long id) throws EntityNotFoundException, DataIntegrityViolationException {
-		
+
 		if (this.findById(id) != null) {
 			enderecoService.deleteAll(this.findById(id));
 		}
-		
-		repository.deleteById(id);
+
+		clienteRepository.deleteById(id);
 
 	}
 
 	public ClienteEntity findById(Long id) throws EntityNotFoundException {
-		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
+		return clienteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
 
 }

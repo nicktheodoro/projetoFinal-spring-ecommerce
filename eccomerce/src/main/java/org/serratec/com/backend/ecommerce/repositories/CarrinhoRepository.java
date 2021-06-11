@@ -8,7 +8,7 @@ import org.serratec.com.backend.ecommerce.entities.ProdutoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CarrinhoRepository extends JpaRepository<CarrinhoEntity, Long> {
-	List<CarrinhoEntity> findByPedidos(PedidoEntity pedidos);
+	List<CarrinhoEntity> findByPedidos(PedidoEntity pedidosEntity);
 	
-	List<CarrinhoEntity> findByProdutos(ProdutoEntity produtos);
+	List<CarrinhoEntity> findByProdutos(ProdutoEntity produtosEntity);
 }

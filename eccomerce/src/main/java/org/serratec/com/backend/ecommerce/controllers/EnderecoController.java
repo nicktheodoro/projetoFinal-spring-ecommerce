@@ -26,32 +26,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class EnderecoController {
 
 	@Autowired
-	EnderecoService service;
+	EnderecoService enderecoService;
 
 	@GetMapping
 	public ResponseEntity<List<EnderecoSimplesDto>> getAll() {
-		return new ResponseEntity<List<EnderecoSimplesDto>>(service.getAll(), HttpStatus.OK);
+		return new ResponseEntity<List<EnderecoSimplesDto>>(enderecoService.getAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<EnderecoSimplesDto> getOne(@PathVariable Long id) throws EntityNotFoundException {
-		return new ResponseEntity<EnderecoSimplesDto>(service.getById(id), HttpStatus.OK);
+		return new ResponseEntity<EnderecoSimplesDto>(enderecoService.getById(id), HttpStatus.OK);
 	}
 
 	@PostMapping("/{id}")
 	public ResponseEntity<EnderecoSimplesDto> create(@Valid @RequestBody EnderecoDto dto, @PathVariable Long id) throws EntityNotFoundException {
-		return new ResponseEntity<EnderecoSimplesDto>(service.create(dto, id), HttpStatus.CREATED);
+		return new ResponseEntity<EnderecoSimplesDto>(enderecoService.create(dto, id), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<EnderecoDto> update(@PathVariable Long id, @Valid @RequestBody EnderecoDto dto)
 			throws EntityNotFoundException {
-		return new ResponseEntity<EnderecoDto>(service.update(id, dto), HttpStatus.ACCEPTED);
+		return new ResponseEntity<EnderecoDto>(enderecoService.update(id, dto), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
-		service.delete(id);
+		enderecoService.delete(id);
 		return new ResponseEntity<String>("Endereço deletado com sucesso!", HttpStatus.OK);
 	}
 

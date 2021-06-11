@@ -27,46 +27,42 @@ import org.springframework.web.bind.annotation.RestController;
 public class PedidoController {
 
 	@Autowired
-	PedidoService service;
+	PedidoService pedidoService;
 
 	@GetMapping
 	public ResponseEntity<List<PedidoDto>> getAll() {
-		return new ResponseEntity<List<PedidoDto>>(service.getAll(), HttpStatus.OK);
+		return new ResponseEntity<List<PedidoDto>>(pedidoService.getAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{numeroPedido}")
 	public ResponseEntity<PedidoDto> getById(@PathVariable String numeroPedido) throws EntityNotFoundException {
-		return new ResponseEntity<PedidoDto>(service.getByNumeroPedido(numeroPedido), HttpStatus.OK);
+		return new ResponseEntity<PedidoDto>(pedidoService.getByNumeroPedido(numeroPedido), HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<CadastroPedidoDto> create(@RequestBody PedidoDto purchase) throws EntityNotFoundException, ProdutoException {
-		return new ResponseEntity<CadastroPedidoDto>(service.order(purchase), HttpStatus.CREATED);
+	public ResponseEntity<CadastroPedidoDto> create(@RequestBody PedidoDto purchase)
+			throws EntityNotFoundException, ProdutoException {
+		return new ResponseEntity<CadastroPedidoDto>(pedidoService.order(purchase), HttpStatus.CREATED);
 	}
-
-//	@PutMapping("/{id}")
-//	public ResponseEntity<PedidoDto> update(@PathVariable Long id, @RequestBody PedidoDto purchase)
-//			throws EntityNotFoundException {
-//		return new ResponseEntity<PedidoDto>(service.update(id, purchase), HttpStatus.ACCEPTED);
-//	}
 
 	@PutMapping("/atualizar/{numeroPedido}")
 	public ResponseEntity<PedidoDto> adionarProduto(@PathVariable String numeroPedido,
 			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException {
-		return new ResponseEntity<PedidoDto>(service.updateOrder(numeroPedido, productOrderDto), HttpStatus.ACCEPTED);
+		return new ResponseEntity<PedidoDto>(pedidoService.updateOrder(numeroPedido, productOrderDto),
+				HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/remover-produto-pedido/{numeroPedido}")
 	public ResponseEntity<PedidoDto> delete(@PathVariable String numeroPedido,
 			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException, CarrinhoException {
-		service.deletarProdutoOrder(numeroPedido, productOrderDto);
-		return new ResponseEntity<PedidoDto>(service.deletarProdutoOrder(numeroPedido, productOrderDto), HttpStatus.OK);
+		pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto);
+		return new ResponseEntity<PedidoDto>(pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto),
+				HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id)
-			throws EntityNotFoundException, PedidoException {
-		service.delete(id);
+	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, PedidoException {
+		pedidoService.delete(id);
 		return new ResponseEntity<String>("Pedido com id: " + id + " deletado com sucesso!", HttpStatus.OK);
 	}
 

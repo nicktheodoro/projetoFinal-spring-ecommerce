@@ -26,32 +26,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClienteController {
 
 	@Autowired
-	ClienteService service;
+	ClienteService clienteService;
 
 	@GetMapping
 	public ResponseEntity<List<ClienteDto>> getAll() {
-		return new ResponseEntity<List<ClienteDto>>(service.getAll(), HttpStatus.OK);
+		return new ResponseEntity<List<ClienteDto>>(clienteService.getAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ClienteDto> getById(@PathVariable Long id) throws EntityNotFoundException {
-		return new ResponseEntity<ClienteDto>(service.getById(id), HttpStatus.OK);
+		return new ResponseEntity<ClienteDto>(clienteService.getById(id), HttpStatus.OK);
 	}
 
 	@PostMapping
 	public ResponseEntity<ClienteSimplesDto> create(@Valid @RequestBody ClienteDto dto) throws EntityNotFoundException {
-		return new ResponseEntity<ClienteSimplesDto>(service.create(dto), HttpStatus.CREATED);
+		return new ResponseEntity<ClienteSimplesDto>(clienteService.create(dto), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<ClienteDto> update(@PathVariable Long id, @Valid @RequestBody ClienteDto dto)
 			throws EntityNotFoundException {
-		return new ResponseEntity<ClienteDto>(service.update(id, dto), HttpStatus.ACCEPTED);
+		return new ResponseEntity<ClienteDto>(clienteService.update(id, dto), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
-		service.delete(id);
+		clienteService.delete(id);
 		return new ResponseEntity<String>("Cliente com " + id +" deletado com sucesso!", HttpStatus.OK);
 	}
 }
