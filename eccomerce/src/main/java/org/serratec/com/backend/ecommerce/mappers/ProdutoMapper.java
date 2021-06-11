@@ -15,30 +15,28 @@ import org.springframework.stereotype.Component;
 public class ProdutoMapper {
 
 	@Autowired
-	CategoriaService service;
-	
-  public ProdutoEntity toEntity(ProdutoDto dto) throws EntityNotFoundException {
-		ProdutoEntity product = new ProdutoEntity();
-		product.setNome(dto.getNome());
-		product.setDescricao(dto.getDescricao());
-		product.setPreco(dto.getPreco());
-		product.setQuantidadeEstoque(dto.getQuantidadeEstoque());
-		product.setDataCadastro(dto.getDataCadastro());
-		product.setCategoria(service.findById(dto.getCategoria()));
-//		product.setImagem(dto.getImagem());
+	CategoriaService categoriaService;
 
-		return product;
+	public ProdutoEntity toEntity(ProdutoDto dto) throws EntityNotFoundException {
+		ProdutoEntity entity = new ProdutoEntity();
+		entity.setNome(dto.getNome());
+		entity.setDescricao(dto.getDescricao());
+		entity.setPreco(dto.getPreco());
+		entity.setQuantidadeEstoque(dto.getQuantidadeEstoque());
+		entity.setDataCadastro(dto.getDataCadastro());
+		entity.setCategoria(categoriaService.findById(dto.getCategoria()));
+
+		return entity;
 	}
 
-	public ProdutoDto toDto(ProdutoEntity product) {
+	public ProdutoDto toDto(ProdutoEntity entity) {
 		ProdutoDto dto = new ProdutoDto();
-		dto.setNome(product.getNome());
-		dto.setDescricao(product.getDescricao());
-		dto.setPreco(product.getPreco());
-		dto.setQuantidadeEstoque(product.getQuantidadeEstoque());
-		dto.setDataCadastro(product.getDataCadastro());
-		dto.setCategoria(product.getCategoria().getId());
-//		product.setImagem(dto.getImagem());
+		dto.setNome(entity.getNome());
+		dto.setDescricao(entity.getDescricao());
+		dto.setPreco(entity.getPreco());
+		dto.setQuantidadeEstoque(entity.getQuantidadeEstoque());
+		dto.setDataCadastro(entity.getDataCadastro());
+		dto.setCategoria(entity.getCategoria().getId());
 
 		return dto;
 	}
@@ -50,20 +48,21 @@ public class ProdutoMapper {
 		return dto;
 	}
 
-	public List<ProdutoDto> listToDto(List<ProdutoEntity> produtos) {
-		List<ProdutoDto> list = new ArrayList<>();
-		for (ProdutoEntity entity : produtos) {
+	public List<ProdutoDto> listToDto(List<ProdutoEntity> listaEntity) {
+		List<ProdutoDto> listaDto = new ArrayList<>();
+		for (ProdutoEntity entity : listaEntity) {
 			ProdutoDto dto = this.toDto(entity);
-			list.add(dto);
+			listaDto.add(dto);
 		}
-		return list;
+		return listaDto;
 	}
-	public List<ProdutoEntity> listToEntity(List<ProdutoDto> produtos) throws EntityNotFoundException {
-		List<ProdutoEntity> list = new ArrayList<>();
-		for (ProdutoDto dto : produtos) {
+
+	public List<ProdutoEntity> listToEntity(List<ProdutoDto> listaDto) throws EntityNotFoundException {
+		List<ProdutoEntity> listaEntity = new ArrayList<>();
+		for (ProdutoDto dto : listaDto) {
 			ProdutoEntity entity = this.toEntity(dto);
-			list.add(entity);
+			listaEntity.add(entity);
 		}
-		return list;
+		return listaEntity;
 	}
 }

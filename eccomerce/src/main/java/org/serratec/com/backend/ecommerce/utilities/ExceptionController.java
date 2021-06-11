@@ -5,6 +5,7 @@ package org.serratec.com.backend.ecommerce.utilities;
 import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
 import org.serratec.com.backend.ecommerce.exceptions.CategoriaException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.exceptions.PedidoException;
 import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -49,9 +50,13 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 		return ResponseEntity.badRequest().headers(this.header(e)).build();
 	}
 	
+	@ExceptionHandler(PedidoException.class)
+	public ResponseEntity<String> handlerPedidoException(PedidoException e) {
+		return ResponseEntity.badRequest().headers(this.header(e)).build();
+	}
+	
 	@ExceptionHandler(CarrinhoException.class)
 	public ResponseEntity<String> handlerCarrinhoException(CarrinhoException e) {
 		return ResponseEntity.badRequest().headers(this.header(e)).build();
 	}
-	
 }

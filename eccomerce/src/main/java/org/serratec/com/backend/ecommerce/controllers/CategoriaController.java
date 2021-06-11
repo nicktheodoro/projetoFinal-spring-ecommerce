@@ -24,37 +24,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoriaController {
 
 	@Autowired
-	CategoriaService service;
+	CategoriaService categoriaService;
 
 	@GetMapping
 	public ResponseEntity<List<CategoriaDto>> getAll() {
-		return new ResponseEntity<List<CategoriaDto>>(service.getAll(), HttpStatus.OK);
+		return new ResponseEntity<List<CategoriaDto>>(categoriaService.getAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<CategoriaDto> getById(@PathVariable Long id) throws EntityNotFoundException {
-		return new ResponseEntity<CategoriaDto>(service.getById(id), HttpStatus.OK);
+		return new ResponseEntity<CategoriaDto>(categoriaService.getById(id), HttpStatus.OK);
 	}
 
 	@GetMapping("/nome")
 	public ResponseEntity<CategoriaDto> getByName(@RequestParam String nome) {
-		return new ResponseEntity<CategoriaDto>(service.getByName(nome), HttpStatus.OK);
+		return new ResponseEntity<CategoriaDto>(categoriaService.getByName(nome), HttpStatus.OK);
 	}
 
 	@PostMapping
 	public ResponseEntity<CategoriaDto> create(@RequestBody CategoriaDto category) throws CategoriaException {
-		return new ResponseEntity<CategoriaDto>(service.create(category), HttpStatus.CREATED);
+		return new ResponseEntity<CategoriaDto>(categoriaService.create(category), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<CategoriaDto> update(@PathVariable Long id, @RequestBody CategoriaDto category)
 			throws EntityNotFoundException {
-		return new ResponseEntity<CategoriaDto>(service.update(id, category), HttpStatus.ACCEPTED);
+		return new ResponseEntity<CategoriaDto>(categoriaService.update(id, category), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, CategoriaException {
-		service.delete(id);
+		categoriaService.delete(id);
 		return new ResponseEntity<String>("Categoria com id: " + id +" deletada com sucesso!", HttpStatus.OK);
 	}
 }

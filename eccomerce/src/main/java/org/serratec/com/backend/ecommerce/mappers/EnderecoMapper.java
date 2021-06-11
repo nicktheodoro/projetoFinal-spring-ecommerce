@@ -3,7 +3,6 @@ package org.serratec.com.backend.ecommerce.mappers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.serratec.com.backend.ecommerce.entities.ClienteEntity;
 import org.serratec.com.backend.ecommerce.entities.EnderecoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.CadastroUsuarioDto;
 import org.serratec.com.backend.ecommerce.entities.dto.EnderecoDto;
@@ -42,33 +41,33 @@ public class EnderecoMapper {
 		return dto;
 	}
 
-	public EnderecoSimplesDto toSimplificadoDto(EnderecoEntity endereco) {
+	public EnderecoSimplesDto toSimplificadoDto(EnderecoEntity entity) {
 		EnderecoSimplesDto dto = new EnderecoSimplesDto();
-		dto.setCep(endereco.getCep());
-		dto.setLogradouro(endereco.getRua());
-		dto.setBairro(endereco.getBairro());
-		dto.setLocalidade(endereco.getCidade());
-		dto.setNumero(endereco.getNumero());
-		dto.setComplemento(endereco.getComplemento());
-		dto.setUf(endereco.getEstado());
-		dto.setNomeCliente(endereco.getCliente().getNome());
+		dto.setCep(entity.getCep());
+		dto.setLogradouro(entity.getRua());
+		dto.setBairro(entity.getBairro());
+		dto.setLocalidade(entity.getCidade());
+		dto.setNumero(entity.getNumero());
+		dto.setComplemento(entity.getComplemento());
+		dto.setUf(entity.getEstado());
+		dto.setNomeCliente(entity.getCliente().getNome());
 
 		return dto;
 	}
 
-	public EnderecoEntity simplesDtoToEntity(EnderecoSimplesDto enderecoSimples) {
+	public EnderecoEntity simplesDtoToEntity(EnderecoSimplesDto dto) {
 		EnderecoEntity entity = new EnderecoEntity();
-		entity.setCep(enderecoSimples.getCep());
-		entity.setRua(enderecoSimples.getLogradouro());
-		entity.setBairro(enderecoSimples.getBairro());
-		entity.setCidade(enderecoSimples.getLocalidade());
-		entity.setNumero(enderecoSimples.getNumero());
-		entity.setComplemento(enderecoSimples.getComplemento());
-		entity.setEstado(enderecoSimples.getUf());
+		entity.setCep(dto.getCep());
+		entity.setRua(dto.getLogradouro());
+		entity.setBairro(dto.getBairro());
+		entity.setCidade(dto.getLocalidade());
+		entity.setNumero(dto.getNumero());
+		entity.setComplemento(dto.getComplemento());
+		entity.setEstado(dto.getUf());
 
 		return entity;
 	}
-	
+
 	public CadastroUsuarioDto entityToCadastro(EnderecoEntity entity) {
 		CadastroUsuarioDto dto = new CadastroUsuarioDto();
 		dto.setBairro(entity.getBairro());
@@ -78,21 +77,21 @@ public class EnderecoMapper {
 		dto.setLogradouro(entity.getRua());
 		dto.setNumero(entity.getNumero());
 		dto.setUf(entity.getEstado());
-		
+
 		return dto;
 	}
 
-	public List<EnderecoSimplesDto> toListaSimplficadoDto(List<EnderecoEntity> enderecos) {
-		List<EnderecoSimplesDto> lista = new ArrayList<>();
+	public List<EnderecoSimplesDto> toListaSimplficadoDto(List<EnderecoEntity> listaEntity) {
+		List<EnderecoSimplesDto> listaDto = new ArrayList<>();
 
-		for (EnderecoEntity enderecoEntity : enderecos) {
-			EnderecoSimplesDto dto = this.toSimplificadoDto(enderecoEntity);
-			lista.add(dto);
+		for (EnderecoEntity entity : listaEntity) {
+			EnderecoSimplesDto dto = this.toSimplificadoDto(entity);
+			listaDto.add(dto);
 		}
 
-		return lista;
+		return listaDto;
 	}
-	
+
 	public List<CadastroUsuarioDto> toListCadastroDto(List<EnderecoEntity> enderecos) {
 		List<CadastroUsuarioDto> lista = new ArrayList<>();
 
@@ -104,37 +103,37 @@ public class EnderecoMapper {
 		return lista;
 	}
 
-	public List<EnderecoDto> listToDto(List<EnderecoEntity> enderecos) {
-		List<EnderecoDto> list = new ArrayList<>();
+	public List<EnderecoDto> listToDto(List<EnderecoEntity> listaEntity) {
+		List<EnderecoDto> listaDto = new ArrayList<>();
 
-		for (EnderecoEntity entity : enderecos) {
+		for (EnderecoEntity entity : listaEntity) {
 			EnderecoDto dto = this.toDto(entity);
-			list.add(dto);
+			listaDto.add(dto);
 		}
 
-		return list;
+		return listaDto;
 	}
 
-	public List<EnderecoEntity> listToEntity(List<EnderecoDto> enderecos) throws EntityNotFoundException {
-		List<EnderecoEntity> list = new ArrayList<>();
+	public List<EnderecoEntity> listToEntity(List<EnderecoDto> listaDto) throws EntityNotFoundException {
+		List<EnderecoEntity> listaEntity = new ArrayList<>();
 
-		for (EnderecoDto dto : enderecos) {
+		for (EnderecoDto dto : listaDto) {
 			EnderecoEntity entity = this.toEntity(dto);
-			list.add(entity);
+			listaEntity.add(entity);
 		}
 
-		return list;
+		return listaEntity;
 	}
 
-	public List<EnderecoEntity> listaSimplficadaToEntity(List<EnderecoSimplesDto> enderecoSimples) {
-		List<EnderecoEntity> list = new ArrayList<>();
+	public List<EnderecoEntity> listaSimplficadaToEntity(List<EnderecoSimplesDto> listaDto) {
+		List<EnderecoEntity> listaEntity = new ArrayList<>();
 
-		for (EnderecoSimplesDto enderecoDto : enderecoSimples) {
-			EnderecoEntity entity = this.simplesDtoToEntity(enderecoDto);
-			list.add(entity);
+		for (EnderecoSimplesDto dto : listaDto) {
+			EnderecoEntity entity = this.simplesDtoToEntity(dto);
+			listaEntity.add(entity);
 		}
 
-		return list;
+		return listaEntity;
 	}
 
 }

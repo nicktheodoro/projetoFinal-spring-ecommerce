@@ -13,22 +13,29 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ImagemService {
+	
 	@Autowired
-	ImagemRepository repository;
+	ImagemRepository imagemRepository;
 	
 	@Transactional
-	public ImagemEntity create(ProdutoEntity entity, MultipartFile file) throws IOException {
-		ImagemEntity imagem = new ImagemEntity();
-		imagem.setProduto(entity);
-		imagem.setData(file.getBytes());
-		imagem.setMimeType(file.getContentType());
-		imagem.setNome("Imagem");
-		return repository.save(imagem);
+	public ImagemEntity create(ProdutoEntity produtoEntity, MultipartFile file) throws IOException {
+		ImagemEntity imagemEntity = new ImagemEntity();
+		imagemEntity.setProduto(produtoEntity);
+		imagemEntity.setData(file.getBytes());
+		imagemEntity.setMimeType(file.getContentType());
+		imagemEntity.setNome("Imagem");
+		return imagemRepository.save(imagemEntity);
 	}
 	
 	@Transactional
 	public ImagemEntity getImagem(Long id) {
-		ImagemEntity imageClient = repository.findByProdutoId(id);
-		return imageClient;
+		ImagemEntity imagemEntity = imagemRepository.findByProdutoId(id);
+		return imagemEntity;
+	}
+	
+	@Transactional
+	public void deletarImagemProduto(Long id) {
+		ImagemEntity imagemEntity = imagemRepository.findByProdutoId(id);
+		imagemRepository.delete(imagemEntity);
 	}
 }

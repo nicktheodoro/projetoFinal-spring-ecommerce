@@ -30,51 +30,51 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProdutoController {
 
 	@Autowired
-	ProdutoService service;
-	
+	ProdutoService produtoService;
+
 	@Autowired
 	ImagemService imagemService;
 
 	@GetMapping
 	public ResponseEntity<List<ProdutoDto>> getAll() {
-		return new ResponseEntity<List<ProdutoDto>>(service.getAll(), HttpStatus.OK);
+		return new ResponseEntity<List<ProdutoDto>>(produtoService.getAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ProdutoDto> getById(@PathVariable Long id) throws EntityNotFoundException {
-		return new ResponseEntity<ProdutoDto>(service.getById(id), HttpStatus.OK);
+		return new ResponseEntity<ProdutoDto>(produtoService.getById(id), HttpStatus.OK);
 	}
 
 	@GetMapping("/nome")
 	public ResponseEntity<ProdutoDto> getByName(@RequestParam String nome) throws EntityNotFoundException {
-		return new ResponseEntity<ProdutoDto>(service.getByName(nome), HttpStatus.OK);
+		return new ResponseEntity<ProdutoDto>(produtoService.getByName(nome), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{id}/imagem")
-	public ResponseEntity <byte[]> getImage(@PathVariable Long id){
+	public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
 		ImagemEntity imagem = imagemService.getImagem(id);
 		HttpHeaders header = new HttpHeaders();
 		header.add("content-length", String.valueOf(imagem.getData().length));
 		header.add("content-type", imagem.getMimeType());
-		return new ResponseEntity<byte[]>(imagemService.getImagem(id).getData(),header, HttpStatus.OK);
+		return new ResponseEntity<byte[]>(imagemService.getImagem(id).getData(), header, HttpStatus.OK);
 	}
 
 	@PostMapping
 	public ResponseEntity<ProdutoDto> create(@RequestParam MultipartFile file, @RequestPart ProdutoDto product)
 			throws EntityNotFoundException, ProdutoException, IOException {
-		return new ResponseEntity<ProdutoDto>(service.create(product, file), HttpStatus.CREATED);
+		return new ResponseEntity<ProdutoDto>(produtoService.create(product, file), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<ProdutoDto> update(@PathVariable Long id, @RequestBody ProdutoDto category)
 			throws EntityNotFoundException {
-		return new ResponseEntity<ProdutoDto>(service.update(id, category), HttpStatus.ACCEPTED);
+		return new ResponseEntity<ProdutoDto>(produtoService.update(id, category), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, ProdutoException {
-		service.delete(id);
+		produtoService.delete(id);
 
-		return new ResponseEntity<String>("Categoria com id: " + id + " deletada com sucesso!", HttpStatus.OK);
+		return new ResponseEntity<String>("Produto com id: " + id + " deletado com sucesso!", HttpStatus.OK);
 	}
 }

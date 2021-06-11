@@ -2,11 +2,12 @@ package org.serratec.com.backend.ecommerce.controllers;
 
 import java.util.List;
 
-import org.serratec.com.backend.ecommerce.entities.dto.ProdutosPedidosDto;
+import org.serratec.com.backend.ecommerce.entities.dto.CadastroPedidoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.PedidoDto;
+import org.serratec.com.backend.ecommerce.entities.dto.ProdutosPedidosDto;
 import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
-import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.exceptions.PedidoException;
 import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
 import org.serratec.com.backend.ecommerce.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,53 +27,49 @@ import org.springframework.web.bind.annotation.RestController;
 public class PedidoController {
 
 	@Autowired
-	PedidoService service;
+	PedidoService pedidoService;
 
 	@GetMapping
 	public ResponseEntity<List<PedidoDto>> getAll() {
-		return new ResponseEntity<List<PedidoDto>>(service.getAll(), HttpStatus.OK);
+		return new ResponseEntity<List<PedidoDto>>(pedidoService.getAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{numeroPedido}")
 	public ResponseEntity<PedidoDto> getById(@PathVariable String numeroPedido) throws EntityNotFoundException {
-		return new ResponseEntity<PedidoDto>(service.getByNumeroPedido(numeroPedido), HttpStatus.OK);
+		return new ResponseEntity<PedidoDto>(pedidoService.getByNumeroPedido(numeroPedido), HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<PedidoDto> create(@RequestBody PedidoDto purchase) throws EntityNotFoundException, ProdutoException {
-		return new ResponseEntity<PedidoDto>(service.order(purchase), HttpStatus.CREATED);
-	}
-
-	@PutMapping("/{id}")
-	public ResponseEntity<PedidoDto> update(@PathVariable Long id, @RequestBody PedidoDto purchase)
-			throws EntityNotFoundException {
-		return new ResponseEntity<PedidoDto>(service.update(id, purchase), HttpStatus.ACCEPTED);
+	public ResponseEntity<CadastroPedidoDto> create(@RequestBody PedidoDto purchase)
+			throws EntityNotFoundException, ProdutoException {
+		return new ResponseEntity<CadastroPedidoDto>(pedidoService.order(purchase), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/atualizar/{numeroPedido}")
 	public ResponseEntity<PedidoDto> adionarProduto(@PathVariable String numeroPedido,
 			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException {
-		return new ResponseEntity<PedidoDto>(service.updateOrder(numeroPedido, productOrderDto), HttpStatus.ACCEPTED);
+		return new ResponseEntity<PedidoDto>(pedidoService.updateOrder(numeroPedido, productOrderDto),
+				HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/remover-produto/{numeroPedido}")
 	public ResponseEntity<PedidoDto> remover(@PathVariable String numeroPedido,
 			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException, CarrinhoException {
-		service.deletarProdutoOrder(numeroPedido, productOrderDto);
-		return new ResponseEntity<PedidoDto>(service.deletarProdutoOrder(numeroPedido, productOrderDto), HttpStatus.OK);
+		pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto);
+		return new ResponseEntity<PedidoDto>(pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto),
+				HttpStatus.OK);
 	}
 	
 	@PutMapping("/finalizar-pedido/{numeroPedido}")
 	public ResponseEntity<PedidoDto> finalizarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException{
-		return new ResponseEntity<PedidoDto>(service.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
+		return new ResponseEntity<PedidoDto>(pedidoService.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
 	}
 	
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id)
-			throws EntityNotFoundException, DataIntegrityViolationException {
-		service.delete(id);
-		return new ResponseEntity<String>("Categoria com id: " + id + " deletada com sucesso!", HttpStatus.NO_CONTENT);
+	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, PedidoException {
+		pedidoService.delete(id);
+		return new ResponseEntity<String>("Pedido com id: " + id + " deletado com sucesso!", HttpStatus.OK);
 	}
 
 }
