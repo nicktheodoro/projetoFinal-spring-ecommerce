@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.serratec.com.backend.ecommerce.entities.PedidoEntity;
 import org.serratec.com.backend.ecommerce.entities.CarrinhoEntity;
+import org.serratec.com.backend.ecommerce.entities.PedidoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.CarrinhoDto;
 import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
-import org.serratec.com.backend.ecommerce.mappers.PedidoMapper;
 import org.serratec.com.backend.ecommerce.mappers.CarrinhoMapper;
+import org.serratec.com.backend.ecommerce.mappers.PedidoMapper;
 import org.serratec.com.backend.ecommerce.repositories.CarrinhoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,7 +68,7 @@ public class CarrinhoService {
 	}
 
 	public void removerProdutoCarrinho(List<CarrinhoDto> listaCarrinhoDto)
-			throws EntityNotFoundException, CarrinhoException {
+			throws EntityNotFoundException, CarrinhoException, ProdutoException {
 		if (listaCarrinhoDto.isEmpty()) {
 			throw new CarrinhoException(
 					"Para se deletar um produto da lista de seus pedidos é necessário informar o número do pedido e o nome do produto");
@@ -84,6 +84,7 @@ public class CarrinhoService {
 			for (CarrinhoEntity carrinhoEntity : listaCarrinhoEntity) {
 				for (CarrinhoDto carrinhoDto : listaCarrinhoDto) {
 					if (carrinhoEntity.getProdutos().getId().equals(carrinhoDto.getProduto())) {
+						produtoService.devolverEstoque(carrinhoDto.getProduto(), carrinhoEntity.getQuantidade());
 						carrinhoRepository.deleteById(carrinhoEntity.getId());
 					}
 				}
@@ -91,8 +92,8 @@ public class CarrinhoService {
 		}
 	}
 
-	public Double calcularTotal(Long id) throws EntityNotFoundException {
-		List<CarrinhoEntity> carrinhosEntity = carrinhoRepository.findByPedidos(pedidoService.findById(id));
+	public Double calcularTotal(Long pedidoId) throws EntityNotFoundException {
+		List<CarrinhoEntity> carrinhosEntity = carrinhoRepository.findByPedidos(pedidoService.findById(pedidoId));
 		Double total = 0D;
 		for (CarrinhoEntity carrinhoEntity : carrinhosEntity) {
 			total = total + (carrinhoEntity.getQuantidade() * carrinhoEntity.getPreco());
@@ -109,6 +110,15 @@ public class CarrinhoService {
 					&& carrinhoDto.getPedido().equals(carrinhoMapper.toDto(entity).getPedido())) {
 				entity.setQuantidade(carrinhoDto.getQuantidade());
 				carrinhoRepository.save(entity);
+			}else if(carrinhoDto.getPedido().equals(carrinhoMapper.toDto(entity).getPedido())){
+					CarrinhoDto novoCarrinho = new CarrinhoDto();
+					
+					novoCarrinho.setPedido(carrinhoDto.getPedido());
+					novoCarrinho.setProduto(carrinhoDto.getProduto());
+					novoCarrinho.setPreco(produtoService.findById(carrinhoDto.getProduto()).getPreco());
+					novoCarrinho.setQuantidade(carrinhoDto.getQuantidade());
+					
+					carrinhoRepository.save(carrinhoMapper.toEntity(carrinhoDto));
 			}
 		}
 	}

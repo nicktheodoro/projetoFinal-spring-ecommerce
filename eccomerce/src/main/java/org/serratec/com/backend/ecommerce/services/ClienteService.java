@@ -44,7 +44,7 @@ public class ClienteService {
 	public ClienteSimplesDto create(ClienteDto clienteDto) throws EntityNotFoundException, ClienteException {
 		if (this.findByCpf(clienteDto.getCpf()) != null
 				|| clienteRepository.findByEmail(clienteDto.getEmail()).size() != 0
-				|| clienteRepository.findByUsername(clienteDto.getUsername()).size() != 0) {
+				|| clienteRepository.findByUsername(clienteDto.getUsername()) != null) {
 			throw new ClienteException("CPF ou Email ou UserName já cadastrado");
 		} else {
 			ClienteEntity clienteEntity = clienteMapper.toEntity(clienteDto);

@@ -55,7 +55,7 @@ public class PedidoController {
 
 	@PutMapping("/remover-produto/{numeroPedido}")
 	public ResponseEntity<PedidoDto> remover(@PathVariable String numeroPedido,
-			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException, CarrinhoException {
+			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException, CarrinhoException, ProdutoException, PedidoException {
 		pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto);
 		return new ResponseEntity<PedidoDto>(pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto),
 				HttpStatus.OK);
