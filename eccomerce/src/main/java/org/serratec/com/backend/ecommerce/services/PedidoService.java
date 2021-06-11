@@ -301,5 +301,19 @@ public class PedidoService {
 
 		return produtos;
 	}
+	
+	public PedidoDto cancelarPedido(String numeroPedido, Long pedidoId) throws EntityNotFoundException, ProdutoException{
+		if(this.getByNumeroPedido(numeroPedido).getStatus().equals(StatusCompra.NAO_FINALIZADO)) {
+			List<CarrinhoEntity> carrinho = carrinhoRepository.findByPedidos(this.findById(pedidoId));
+			List<CarrinhoDto> listaCarrinhoDto = new ArrayList<>();
+			
+			for (CarrinhoEntity carrinhoEntity : carrinho) {
+				List<ProdutoDto> listaProdutoDto = new ArrayList<>();
+				this.devolverProdutosEstoque(numeroPedido, listaProdutoDto);
+				//carrinhoService.removerProdutoCarrinho(listaCarrinhoDto);
+			}	
+		}
+		return null;
+	}
 
 }
