@@ -40,11 +40,11 @@ public class ProdutoMapper {
 
 		return dto;
 	}
-
+	
 	public ProdutosPedidosDto toProdutosPedidos(ProdutoEntity entity) {
 		ProdutosPedidosDto dto = new ProdutosPedidosDto();
 		dto.setNome(entity.getNome());
-
+		
 		return dto;
 	}
 

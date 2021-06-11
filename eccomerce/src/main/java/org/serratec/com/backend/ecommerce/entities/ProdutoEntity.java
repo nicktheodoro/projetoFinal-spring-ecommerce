@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -29,6 +30,9 @@ public class ProdutoEntity {
 
 	@OneToMany(mappedBy="produtos")    
 	private List<CarrinhoEntity> carrinhos;
+	
+	@OneToOne
+	private ImagemEntity imagem;
 
 	
 	public Long getId() {

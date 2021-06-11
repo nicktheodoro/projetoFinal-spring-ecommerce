@@ -13,20 +13,21 @@ public class MailConfig {
 
 	@Autowired
 	JavaMailSender javaMailSender;
-	
-	public String sendMail(String para, String assunto, String msg) {
-        try {
 
-        	MimeMessage mail = javaMailSender.createMimeMessage();
-    		mail.setSubject(assunto);
-    		MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-    		helper.setFrom("apirestful.backend@gmail.com");
-    		helper.setTo(para);
-    		helper.setText(msg,true);
-    		javaMailSender.send(mail);
-    		return "E-mail enviado com sucesso";
-        } catch (MessagingException ex) {
-            return null;
-        }
-    }
+	public String sendMail(String para, String assunto, String msg) {
+		try {
+
+			MimeMessage mail = javaMailSender.createMimeMessage();
+			mail.setSubject(assunto);
+			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+			helper.setFrom("apirestful.backend@gmail.com");
+			helper.setTo(para);
+			helper.setText(msg, true);
+			javaMailSender.send(mail);
+			return "E-mail enviado com sucesso";
+		} catch (MessagingException ex) {
+			return null;
+		}
+	}
+
 }

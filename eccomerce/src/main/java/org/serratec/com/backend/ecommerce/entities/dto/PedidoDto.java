@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import org.serratec.com.backend.ecommerce.entities.CarrinhoEntity;
 import org.serratec.com.backend.ecommerce.enums.StatusCompra;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class PedidoDto {
 
   private String numeroPedido;
@@ -25,6 +27,7 @@ public class PedidoDto {
   @NotNull
   private Long cliente;
 	
+  	@JsonIgnore
 	private List<CarrinhoEntity> carrinhos;
 	
 	private List<ProdutosPedidosDto> produto;

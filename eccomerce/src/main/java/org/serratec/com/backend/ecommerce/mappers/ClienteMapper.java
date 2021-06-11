@@ -49,7 +49,7 @@ public class ClienteMapper {
 		dto.setCpf(entity.getCpf());
 		dto.setTelefone(entity.getTelefone());
 		dto.setDataNascimento(entity.getDataNascimento());
-		dto.setEnderecos(enderecoMapper.toListaSimplficadoDto(entity.getEnderecos()));
+		dto.setEnderecos(enderecoMapper.toListCadastroDto(entity.getEnderecos()));
 		
 		return dto;
 	}

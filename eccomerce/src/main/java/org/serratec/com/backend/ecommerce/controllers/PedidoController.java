@@ -52,13 +52,19 @@ public class PedidoController {
 				HttpStatus.ACCEPTED);
 	}
 
-	@PutMapping("/remover-produto-pedido/{numeroPedido}")
-	public ResponseEntity<PedidoDto> delete(@PathVariable String numeroPedido,
+	@PutMapping("/remover-produto/{numeroPedido}")
+	public ResponseEntity<PedidoDto> remover(@PathVariable String numeroPedido,
 			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException, CarrinhoException {
 		pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto);
 		return new ResponseEntity<PedidoDto>(pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto),
 				HttpStatus.OK);
 	}
+	
+	@PutMapping("/finalizar-pedido/{numeroPedido}")
+	public ResponseEntity<PedidoDto> finalizarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException{
+		return new ResponseEntity<PedidoDto>(pedidoService.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
+	}
+	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, PedidoException {

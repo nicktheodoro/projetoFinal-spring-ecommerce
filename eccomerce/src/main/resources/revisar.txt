@@ -1,8 +1,9 @@
-Fazer Swagger
-
 Autentitifcaçao
+Email
+Imagem
+Swagger
 
-Verificar método update do endereco cliente
+Verificar lógica do update do endereço cliente
 
 Resolver se irá alterar os nomes dos métodos do controller
 

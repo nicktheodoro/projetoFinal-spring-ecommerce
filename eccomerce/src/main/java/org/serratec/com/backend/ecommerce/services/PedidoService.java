@@ -31,6 +31,9 @@ public class PedidoService {
 
 	@Autowired
 	PedidoRepository pedidoRepository;
+	
+	@Autowired
+	CarrinhoRepository carrinhoRepository;
 
 	@Autowired
 	PedidoMapper pedidoMapper;
@@ -47,11 +50,12 @@ public class PedidoService {
 	@Autowired
 	CarrinhoService carrinhoService;
 
-	@Autowired
-	CarrinhoRepository carrinhoRepository;
 
 	@Autowired
 	MailConfig mailConfig;
+
+	@Autowired
+	MailConfig mailconfig;
 
 	public PedidoEntity findById(Long id) throws EntityNotFoundException {
 		return pedidoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));

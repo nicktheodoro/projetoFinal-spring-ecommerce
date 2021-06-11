@@ -67,8 +67,8 @@ public class ProdutoService {
 			throws EntityNotFoundException, ProdutoException, IOException {
 
 		try {
-			if (produtoDto.getNome().isBlank() || produtoDto.getPreco() == null || produtoDto.getQuantidadeEstoque() == null
-					|| produtoDto.getCategoria() == null) {
+			if (produtoDto.getNome().isBlank() || produtoDto.getPreco() == null
+					|| produtoDto.getQuantidadeEstoque() == null || produtoDto.getCategoria() == null) {
 				throw new ProdutoException(
 						"Os campos Nome, Preço, Quantidade em estoque e categoria são obrigatórios!");
 			} else {
@@ -148,4 +148,5 @@ public class ProdutoService {
 		return uri.toString();
 
 	}
+
 }
