@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.serratec.com.backend.ecommerce.configs.MailConfig;
 import org.serratec.com.backend.ecommerce.entities.CarrinhoEntity;
+import org.serratec.com.backend.ecommerce.entities.ClienteEntity;
 import org.serratec.com.backend.ecommerce.entities.PedidoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.CadastroPedidoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.CarrinhoDto;
@@ -54,8 +55,9 @@ public class PedidoService {
 	@Autowired
 	MailConfig mailConfig;
 
-	@Autowired
-	MailConfig mailconfig;
+//	@Value("${body.mail}")
+//	String body;
+	
 
 	public PedidoEntity findById(Long id) throws EntityNotFoundException {
 		return pedidoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
@@ -67,6 +69,10 @@ public class PedidoService {
 
 	public PedidoDto getByNumeroPedido(String numeroPedido) throws EntityNotFoundException {
 		return pedidoMapper.toDto(pedidoRepository.findByNumeroPedido(numeroPedido));
+	}
+	
+	public List<PedidoEntity> getByCliente(ClienteEntity cliente){
+		return pedidoRepository.findByCliente(cliente);
 	}
 
 	public PedidoEntity create(PedidoDto pedidoDto) throws EntityNotFoundException {
@@ -227,7 +233,7 @@ public class PedidoService {
 		pedidoEntity.setDataEntrega(LocalDate.now().plusDays(7));
 		pedidoEntity.setStatus(StatusCompra.FINALIZADO);
 
-		String msg = "Recebemos seu pedido";
+		String msg = "body";
 
 		mailConfig.sendMail(pedidoEntity.getCliente().getEmail(), "Pedido recebido com sucesso", msg);
 

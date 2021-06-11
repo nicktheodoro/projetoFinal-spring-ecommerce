@@ -44,6 +44,11 @@ public class ProdutoController {
 	public ResponseEntity<ProdutoDto> getById(@PathVariable Long id) throws EntityNotFoundException {
 		return new ResponseEntity<ProdutoDto>(produtoService.getById(id), HttpStatus.OK);
 	}
+	
+	@GetMapping("/categoria/{nome}")
+	public ResponseEntity<List<ProdutoDto>> getByProdutoByCategoriaId(@PathVariable String nome) throws EntityNotFoundException {
+		return new ResponseEntity<List<ProdutoDto>>(produtoService.getByCategoriaNome(nome), HttpStatus.OK);
+	}
 
 	@GetMapping("/nome")
 	public ResponseEntity<ProdutoDto> getByName(@RequestParam String nome) throws EntityNotFoundException {

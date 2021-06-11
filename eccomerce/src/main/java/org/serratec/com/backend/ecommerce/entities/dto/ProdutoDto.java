@@ -3,8 +3,6 @@ package org.serratec.com.backend.ecommerce.entities.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.serratec.com.backend.ecommerce.entities.CarrinhoEntity;
@@ -13,23 +11,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ProdutoDto {
 
-	@NotBlank
+
 	@Size(max = 40)
 	private String nome;
 
 	@Size(max = 250)
 	private String descricao;
 
-	@NotNull
 	private Double preco;
 
-	@NotNull
 	private Integer quantidadeEstoque;
 
-	@NotNull
 	private Long categoria;
 
-	@NotNull
 	private LocalDate dataCadastro = LocalDate.now();
 
 	@JsonIgnore

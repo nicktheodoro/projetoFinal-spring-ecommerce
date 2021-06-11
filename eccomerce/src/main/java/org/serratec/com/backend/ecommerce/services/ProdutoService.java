@@ -46,6 +46,10 @@ public class ProdutoService {
 	public List<ProdutoEntity> findByCategoriaId(Long idCategoria) {
 		return produtoRepository.findByCategoriaId(idCategoria);
 	}
+	
+	public List<ProdutoDto> getByCategoriaNome(String nomeCategoria) throws EntityNotFoundException {
+		return produtoMapper.listToDto((produtoRepository.findByCategoriaId(categoriaService.findByNome(nomeCategoria).getId())));
+	}
 
 	public List<ProdutoDto> getAll() {
 		return produtoRepository.findAll().stream().map(produtoMapper::toDto).collect(Collectors.toList());

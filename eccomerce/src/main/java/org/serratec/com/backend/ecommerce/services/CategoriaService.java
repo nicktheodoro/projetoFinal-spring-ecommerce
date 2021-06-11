@@ -24,10 +24,21 @@ public class CategoriaService {
 	@Autowired
 	ProdutoService produtoService;
 
+	
+	
 	public CategoriaEntity findById(Long id) throws EntityNotFoundException {
 		return categoriaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
 
+	public CategoriaEntity findByNome(String nome) throws EntityNotFoundException {
+		if(categoriaRepository.findByNome(nome) != null) {
+			return categoriaRepository.findByNome(nome);
+		}
+		else {
+			throw new EntityNotFoundException("Categoria com nome:" + nome + " não encontrada!");
+		}
+	}
+	
 	public List<CategoriaDto> getAll() {
 		return categoriaRepository.findAll().stream().map(categoriaMapper::toDto).collect(Collectors.toList());
 	}
