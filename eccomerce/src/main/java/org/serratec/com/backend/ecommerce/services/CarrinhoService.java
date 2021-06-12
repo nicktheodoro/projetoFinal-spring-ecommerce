@@ -136,9 +136,4 @@ public class CarrinhoService {
 		}
 
 	}
-
-	public String deletarCarrinho(PedidoEntity pedidoEntity) {
-		carrinhoRepository.deleteById(pedidoEntity.getId());
-		return " Carrinho deletado com sucesso";
-	}
 }

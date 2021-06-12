@@ -10,9 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> {
 	PedidoEntity findByNumeroPedido(String numeroPedido);
-	
+
 	List<PedidoEntity> findByCliente(ClienteEntity cliente);
 
-	//@Query("delete from PedidoEntity p where p.numeroPedido = :numeroPedido")
-	//void deleteByNumeroPedido(@Param("numeroPedido") String numeroPedido);	
 }
