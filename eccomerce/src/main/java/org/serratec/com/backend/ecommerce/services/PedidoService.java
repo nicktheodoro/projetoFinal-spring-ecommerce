@@ -141,7 +141,7 @@ public class PedidoService {
 		List<ProdutosPedidosDto> listaProdutosPedidosDto = pedidoDto.getProduto();
 
 		for (ProdutosPedidosDto produtosPedidosDto : listaProdutosPedidosDto) {
-			ProdutoDto dto = produtoService.getByName(produtosPedidosDto.getNome());
+			ProdutoDto dto = produtoService.getByName(produtosPedidosDto.getNome().toLowerCase());
 			dto.setQuantidade(produtosPedidosDto.getQuantidade());
 
 			listaProdutoDto.add(dto);
@@ -178,7 +178,7 @@ public class PedidoService {
 		List<ProdutoDto> listaProdutoDto = new ArrayList<>();
 
 		for (ProdutosPedidosDto produtosPedidosDto : listaProdutosPedidosDto) {
-			ProdutoDto produtoDto = produtoService.getByName(produtosPedidosDto.getNome());
+			ProdutoDto produtoDto = produtoService.getByName(produtosPedidosDto.getNome().toLowerCase());
 			produtoDto.setQuantidade(produtosPedidosDto.getQuantidade());
 			listaProdutoDto.add(produtoDto);
 		}
@@ -223,7 +223,7 @@ public class PedidoService {
 			List<ProdutoDto> listaProdutoDto = new ArrayList<>();
 
 			for (ProdutosPedidosDto produtosPedidosDto : listaProdutosPedidosDto) {
-				ProdutoDto produtoDto = produtoService.getByName(produtosPedidosDto.getNome());
+				ProdutoDto produtoDto = produtoService.getByName(produtosPedidosDto.getNome().toLowerCase());
 				produtoDto.setQuantidade(produtosPedidosDto.getQuantidade());
 				listaProdutoDto.add(produtoDto);
 			}
@@ -257,6 +257,7 @@ public class PedidoService {
 			produtoService.devolverEstoque(carrinhoEntity.getProdutos().getId(), carrinhoEntity.getQuantidade());
 		}
 	}
+	
 	public void devolverProdutosEstoque(String numeroPedido)
 			throws EntityNotFoundException, ProdutoException {
 		PedidoEntity pedidoEntity = pedidoRepository.findByNumeroPedido(numeroPedido);
