@@ -10,4 +10,5 @@ public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Long> 
 
 	List<EnderecoEntity> findByCliente(ClienteEntity clienteEntity);
 
+	EnderecoEntity findByCepAndClienteIdAndNumeroAndComplemento(String cep, Long id, String numero, String complemento);
 }

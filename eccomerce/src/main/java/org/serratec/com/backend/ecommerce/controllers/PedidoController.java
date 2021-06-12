@@ -72,6 +72,11 @@ public class PedidoController {
 		return new ResponseEntity<PedidoFinalizadoDto>(pedidoService.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
 	}
 	
+	@PutMapping("/cancelar-pedido/{numeroPedido}")
+	public ResponseEntity<String> cancelarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException, ProdutoException, CarrinhoException{
+		return new ResponseEntity<String>(pedidoService.cancelarPedido(numeroPedido), HttpStatus.ACCEPTED);
+	}
+	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, PedidoException {

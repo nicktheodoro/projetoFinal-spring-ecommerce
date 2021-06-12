@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> {
 	PedidoEntity findByNumeroPedido(String numeroPedido);
-	
+
 	List<PedidoEntity> findByCliente(ClienteEntity cliente);
+
 }

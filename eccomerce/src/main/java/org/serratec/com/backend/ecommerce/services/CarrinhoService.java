@@ -25,7 +25,7 @@ public class CarrinhoService {
 
 	@Autowired
 	PedidoRepository pedidoRepository;
-	
+
 	@Autowired
 	CarrinhoMapper carrinhoMapper;
 
@@ -99,10 +99,7 @@ public class CarrinhoService {
 			return carrinhosAtualizado;
 		}
 	}
-
-	
-	
-	
+  
 	public Double calcularTotal(Long pedidoId) throws EntityNotFoundException {
 		List<CarrinhoEntity> carrinhosEntity = carrinhoRepository.findByPedidos(pedidoService.findById(pedidoId));
 		Double total = 0D;
