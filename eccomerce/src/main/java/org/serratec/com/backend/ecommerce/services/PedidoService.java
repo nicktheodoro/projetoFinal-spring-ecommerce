@@ -162,8 +162,8 @@ public class PedidoService {
 
 	}
 
-	public PedidoDto updateOrder(String numeroPedido, List<ProdutosPedidosDto> listaProdutosPedidosDto)
-			throws EntityNotFoundException {
+	public PedidoDto adicionarProdutoPedido(String numeroPedido, List<ProdutosPedidosDto> listaProdutosPedidosDto)
+			throws EntityNotFoundException, ProdutoException {
 
 		List<CarrinhoDto> listaCarrinhoDto = new ArrayList<>();
 		List<ProdutoDto> listaProdutoDto = new ArrayList<>();
@@ -183,7 +183,11 @@ public class PedidoService {
 
 			listaCarrinhoDto.add(carrinhoDto);
 		}
-		carrinhoService.adicionarProduto(listaCarrinhoDto);
+		
+		for (CarrinhoDto carrinhoDto : listaCarrinhoDto) {
+			carrinhoService.adicionarProdutoNoCarrinho(carrinhoDto);
+		}
+		
 
 		PedidoEntity pedidoEntity = pedidoRepository.findByNumeroPedido(numeroPedido);
 		pedidoEntity.setValorTotal(carrinhoService.calcularTotal(pedidoEntity.getId()));
@@ -195,6 +199,42 @@ public class PedidoService {
 
 		return pedidoDto;
 	}
+	
+	public PedidoDto alterarQuantidadeProdutoPedido(String numeroPedido, List<ProdutosPedidosDto> listaProdutosPedidosDto) throws EntityNotFoundException, ProdutoException, PedidoException, CarrinhoException {
+		if(carrinhoRepository.findByPedidos(pedidoRepository.findByNumeroPedido(numeroPedido)).isEmpty()) {
+			throw new PedidoException("Pedido com o número: " + numeroPedido + " não encontrado no carrinho");
+		}
+		
+		List<CarrinhoEntity> carrinho = carrinhoRepository.findByPedidos(pedidoRepository.findByNumeroPedido(numeroPedido));
+		List<ProdutoDto> listaProdutoDto = new ArrayList<>();
+
+		
+		for (ProdutosPedidosDto produtosPedidosDto : listaProdutosPedidosDto) {
+			ProdutoDto produtoDto = produtoService.getByName(produtosPedidosDto.getNome());
+			produtoDto.setQuantidade(produtosPedidosDto.getQuantidade());
+			listaProdutoDto.add(produtoDto);
+		}
+		for (CarrinhoEntity entity : carrinho) {
+			for (ProdutoDto produtoDto : listaProdutoDto) {
+				if (produtoDto.getNome().equals(entity.getProdutos().getNome())) {
+					entity.setQuantidade(produtoDto.getQuantidade());
+					carrinhoService.atualizarQuantidade(entity);
+				}
+			}
+		}
+		
+	
+		PedidoEntity pedidoEntity = pedidoRepository.findByNumeroPedido(numeroPedido);
+		pedidoEntity.setValorTotal(carrinhoService.calcularTotal(pedidoEntity.getId()));
+
+		pedidoRepository.save(pedidoEntity);
+
+		PedidoDto pedidoDto = pedidoMapper.toDto(pedidoEntity);
+		pedidoDto.setProduto(this.coletarProdutosCarrinho(pedidoEntity.getId()));
+
+		return pedidoDto;
+	}
+	
 
 	public void devolverProdutosEstoque(String numeroPedido, List<ProdutoDto> produtos) throws EntityNotFoundException, ProdutoException {
 		PedidoEntity pedidoEntity = pedidoRepository.findByNumeroPedido(numeroPedido);

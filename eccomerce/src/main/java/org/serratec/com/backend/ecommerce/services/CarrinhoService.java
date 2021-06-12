@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.serratec.com.backend.ecommerce.entities.CarrinhoEntity;
-import org.serratec.com.backend.ecommerce.entities.PedidoEntity;
+import org.serratec.com.backend.ecommerce.entities.ProdutoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.CarrinhoDto;
 import org.serratec.com.backend.ecommerce.exceptions.CarrinhoException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
@@ -37,7 +37,14 @@ public class CarrinhoService {
 	public CarrinhoEntity findById(Long id) throws EntityNotFoundException {
 		return carrinhoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
-
+	
+	public List<CarrinhoEntity> findByProdutos(ProdutoEntity produto) throws CarrinhoException{
+		if(carrinhoRepository.findByProdutos(produto).isEmpty()) {
+			throw new CarrinhoException("Produto com nome: " + produto.getNome() + " não encontrado, favor verificar");
+		}else {
+			return carrinhoRepository.findByProdutos(produto);
+		}
+	}
 	public List<CarrinhoDto> getAll() {
 		return carrinhoRepository.findAll().stream().map(carrinhoMapper::toDto).collect(Collectors.toList());
 	}
@@ -101,34 +108,20 @@ public class CarrinhoService {
 		return total;
 	}
 
-	private void atualizarQuantidade(PedidoEntity pedidoEntity, CarrinhoDto carrinhoDto)
-			throws EntityNotFoundException {
-		List<CarrinhoEntity> carrinhoEntity = this.findAll();
-
-		for (CarrinhoEntity entity : carrinhoEntity) {
-			if (carrinhoDto.getProduto().equals(carrinhoMapper.toDto(entity).getProduto())
-					&& carrinhoDto.getPedido().equals(carrinhoMapper.toDto(entity).getPedido())) {
-				entity.setQuantidade(carrinhoDto.getQuantidade());
-				carrinhoRepository.save(entity);
-			}else if(carrinhoDto.getPedido().equals(carrinhoMapper.toDto(entity).getPedido())){
-					CarrinhoDto novoCarrinho = new CarrinhoDto();
+	public void atualizarQuantidade(CarrinhoEntity carrinho)
+			throws EntityNotFoundException, ProdutoException {
 					
-					novoCarrinho.setPedido(carrinhoDto.getPedido());
-					novoCarrinho.setProduto(carrinhoDto.getProduto());
-					novoCarrinho.setPreco(produtoService.findById(carrinhoDto.getProduto()).getPreco());
-					novoCarrinho.setQuantidade(carrinhoDto.getQuantidade());
-					
-					carrinhoRepository.save(carrinhoMapper.toEntity(carrinhoDto));
-			}
-		}
+			produtoService.removerEstoque(carrinho.getProdutos().getId(), carrinho.getQuantidade());
+			carrinhoRepository.save(carrinho);	
 	}
-
-	public void adicionarProduto(List<CarrinhoDto> carrinhosDto) throws EntityNotFoundException {
-		for (CarrinhoDto carrinhoDto : carrinhosDto) {
-			PedidoEntity pedidoEntity = pedidoService.findById(carrinhoDto.getPedido());
-			if (pedidoEntity != null) {
-				this.atualizarQuantidade(pedidoEntity, carrinhoDto);
-			}
-		}
+	
+	public void adicionarProdutoNoCarrinho(CarrinhoDto carrinho) throws EntityNotFoundException, ProdutoException {
+		
+			CarrinhoDto novoCarrinho = carrinho;
+			novoCarrinho.setPreco(produtoService.findById(carrinho.getProduto()).getPreco());
+			
+			produtoService.removerEstoque(carrinho.getProduto(), carrinho.getQuantidade());
+			carrinhoRepository.save(carrinhoMapper.toEntity(novoCarrinho));
 	}
+	
 }
