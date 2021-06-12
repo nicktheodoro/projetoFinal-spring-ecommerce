@@ -68,8 +68,13 @@ public class PedidoService {
 		return pedidoRepository.findByNumeroPedido(numeroPedido);
 	}
 	
-	public PedidoDto getByNumeroPedido(String numeroPedido) throws EntityNotFoundException {
+	public PedidoDto getByNumeroPedido(String numeroPedido) throws EntityNotFoundException, PedidoException {
 		PedidoEntity pedido = pedidoRepository.findByNumeroPedido(numeroPedido);
+		
+		if(pedido==null) {
+			throw new PedidoException("Pedido com número: " + numeroPedido + " nâo encontrado");
+		}
+		
 		List<CarrinhoEntity> carrinho = pedido.getCarts();
 		List<ProdutosPedidosDto> produtos = new ArrayList<>();
 
@@ -78,7 +83,7 @@ public class PedidoService {
 		}
 
 		PedidoDto pedidoDto = pedidoMapper.toDto(pedido);
-		pedidoDto.setProduto(produtos);
+		pedidoDto.setProduto(this.coletarProdutosCarrinho(pedido.getId()));
 
 		return pedidoDto;
 	}
@@ -96,6 +101,7 @@ public class PedidoService {
 		pedidoDto.setNumeroPedido(this.generateNumber());
 
 		return pedidoRepository.save(pedidoMapper.toEntity(pedidoDto));
+		
 	}
 
 	public void delete(Long id) throws EntityNotFoundException, PedidoException {
@@ -160,10 +166,9 @@ public class PedidoService {
 		pedidoRepository.save(pedidoEntity);
 
 		PedidoDto pedido = pedidoMapper.toDto(pedidoEntity);
-		pedido.setProduto(pedidoDto.getProduto());
-
+		pedido.setProduto(listaProdutosPedidosDto);
+		
 		return pedidoMapper.toCadastroPedidoDto(pedido);
-
 	}
 
 	public PedidoDto adicionarProdutoPedido(String numeroPedido, List<ProdutosPedidosDto> listaProdutosPedidosDto)
@@ -282,6 +287,7 @@ public class PedidoService {
 			List<CarrinhoEntity> listaCarrinhoAtualizada  = carrinhoRepository.findByPedidos(pedidoEntity);
 			
 			if(listaCarrinhoAtualizada.isEmpty()) {
+				this.delete(pedidoEntity.getId());
 				throw new PedidoException("Carrinho zerado, favor realizar um novo pedido");
 			}
 			
@@ -302,8 +308,12 @@ public class PedidoService {
 		}
 	}
 	
-	public PedidoFinalizadoDto finalizarPedido(String numeroPedido) throws EntityNotFoundException {
+	public PedidoFinalizadoDto finalizarPedido(String numeroPedido) throws EntityNotFoundException, PedidoException {
 		PedidoEntity pedidoEntity = pedidoRepository.findByNumeroPedido(numeroPedido);
+		if(pedidoEntity == null) {
+			throw new PedidoException("Pedido com número: " + numeroPedido + " não encontrado");
+		}
+		
 		List<ProdutosPedidosDto> listaProdutosPedidosDto = new ArrayList<>();
 		List<CarrinhoEntity> listaCarrinhoEntity = carrinhoRepository.findByPedidos(pedidoEntity);
 

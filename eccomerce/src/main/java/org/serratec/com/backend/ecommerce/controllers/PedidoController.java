@@ -36,7 +36,7 @@ public class PedidoController {
 	}
 
 	@GetMapping("/{numeroPedido}")
-	public ResponseEntity<PedidoDto> getById(@PathVariable String numeroPedido) throws EntityNotFoundException {
+	public ResponseEntity<PedidoDto> getById(@PathVariable String numeroPedido) throws EntityNotFoundException, PedidoException {
 		return new ResponseEntity<PedidoDto>(pedidoService.getByNumeroPedido(numeroPedido), HttpStatus.OK);
 	}
 
@@ -68,7 +68,7 @@ public class PedidoController {
 	}
 	
 	@PutMapping("/finalizar-pedido/{numeroPedido}")
-	public ResponseEntity<PedidoFinalizadoDto> finalizarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException{
+	public ResponseEntity<PedidoFinalizadoDto> finalizarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException, PedidoException{
 		return new ResponseEntity<PedidoFinalizadoDto>(pedidoService.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
 	}
 	

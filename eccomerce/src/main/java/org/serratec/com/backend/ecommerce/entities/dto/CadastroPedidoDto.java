@@ -1,5 +1,7 @@
 package org.serratec.com.backend.ecommerce.entities.dto;
 
+import java.util.List;
+
 import org.serratec.com.backend.ecommerce.enums.StatusCompra;
 
 public class CadastroPedidoDto {
@@ -11,6 +13,8 @@ public class CadastroPedidoDto {
 	private Double valorTotal;
 
 	private StatusCompra status;
+	
+	private List<ProdutosPedidosDto> produtos;
 
 	public String getNumeroPedido() {
 		return numeroPedido;
@@ -44,4 +48,11 @@ public class CadastroPedidoDto {
 		this.status = status;
 	}
 
+	public List<ProdutosPedidosDto> getProdutos() {
+		return produtos;
+	}
+
+	public void setProdutos(List<ProdutosPedidosDto> produtos) {
+		this.produtos = produtos;
+	}
 }

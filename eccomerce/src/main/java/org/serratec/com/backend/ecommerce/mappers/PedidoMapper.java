@@ -41,6 +41,7 @@ public class PedidoMapper {
 		cadastroPedidoDto.setCliente(pedidoDto.getCliente());
 		cadastroPedidoDto.setStatus(pedidoDto.getStatus());
 		cadastroPedidoDto.setValorTotal(pedidoDto.getValorTotal());
+		cadastroPedidoDto.setProdutos(pedidoDto.getProduto());
 		
 		return cadastroPedidoDto;
 	}
