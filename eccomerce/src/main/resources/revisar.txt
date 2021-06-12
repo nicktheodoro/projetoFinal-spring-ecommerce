@@ -1,13 +1,10 @@
 Autentitifcaçao
-Email
-Imagem
+
 Swagger
 
 Verificar lógica do update do endereço cliente
 
-Resolver se irá alterar os nomes dos métodos do controller
-
-PedidoService - metodos semelhantes, ver se consgue juntar
+PedidoService - metodos semelhantes, ver se vai juntar
 
 
 

@@ -98,6 +98,4 @@ public class ProdutoEntity {
 	public void setCarts(List<CarrinhoEntity> carrinhos) {
 		this.carrinhos = carrinhos;
 	}
-	// Adicionar imagens
-	// private String imagem;
 }

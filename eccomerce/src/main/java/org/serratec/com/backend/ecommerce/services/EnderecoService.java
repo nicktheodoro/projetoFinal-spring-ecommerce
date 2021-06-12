@@ -71,23 +71,46 @@ public class EnderecoService {
 		ClienteEntity cliente = clienteRepository.findByUsername(username);
 		List<EnderecoEntity> listaEnderecos = cliente.getEnderecos();
 
-		for (EnderecoEntity endereco : listaEnderecos) {
+		if (enderecoAtualizado.size() > 0) {
+			for (EnderecoDto dto : enderecoAtualizado) {
 
-			for (EnderecoDto enderecoDto : enderecoAtualizado) {
-				if (endereco.getCep().equals(enderecoDto.getCep())) {
-					endereco.setNumero(enderecoDto.getNumero());
-					endereco.setComplemento(enderecoDto.getComplemento());
-					enderecoRepository.save(endereco);
-					listaEnderecos.add(endereco);
+				if (listaEnderecos.size() > 0) {
+
+					for (EnderecoEntity enderecoEntity : listaEnderecos) {
+
+						if (enderecoRepository.findByCepAndClienteIdAndNumeroAndComplemento(dto.getCep(),
+								cliente.getId(), dto.getNumero(), dto.getComplemento()) == null) {
+							EnderecoDto enderecoDto = this.getCep(dto.getCep());
+							enderecoDto.setComplemento(dto.getComplemento());
+							enderecoDto.setCliente(cliente);
+							enderecoDto.setNumero(dto.getNumero());
+
+							enderecoRepository.save(enderecoMapper.toEntity(enderecoDto));
+						}
+
+						if (enderecoEntity.getCep().equals(dto.getCep())) {
+
+							if ((enderecoRepository.findByCepAndClienteIdAndNumeroAndComplemento(dto.getCep(),
+									cliente.getId(), dto.getNumero(), dto.getComplemento()) == null)) {
+								enderecoEntity.setComplemento(dto.getComplemento());
+								enderecoEntity.setNumero(dto.getNumero());
+								enderecoRepository.save(enderecoEntity);
+							}
+						}
+					}
+
+				} else {
+					EnderecoDto enderecoDto = this.getCep(dto.getCep());
+					enderecoDto.setComplemento(dto.getComplemento());
+					enderecoDto.setNumero(dto.getNumero());
+					enderecoDto.setCliente(cliente);
+
+					enderecoRepository.save(enderecoMapper.toEntity(enderecoDto));
 				}
 			}
-
-			enderecoRepository
-					.save(enderecoMapper.toEntity(this.setEndereco(enderecoMapper.toDto(endereco), cliente.getId())));
-			listaEnderecos.add(endereco);
 		}
 
-		return enderecoMapper.listToDto(listaEnderecos);
+		return enderecoMapper.listToDto(enderecoRepository.findByCliente(cliente));
 
 	}
 
