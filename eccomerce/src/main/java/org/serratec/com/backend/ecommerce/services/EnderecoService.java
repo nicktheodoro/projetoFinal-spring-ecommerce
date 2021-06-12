@@ -93,10 +93,15 @@ public class EnderecoService {
 						}
 
 						if (enderecoEntity.getCep().equals(dto.getCep())) {
-							enderecoEntity.setComplemento(dto.getComplemento());
-							enderecoEntity.setNumero(dto.getNumero());
-							enderecoRepository.save(enderecoEntity);
+							
 
+							if ((enderecoRepository.findByCepAndClienteIdAndNumeroAndComplemento(dto.getCep(),
+									cliente.getId(), dto.getNumero(), dto.getComplemento()) == null)) {
+								enderecoEntity.setComplemento(dto.getComplemento());
+								enderecoEntity.setNumero(dto.getNumero());
+								enderecoRepository.save(enderecoEntity);
+							}
+							
 							if (!listaRetorno.contains(enderecoEntity)) {
 								listaRetorno.add(enderecoEntity);
 							}
