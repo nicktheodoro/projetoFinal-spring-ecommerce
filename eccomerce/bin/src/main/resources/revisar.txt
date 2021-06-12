@@ -1,56 +1,10 @@
+Autentitifcaçao
 
-Verificar se é necessário o if do metodo delete do categoryservice
+Swagger
 
+Verificar lógica do update do endereço cliente
 
-Verificar se é permitido alterar os atributos do pedidoProduto;
-
-Alterar a logica update do produto;
-
-Perguntar no André sobre as restrições da classe cliente pra atualizar;
-
-
-
-
-
-
-
-
- ------- Pedidos -------
-fazer um método para abrir o pedido
-- data do pedido
-- numero do pedido
-- status-
-- valor total = 0;
-
-avaliar se ja vem com produtos para cadastrar , e se vier chamar um metodo para incluir esses produtos (create)
-
-Método para atualizar o valor total 
-
-
-------            -------
-
-Update pedido  , acrescentando ou diminuindo os produtos, verficar se o produto já está incluso naquele pedido , se sim, 
-fazer um uptadte na quantidade, se nao usa msm metodo create de cima. Após atualizar a quantidade, atualizar tbm o valor total
-
-verificar se o produto existe no pedido senao informar erro, se existir, deletar o produto do pedido e atualizar o valor total
-
-
-quando acrescentar um produto verificar o estoque . e modificar o estoque de acordo com o pedido
-
-
-
-
-
-
-
-
--------------------------------------
-
-Entrar com Dto no metodo order, 
-fazer um foreach na lista de pedidos que está vindo da dto,
-capturar os dados do produto a partir do q for informado
-e criar um objeto pedido_produto colocando esses dados necessários
-
+PedidoService - metodos semelhantes, ver se vai juntar
 
 
 

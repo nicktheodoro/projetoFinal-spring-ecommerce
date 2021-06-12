@@ -14,6 +14,7 @@ import org.serratec.com.backend.ecommerce.mappers.EnderecoMapper;
 import org.serratec.com.backend.ecommerce.repositories.ClienteRepository;
 import org.serratec.com.backend.ecommerce.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,6 +37,9 @@ public class ClienteService {
 
 	@Autowired
 	EnderecoMapper enderecoMapper;
+	
+	@Autowired
+	BCryptPasswordEncoder bCrypt;
 
 	public List<ClienteDto> getAll() {
 		return clienteRepository.findAll().stream().map(clienteMapper::toDto).collect(Collectors.toList());
@@ -52,6 +56,7 @@ public class ClienteService {
 			throw new ClienteException("CPF ou Email ou UserName já cadastrado");
 		} else {
 			ClienteEntity clienteEntity = clienteMapper.toEntity(clienteDto);
+			clienteEntity.setSenha(bCrypt.encode(clienteDto.getSenha()));
 			ClienteEntity savedClienteEntity = clienteRepository.save(clienteEntity);
 
 			List<EnderecoEntity> listaEnderecosEntity = enderecoMapper.listaSimplficadaToEntity(enderecoService

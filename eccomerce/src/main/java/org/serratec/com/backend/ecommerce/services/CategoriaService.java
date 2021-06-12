@@ -30,13 +30,8 @@ public class CategoriaService {
 		return categoriaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id + " não encontrado."));
 	}
 
-	public CategoriaEntity findByNome(String nome) throws EntityNotFoundException {
-		if(categoriaRepository.findByNome(nome) != null) {
+	public CategoriaEntity findByNome(String nome) {
 			return categoriaRepository.findByNome(nome);
-		}
-		else {
-			throw new EntityNotFoundException("Categoria com nome:" + nome + " não encontrada!");
-		}
 	}
 	
 	public List<CategoriaDto> getAll() {
@@ -48,18 +43,23 @@ public class CategoriaService {
 	}
 	
 	public CategoriaDto getByName(String nome) {
+		nome = nome.toLowerCase();
 		return categoriaMapper.toDto(categoriaRepository.findByNome(nome));
 	}
 	
 	
 	public CategoriaDto create(CategoriaDto categoriaDto) throws CategoriaException{
-		if(categoriaDto.getNome().isBlank()) {
+		categoriaDto.setNome(categoriaDto.getNome().toLowerCase());
+		if (categoriaDto.getNome().isBlank()) {
 			throw new CategoriaException("O nome da categoria é obrigatório");
-		}else{
-			categoriaDto.setNome(categoriaDto.getNome().toLowerCase());
-			categoriaRepository.save(categoriaMapper.toEntity(categoriaDto));			
-			
-			return categoriaDto;
+		}
+		if(this.findByNome(categoriaDto.getNome()) != null) {
+			throw new CategoriaException("Categoria com o nome: " + categoriaDto.getNome() + " já cadastrada");
+		}else {
+				categoriaDto.setNome(categoriaDto.getNome().toLowerCase());
+				categoriaRepository.save(categoriaMapper.toEntity(categoriaDto));
+
+				return categoriaDto;
 		}
 	}
 
