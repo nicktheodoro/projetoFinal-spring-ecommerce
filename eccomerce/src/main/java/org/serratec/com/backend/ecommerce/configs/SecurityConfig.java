@@ -1,7 +1,5 @@
 package org.serratec.com.backend.ecommerce.configs;
 
-import javax.servlet.Filter;
-
 import org.serratec.com.backend.ecommerce.security.AuthService;
 import org.serratec.com.backend.ecommerce.security.JWTAuthenticationFilter;
 import org.serratec.com.backend.ecommerce.security.JWTAuthorizationFilter;
