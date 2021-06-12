@@ -73,7 +73,7 @@ public class PedidoController {
 	}
 	
 	@PutMapping("/cancelar-pedido/{numeroPedido}")
-	public ResponseEntity<String> cancelarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException, ProdutoException, CarrinhoException{
+	public ResponseEntity<String> cancelarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException, ProdutoException, CarrinhoException, PedidoException{
 		return new ResponseEntity<String>(pedidoService.cancelarPedido(numeroPedido), HttpStatus.ACCEPTED);
 	}
 	

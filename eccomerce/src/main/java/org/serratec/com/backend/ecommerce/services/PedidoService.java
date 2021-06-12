@@ -380,7 +380,7 @@ public class PedidoService {
 	}
 	
 	public String cancelarPedido(String numeroPedido)
-			throws EntityNotFoundException, ProdutoException, CarrinhoException {
+			throws EntityNotFoundException, ProdutoException, CarrinhoException, PedidoException {
 
 		if (this.getByNumeroPedido(numeroPedido).getStatus().equals(StatusCompra.NAO_FINALIZADO)) {
 				this.devolverProdutosEstoque(numeroPedido);
