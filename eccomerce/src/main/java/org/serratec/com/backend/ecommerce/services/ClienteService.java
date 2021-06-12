@@ -12,6 +12,7 @@ import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.ClienteMapper;
 import org.serratec.com.backend.ecommerce.mappers.EnderecoMapper;
 import org.serratec.com.backend.ecommerce.repositories.ClienteRepository;
+import org.serratec.com.backend.ecommerce.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ public class ClienteService {
 
 	@Autowired
 	ClienteRepository clienteRepository;
+
+	@Autowired
+	EnderecoRepository enderecoRepository;
 
 	@Autowired
 	EnderecoService enderecoService;
@@ -58,8 +62,8 @@ public class ClienteService {
 		}
 	}
 
-	public ClienteDto update(Long id, ClienteDto clienteUpdate) throws EntityNotFoundException {
-		ClienteEntity clienteEntity = this.findById(id);
+	public ClienteDto update(String username, ClienteDto clienteUpdate) throws EntityNotFoundException {
+		ClienteEntity clienteEntity = clienteRepository.findByUsername(username);
 
 		clienteEntity.setUsername(clienteUpdate.getUsername());
 		clienteEntity.setSenha(clienteUpdate.getSenha());
@@ -67,21 +71,26 @@ public class ClienteService {
 		clienteEntity.setCpf(clienteUpdate.getCpf());
 		clienteEntity.setTelefone(clienteUpdate.getTelefone());
 		clienteEntity.setDataNascimento(clienteUpdate.getDataNascimento());
+		enderecoService.update(clienteEntity.getUsername(), enderecoMapper.listToDto(clienteUpdate.getEnderecos()));
 
-		return clienteMapper.toDto(clienteRepository.save(clienteEntity));
+		ClienteDto retorno = clienteMapper.toDto(clienteRepository.save(clienteEntity));
+		retorno.setEnderecos(enderecoRepository.findByCliente(clienteEntity));
+		return retorno;
 	}
 
-	public void delete(String cpf) throws EntityNotFoundException, ClienteException {
+	public void delete(String username) throws EntityNotFoundException, ClienteException {
 
-		if (this.findByCpf(cpf) != null) {
-			if (pedidoService.getByCliente(this.findByCpf(cpf)).isEmpty()) {
-				Long id = this.findByCpf(cpf).getId();
+		if (clienteRepository.findByUsername(username) != null) {
+			ClienteEntity cliente = clienteRepository.findByUsername(username);
+			if (pedidoService.getByCliente(this.findByCpf(cliente.getCpf())).isEmpty()) {
+				Long id = this.findByCpf(cliente.getCpf()).getId();
 				enderecoService.deleteAll(this.findById(id));
 				clienteRepository.deleteById(id);
 			} else {
-				throw new ClienteException("O cliente com cpf " + cpf + "possui pedidos vinculados. Favor verificar");
+				throw new ClienteException("O cliente " + username + " possui pedidos vinculados. Favor verificar");
 			}
 		}
+		throw new EntityNotFoundException("O cliente " + username + " não existe");
 	}
 
 	public ClienteEntity findById(Long id) throws EntityNotFoundException {

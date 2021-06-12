@@ -43,15 +43,15 @@ public class ClienteController {
 		return new ResponseEntity<ClienteSimplesDto>(clienteService.create(dto), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<ClienteDto> update(@PathVariable Long id, @Valid @RequestBody ClienteDto dto)
+	@PutMapping("/{username}")
+	public ResponseEntity<ClienteDto> update(@PathVariable String username, @Valid @RequestBody ClienteDto dto)
 			throws EntityNotFoundException {
-		return new ResponseEntity<ClienteDto>(clienteService.update(id, dto), HttpStatus.ACCEPTED);
+		return new ResponseEntity<ClienteDto>(clienteService.update(username, dto), HttpStatus.ACCEPTED);
 	}
 
-	@DeleteMapping("/{cpf}")
-	public ResponseEntity<String> delete(@PathVariable String cpf) throws EntityNotFoundException, ClienteException {
-		clienteService.delete(cpf);
-		return new ResponseEntity<String>("Cliente com CPF" + cpf +" deletado com sucesso!", HttpStatus.OK);
+	@DeleteMapping("/{username}")
+	public ResponseEntity<String> delete(@PathVariable String username) throws EntityNotFoundException, ClienteException {
+		clienteService.delete(username);
+		return new ResponseEntity<String>("Cliente " + username +" deletado com sucesso!", HttpStatus.OK);
 	}
 }

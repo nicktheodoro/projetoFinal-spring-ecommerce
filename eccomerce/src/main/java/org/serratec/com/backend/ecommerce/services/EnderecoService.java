@@ -1,6 +1,5 @@
 package org.serratec.com.backend.ecommerce.services;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,8 +71,6 @@ public class EnderecoService {
 		ClienteEntity cliente = clienteRepository.findByUsername(username);
 		List<EnderecoEntity> listaEnderecos = cliente.getEnderecos();
 
-		List<EnderecoEntity> listaRetorno = new ArrayList<>();
-
 		if (enderecoAtualizado.size() > 0) {
 			for (EnderecoDto dto : enderecoAtualizado) {
 
@@ -89,11 +86,9 @@ public class EnderecoService {
 							enderecoDto.setNumero(dto.getNumero());
 
 							enderecoRepository.save(enderecoMapper.toEntity(enderecoDto));
-							listaRetorno.add(enderecoEntity);
 						}
 
 						if (enderecoEntity.getCep().equals(dto.getCep())) {
-							
 
 							if ((enderecoRepository.findByCepAndClienteIdAndNumeroAndComplemento(dto.getCep(),
 									cliente.getId(), dto.getNumero(), dto.getComplemento()) == null)) {
@@ -101,12 +96,7 @@ public class EnderecoService {
 								enderecoEntity.setNumero(dto.getNumero());
 								enderecoRepository.save(enderecoEntity);
 							}
-							
-							if (!listaRetorno.contains(enderecoEntity)) {
-								listaRetorno.add(enderecoEntity);
-							}
 						}
-
 					}
 
 				} else {
@@ -116,13 +106,11 @@ public class EnderecoService {
 					enderecoDto.setCliente(cliente);
 
 					enderecoRepository.save(enderecoMapper.toEntity(enderecoDto));
-					listaRetorno.add(enderecoMapper.toEntity(enderecoDto));
 				}
-
 			}
 		}
 
-		return enderecoMapper.listToDto(listaRetorno);
+		return enderecoMapper.listToDto(enderecoRepository.findByCliente(cliente));
 
 	}
 
