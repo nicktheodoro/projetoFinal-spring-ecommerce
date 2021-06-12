@@ -135,7 +135,6 @@ public class ProdutoService {
 		} else {
 			throw new ProdutoException("Estoque indisponível");
 		}
-
 	}
 
 	public void devolverEstoque(Long idProduto, Integer quantidade) throws EntityNotFoundException, ProdutoException {
