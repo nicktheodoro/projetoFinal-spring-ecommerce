@@ -248,7 +248,6 @@ public class PedidoService {
 		}
 	}
 	
-
 	public void devolverProdutosEstoque(String numeroPedido, List<ProdutoDto> produtos) throws EntityNotFoundException, ProdutoException {
 		PedidoEntity pedidoEntity = pedidoRepository.findByNumeroPedido(numeroPedido);
 		List<CarrinhoEntity> carrinho = carrinhoRepository.findByPedidos(pedidoEntity);
