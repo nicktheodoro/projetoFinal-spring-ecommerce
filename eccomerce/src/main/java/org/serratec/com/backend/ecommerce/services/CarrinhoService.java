@@ -13,6 +13,7 @@ import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
 import org.serratec.com.backend.ecommerce.mappers.CarrinhoMapper;
 import org.serratec.com.backend.ecommerce.mappers.PedidoMapper;
 import org.serratec.com.backend.ecommerce.repositories.CarrinhoRepository;
+import org.serratec.com.backend.ecommerce.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,9 @@ public class CarrinhoService {
 
 	@Autowired
 	CarrinhoRepository carrinhoRepository;
+
+	@Autowired
+	PedidoRepository pedidoRepository;
 
 	@Autowired
 	CarrinhoMapper carrinhoMapper;
@@ -110,15 +114,15 @@ public class CarrinhoService {
 					&& carrinhoDto.getPedido().equals(carrinhoMapper.toDto(entity).getPedido())) {
 				entity.setQuantidade(carrinhoDto.getQuantidade());
 				carrinhoRepository.save(entity);
-			}else if(carrinhoDto.getPedido().equals(carrinhoMapper.toDto(entity).getPedido())){
-					CarrinhoDto novoCarrinho = new CarrinhoDto();
-					
-					novoCarrinho.setPedido(carrinhoDto.getPedido());
-					novoCarrinho.setProduto(carrinhoDto.getProduto());
-					novoCarrinho.setPreco(produtoService.findById(carrinhoDto.getProduto()).getPreco());
-					novoCarrinho.setQuantidade(carrinhoDto.getQuantidade());
-					
-					carrinhoRepository.save(carrinhoMapper.toEntity(carrinhoDto));
+			} else if (carrinhoDto.getPedido().equals(carrinhoMapper.toDto(entity).getPedido())) {
+				CarrinhoDto novoCarrinho = new CarrinhoDto();
+
+				novoCarrinho.setPedido(carrinhoDto.getPedido());
+				novoCarrinho.setProduto(carrinhoDto.getProduto());
+				novoCarrinho.setPreco(produtoService.findById(carrinhoDto.getProduto()).getPreco());
+				novoCarrinho.setQuantidade(carrinhoDto.getQuantidade());
+
+				carrinhoRepository.save(carrinhoMapper.toEntity(carrinhoDto));
 			}
 		}
 	}
@@ -130,5 +134,11 @@ public class CarrinhoService {
 				this.atualizarQuantidade(pedidoEntity, carrinhoDto);
 			}
 		}
+
+	}
+
+	public String deletarCarrinho(PedidoEntity pedidoEntity) {
+		carrinhoRepository.deleteById(pedidoEntity.getId());
+		return " Carrinho deletado com sucesso";
 	}
 }

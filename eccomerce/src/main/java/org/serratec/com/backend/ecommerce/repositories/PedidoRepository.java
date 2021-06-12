@@ -5,9 +5,14 @@ import java.util.List;
 import org.serratec.com.backend.ecommerce.entities.ClienteEntity;
 import org.serratec.com.backend.ecommerce.entities.PedidoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> {
 	PedidoEntity findByNumeroPedido(String numeroPedido);
 	
 	List<PedidoEntity> findByCliente(ClienteEntity cliente);
+
+	//@Query("delete from PedidoEntity p where p.numeroPedido = :numeroPedido")
+	//void deleteByNumeroPedido(@Param("numeroPedido") String numeroPedido);	
 }

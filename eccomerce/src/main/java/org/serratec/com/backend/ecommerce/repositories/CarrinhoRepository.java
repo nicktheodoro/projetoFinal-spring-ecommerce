@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CarrinhoRepository extends JpaRepository<CarrinhoEntity, Long> {
 	List<CarrinhoEntity> findByPedidos(PedidoEntity pedidosEntity);
-	
+
 	List<CarrinhoEntity> findByProdutos(ProdutoEntity produtosEntity);
+
 }
