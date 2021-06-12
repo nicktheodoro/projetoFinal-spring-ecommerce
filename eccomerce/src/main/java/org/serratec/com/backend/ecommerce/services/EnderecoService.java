@@ -81,7 +81,8 @@ public class EnderecoService {
 
 					for (EnderecoEntity enderecoEntity : listaEnderecos) {
 
-						if (enderecoRepository.findByCepAndClienteId(dto.getCep(), cliente.getId()) == null) {
+						if (enderecoRepository.findByCepAndClienteIdAndNumeroAndComplemento(dto.getCep(),
+								cliente.getId(), dto.getNumero(), dto.getComplemento()) == null) {
 							EnderecoDto enderecoDto = this.getCep(dto.getCep());
 							enderecoDto.setComplemento(dto.getComplemento());
 							enderecoDto.setCliente(cliente);
