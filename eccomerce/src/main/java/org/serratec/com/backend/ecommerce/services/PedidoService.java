@@ -319,24 +319,23 @@ public class PedidoService {
 		PedidoEntity pedidoEntity = pedidoRepository.findByNumeroPedido(numeroPedido);
 		if (pedidoEntity == null) {
 			throw new PedidoException("Pedido com número: " + numeroPedido + " não encontrado");
-		}
+		} else if (!StatusCompra.FINALIZADO.equals(pedidoEntity.getStatus())) {
+			List<ProdutosPedidosDto> listaProdutosPedidosDto = new ArrayList<>();
+			List<CarrinhoEntity> listaCarrinhoEntity = carrinhoRepository.findByPedidos(pedidoEntity);
 
-		List<ProdutosPedidosDto> listaProdutosPedidosDto = new ArrayList<>();
-		List<CarrinhoEntity> listaCarrinhoEntity = carrinhoRepository.findByPedidos(pedidoEntity);
+			for (CarrinhoEntity carrinhoEntity : listaCarrinhoEntity) {
+				ProdutosPedidosDto produtosPedidosDto = produtoMapper
+						.toProdutosPedidos(produtoService.findByName(carrinhoEntity.getProdutos().getNome()));
+				produtosPedidosDto.setQuantidade(carrinhoEntity.getQuantidade());
 
-		for (CarrinhoEntity carrinhoEntity : listaCarrinhoEntity) {
-			ProdutosPedidosDto produtosPedidosDto = produtoMapper
-					.toProdutosPedidos(produtoService.findByName(carrinhoEntity.getProdutos().getNome()));
-			produtosPedidosDto.setQuantidade(carrinhoEntity.getQuantidade());
+				listaProdutosPedidosDto.add(produtosPedidosDto);
+			}
 
-			listaProdutosPedidosDto.add(produtosPedidosDto);
-		}
+			pedidoEntity.setDataPedido(LocalDate.now());
+			pedidoEntity.setDataEntrega(LocalDate.now().plusDays(7));
+			pedidoEntity.setStatus(StatusCompra.FINALIZADO);
 
-		pedidoEntity.setDataPedido(LocalDate.now());
-		pedidoEntity.setDataEntrega(LocalDate.now().plusDays(7));
-		pedidoEntity.setStatus(StatusCompra.FINALIZADO);
-
-		PedidoFinalizadoDto pedidoFinalizadoDto = pedidoMapper.toPedidoFinalizadoDto(pedidoEntity);
+			PedidoFinalizadoDto pedidoFinalizadoDto = pedidoMapper.toPedidoFinalizadoDto(pedidoEntity);
 
 		String msg = "<!DOCTYPE html><html> <head> <meta charset=\"UTF-8\"/> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"/> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/> <title>Nota Fiscal</title> <style>.container{background-color: #e6e8eb; border: thin, solid; margin: 0 auto; width: 50rem; height: 40rem; padding: 2rem; color: black;}</style> </head> <body> <div class=\"container\"> <div class=\"emitente\"> <h2>Emitente</h2> <hr/> <p>Razão Social</p><p>Spring Play Ecommerce de Jogos S.A.</p><p>CNPJ: 07.714.105/0002-07</p><p>Inscrição Estadual: 083078665</p><p>UF: RJ</p></div><div class=\"content-tomador\"> <h2>Destinatário</h2> <hr/> <p>Nome Cliente:{username}</p><p>Cpf:{cpf}</p></div><div class=\"dados-nfe\"> <h2>Dados Pedido</h2> <hr/> <p>Número Pedido:{numeroPedido}</p><p>Data de entrega:{dataEntrega}</p><p>Nome do produto:{nome}</p><p>Total do pedido:{valorTotal}</p></div></div></body></html>";
 		String listaProdutos = "";
@@ -361,12 +360,15 @@ public class PedidoService {
 		msg = msg.replaceAll(Pattern.quote("{nome}"), listaProdutos);
 		msg = msg.replaceAll(Pattern.quote("{valorTotal}"), pedidoFinalizadoDto.getValorTotal().toString());
 
-		mailConfig.sendMail(pedidoEntity.getCliente().getEmail(), "Pedido recebido com sucesso", msg);
+			mailConfig.sendMail(pedidoEntity.getCliente().getEmail(), "Pedido recebido com sucesso", msg);
 
-		pedidoFinalizadoDto.setProduto(listaProdutosPedidosDto);
+			pedidoFinalizadoDto.setProduto(listaProdutosPedidosDto);
 
-		pedidoRepository.save(pedidoEntity);
-		return pedidoFinalizadoDto;
+			pedidoRepository.save(pedidoEntity);
+			return pedidoFinalizadoDto;
+		}else {
+			throw new PedidoException("Pedido já finalizado");
+		}
 	}
 
 	public List<ProdutosPedidosDto> coletarProdutosCarrinho(Long pedidoId) throws EntityNotFoundException {
