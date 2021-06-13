@@ -29,13 +29,13 @@ public class ClienteController {
 	ClienteService clienteService;
 
 	@GetMapping
-	public ResponseEntity<List<ClienteDto>> getAll() {
-		return new ResponseEntity<List<ClienteDto>>(clienteService.getAll(), HttpStatus.OK);
+	public ResponseEntity<List<ClienteSimplesDto>> getAll() {
+		return new ResponseEntity<List<ClienteSimplesDto>>(clienteService.getAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{username}")
-	public ResponseEntity<ClienteDto> getById(@PathVariable String username) throws EntityNotFoundException {
-		return new ResponseEntity<ClienteDto>(clienteService.getByUsername(username), HttpStatus.OK);
+	public ResponseEntity<ClienteSimplesDto> getById(@PathVariable String username) throws EntityNotFoundException {
+		return new ResponseEntity<ClienteSimplesDto>(clienteService.getByUsername(username), HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -44,9 +44,9 @@ public class ClienteController {
 	}
 
 	@PutMapping("/{username}")
-	public ResponseEntity<ClienteDto> update(@PathVariable String username, @Valid @RequestBody ClienteDto dto)
+	public ResponseEntity<ClienteSimplesDto> update(@PathVariable String username, @Valid @RequestBody ClienteDto dto)
 			throws EntityNotFoundException {
-		return new ResponseEntity<ClienteDto>(clienteService.update(username, dto), HttpStatus.ACCEPTED);
+		return new ResponseEntity<ClienteSimplesDto>(clienteService.update(username, dto), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/{username}")

@@ -7,7 +7,6 @@ public class ClienteSimplesDto {
 
 	private String email;
 	private String username;
-	private String senha;
 	private String nome;
 	private String cpf;
 	private String telefone;
@@ -28,14 +27,6 @@ public class ClienteSimplesDto {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
 	}
 
 	public String getNome() {

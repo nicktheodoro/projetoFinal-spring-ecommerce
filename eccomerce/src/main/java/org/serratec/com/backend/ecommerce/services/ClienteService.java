@@ -41,12 +41,12 @@ public class ClienteService {
 	@Autowired
 	BCryptPasswordEncoder bCrypt;
 
-	public List<ClienteDto> getAll() {
-		return clienteRepository.findAll().stream().map(clienteMapper::toDto).collect(Collectors.toList());
+	public List<ClienteSimplesDto> getAll() {
+		return clienteRepository.findAll().stream().map(clienteMapper::toSimplesDto).collect(Collectors.toList());
 	}
 
-	public ClienteDto getByUsername(String username) throws EntityNotFoundException {
-		return clienteMapper.toDto(this.findById(clienteRepository.findByUsername(username).getId()));
+	public ClienteSimplesDto getByUsername(String username) throws EntityNotFoundException {
+		return clienteMapper.toSimplesDto(clienteRepository.findByUsername(username));
 	}
 
 	public ClienteSimplesDto create(ClienteDto clienteDto) throws EntityNotFoundException, ClienteException {
@@ -67,7 +67,7 @@ public class ClienteService {
 		}
 	}
 
-	public ClienteDto update(String username, ClienteDto clienteUpdate) throws EntityNotFoundException {
+	public ClienteSimplesDto update(String username, ClienteDto clienteUpdate) throws EntityNotFoundException {
 		ClienteEntity clienteEntity = clienteRepository.findByUsername(username);
 
 		clienteEntity.setUsername(clienteUpdate.getUsername());
@@ -78,9 +78,10 @@ public class ClienteService {
 		clienteEntity.setDataNascimento(clienteUpdate.getDataNascimento());
 		enderecoService.update(clienteEntity.getUsername(), enderecoMapper.listToDto(clienteUpdate.getEnderecos()));
 
-		ClienteDto retorno = clienteMapper.toDto(clienteRepository.save(clienteEntity));
-		retorno.setEnderecos(enderecoRepository.findByCliente(clienteEntity));
-		return retorno;
+		ClienteDto dto = clienteMapper.toDto(clienteRepository.save(clienteEntity));
+		dto.setEnderecos(enderecoRepository.findByCliente(clienteEntity));
+		
+		return clienteMapper.toSimplesDto(clienteMapper.toEntity(dto));
 	}
 
 	public void delete(String username) throws EntityNotFoundException, ClienteException {
