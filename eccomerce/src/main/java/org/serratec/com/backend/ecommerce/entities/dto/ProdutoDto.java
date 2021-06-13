@@ -22,7 +22,8 @@ public class ProdutoDto {
 
 	private Integer quantidadeEstoque;
 
-	private Long categoria;
+//	private Long categoria;
+	private String categoria;
 
 	private LocalDate dataCadastro = LocalDate.now();
 
@@ -66,11 +67,11 @@ public class ProdutoDto {
 		this.quantidadeEstoque = quantidadeEstoque;
 	}
 
-	public Long getCategoria() {
+	public String getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(Long categoria) {
+	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
 

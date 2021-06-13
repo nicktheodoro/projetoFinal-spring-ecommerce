@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.ImagemEntity;
+import org.serratec.com.backend.ecommerce.entities.ProdutoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ProdutoDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
@@ -46,7 +47,7 @@ public class ProdutoController {
 	}
 	
 	@GetMapping("/categoria/{nome}")
-	public ResponseEntity<List<ProdutoDto>> getByProdutoByCategoriaId(@PathVariable String nome) throws EntityNotFoundException {
+	public ResponseEntity<List<ProdutoDto>> getByProdutoByNomeCategoria(@PathVariable String nome) throws EntityNotFoundException {
 		return new ResponseEntity<List<ProdutoDto>>(produtoService.getByCategoriaNome(nome), HttpStatus.OK);
 	}
 
@@ -55,13 +56,14 @@ public class ProdutoController {
 		return new ResponseEntity<ProdutoDto>(produtoService.getByName(nome), HttpStatus.OK);
 	}
 
-	@GetMapping("/{id}/imagem")
-	public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
-		ImagemEntity imagem = imagemService.getImagem(id);
+	@GetMapping("/{nomeProduto}/imagem")
+	public ResponseEntity<byte[]> getImage(@PathVariable String nomeProduto) throws EntityNotFoundException {
+		ProdutoEntity produto = produtoService.findByName(nomeProduto.toLowerCase());
+		ImagemEntity imagem = imagemService.getImagem(produto.getId());
 		HttpHeaders header = new HttpHeaders();
 		header.add("content-length", String.valueOf(imagem.getData().length));
 		header.add("content-type", imagem.getMimeType());
-		return new ResponseEntity<byte[]>(imagemService.getImagem(id).getData(), header, HttpStatus.OK);
+		return new ResponseEntity<byte[]>(imagemService.getImagem(produto.getId()).getData(), header, HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -70,16 +72,16 @@ public class ProdutoController {
 		return new ResponseEntity<ProdutoDto>(produtoService.create(product, file), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<ProdutoDto> update(@PathVariable Long id, @RequestBody ProdutoDto category)
-			throws EntityNotFoundException {
-		return new ResponseEntity<ProdutoDto>(produtoService.update(id, category), HttpStatus.ACCEPTED);
+	@PutMapping("/{nomeProduto}")
+	public ResponseEntity<ProdutoDto> update(@PathVariable String nomeProduto, @RequestBody ProdutoDto produto)
+			throws EntityNotFoundException, ProdutoException {
+		return new ResponseEntity<ProdutoDto>(produtoService.update(nomeProduto, produto), HttpStatus.ACCEPTED);
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, ProdutoException {
-		produtoService.delete(id);
+	@DeleteMapping("/{nomeProduto}")
+	public ResponseEntity<String> delete(@PathVariable String nomeProduto) throws EntityNotFoundException, ProdutoException {
+		produtoService.delete(nomeProduto);
 
-		return new ResponseEntity<String>("Produto com id: " + id + " deletado com sucesso!", HttpStatus.OK);
+		return new ResponseEntity<String>("Produto com id: " + nomeProduto + " deletado com sucesso!", HttpStatus.OK);
 	}
 }
