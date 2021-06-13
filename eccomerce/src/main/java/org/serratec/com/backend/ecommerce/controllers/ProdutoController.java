@@ -70,10 +70,10 @@ public class ProdutoController {
 		return new ResponseEntity<ProdutoDto>(produtoService.create(product, file), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<ProdutoDto> update(@PathVariable Long id, @RequestBody ProdutoDto category)
+	@PutMapping("/{nomeProduto}")
+	public ResponseEntity<ProdutoDto> update(@PathVariable String nomeProduto, @RequestBody ProdutoDto produto)
 			throws EntityNotFoundException {
-		return new ResponseEntity<ProdutoDto>(produtoService.update(id, category), HttpStatus.ACCEPTED);
+		return new ResponseEntity<ProdutoDto>(produtoService.update(nomeProduto, produto), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/{nomeProduto}")

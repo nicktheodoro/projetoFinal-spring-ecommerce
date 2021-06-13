@@ -99,10 +99,9 @@ public class ProdutoService {
 		}
 	}
 
-	public ProdutoDto update(Long id, ProdutoDto produtoUpdate) throws EntityNotFoundException {
-		produtoUpdate.setNome(produtoUpdate.getNome().toLowerCase());
-		ProdutoEntity produtoEntity = this.findById(id);
-		produtoEntity.setNome(produtoUpdate.getNome());
+	public ProdutoDto update(String nome, ProdutoDto produtoUpdate) throws EntityNotFoundException {
+		ProdutoEntity produtoEntity = this.findByName(nome.toLowerCase());
+		produtoEntity.setNome(produtoUpdate.getNome().toLowerCase());
 		produtoEntity.setPreco(produtoUpdate.getPreco());
 		produtoEntity.setQuantidadeEstoque(produtoUpdate.getQuantidadeEstoque());
 		produtoEntity.setCategoria(categoriaService.findByNome(produtoUpdate.getCategoria()));

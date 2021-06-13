@@ -67,11 +67,19 @@ public class CategoriaService {
 			throws EntityNotFoundException, CategoriaException {
 		CategoriaEntity categoriaEntity = this.findByNome(nome.toLowerCase());
 		if (categoriaEntity != null) {
-			if (categoriaUpdate.getDescricao().isBlank()) {
-				throw new CategoriaException(
-						"É necessário informar uma descrição para se realizar a atualização da categoria");
-			} else {
+			if (categoriaUpdate.getNome() != null) {
+				if (this.findByNome(categoriaUpdate.getNome().toLowerCase()) != null) {
+					throw new CategoriaException(
+							"Categoria " + categoriaUpdate.getNome().toLowerCase() + " já cadastrada");
+				} else {
+					categoriaEntity.setNome(categoriaUpdate.getNome());
+				}
+			}
+			if (!categoriaUpdate.getDescricao().isBlank()) {
 				categoriaEntity.setDescricao(categoriaUpdate.getDescricao());
+			}else if(categoriaUpdate.getDescricao().isBlank()) {
+				throw new CategoriaException(
+						"Para se atualizar a descrição é necessário informar um valor.");
 			}
 			return categoriaMapper.toDto(categoriaRepository.save(categoriaEntity));
 		} else {
