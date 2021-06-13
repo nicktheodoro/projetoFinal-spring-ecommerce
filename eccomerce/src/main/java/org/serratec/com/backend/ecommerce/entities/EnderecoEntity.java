@@ -102,8 +102,6 @@ public class EnderecoEntity {
 
 	@Override
 	public String toString() {
-		return "AddressEntity [id=" + id + ", cep=" + cep + ", rua=" + rua + ", bairro=" + bairro + ", cidade=" + cidade
-				+ ", numero=" + numero + ", complemento=" + complemento + ", estado=" + estado + ", cliente=" + cliente
-				+ "]";
+		return "Rua " + rua +  ", " + numero + ", " + bairro + ", " + cidade;
 	}
 }
