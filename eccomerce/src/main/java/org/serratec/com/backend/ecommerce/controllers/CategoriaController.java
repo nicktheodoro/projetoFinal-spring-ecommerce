@@ -31,18 +31,13 @@ public class CategoriaController {
 		return new ResponseEntity<List<CategoriaDto>>(categoriaService.getAll(), HttpStatus.OK);
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<CategoriaDto> getById(@PathVariable Long id) throws EntityNotFoundException {
-		return new ResponseEntity<CategoriaDto>(categoriaService.getById(id), HttpStatus.OK);
-	}
-
-	@GetMapping("/nome")
-	public ResponseEntity<CategoriaDto> getByName(@RequestParam String nome) {
+	@GetMapping("/{nome}")
+	public ResponseEntity<CategoriaDto> getByName(@PathVariable String nome) {
 		return new ResponseEntity<CategoriaDto>(categoriaService.getByName(nome), HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<CategoriaDto> create(@RequestBody CategoriaDto category) throws CategoriaException{
+	public ResponseEntity<CategoriaDto> create(@RequestBody CategoriaDto category) throws CategoriaException {
 		return new ResponseEntity<CategoriaDto>(categoriaService.create(category), HttpStatus.CREATED);
 	}
 
@@ -53,8 +48,10 @@ public class CategoriaController {
 	}
 
 	@DeleteMapping("/{nomeCategoria}")
-	public ResponseEntity<String> delete(@PathVariable String nomeCategoria) throws EntityNotFoundException, CategoriaException {
+	public ResponseEntity<String> delete(@PathVariable String nomeCategoria)
+			throws EntityNotFoundException, CategoriaException {
 		categoriaService.delete(nomeCategoria);
-		return new ResponseEntity<String>("Categoria com nome: " + nomeCategoria +" deletada com sucesso!", HttpStatus.OK);
+		return new ResponseEntity<String>("Categoria com nome: " + nomeCategoria + " deletada com sucesso!",
+				HttpStatus.OK);
 	}
 }
