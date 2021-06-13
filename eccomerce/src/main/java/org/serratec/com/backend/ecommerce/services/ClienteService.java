@@ -45,15 +45,20 @@ public class ClienteService {
 		return clienteRepository.findAll().stream().map(clienteMapper::toSimplesDto).collect(Collectors.toList());
 	}
 
-	public ClienteSimplesDto getByUsername(String username) throws EntityNotFoundException {
-		return clienteMapper.toSimplesDto(clienteRepository.findByUsername(username));
+	public ClienteSimplesDto getByUsername(String username) throws ClienteException {
+		
+		if(clienteRepository.findByUsername(username) != null) {
+			return clienteMapper.toSimplesDto(clienteRepository.findByUsername(username));
+		} else {
+			throw new ClienteException("Usuário não existe");
+		}
 	}
 
 	public ClienteSimplesDto create(ClienteDto clienteDto) throws EntityNotFoundException, ClienteException {
 		if (this.findByCpf(clienteDto.getCpf()) != null
 				|| clienteRepository.findByEmail(clienteDto.getEmail()).size() != 0
 				|| clienteRepository.findByUsername(clienteDto.getUsername()) != null) {
-			throw new ClienteException("CPF ou Email ou UserName já cadastrado");
+			throw new ClienteException("CPF ou email ou username já cadastrado");
 		} else {
 			ClienteEntity clienteEntity = clienteMapper.toEntity(clienteDto);
 			clienteEntity.setSenha(bCrypt.encode(clienteDto.getSenha()));

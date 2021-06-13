@@ -34,7 +34,7 @@ public class ClienteController {
 	}
 
 	@GetMapping("/{username}")
-	public ResponseEntity<ClienteSimplesDto> getById(@PathVariable String username) throws EntityNotFoundException {
+	public ResponseEntity<ClienteSimplesDto> getById(@PathVariable String username) throws ClienteException {
 		return new ResponseEntity<ClienteSimplesDto>(clienteService.getByUsername(username), HttpStatus.OK);
 	}
 
