@@ -44,11 +44,35 @@ public class EnderecoService {
 		return enderecoMapper.toSimplificadoDto(this.findById(id));
 	}
 
-	public EnderecoSimplesDto create(EnderecoDto enderecoDto, Long idCliente) throws EntityNotFoundException {
+	public EnderecoSimplesDto create(EnderecoDto enderecoNovo, String username)
+			throws EntityNotFoundException, EnderecoRepetidoException {
 
-		EnderecoDto endDto = this.setEndereco(enderecoDto, idCliente);
+		ClienteEntity cliente = clienteRepository.findByUsername(username);
+		List<EnderecoEntity> listaEnderecos = cliente.getEnderecos();
+		EnderecoDto dto = this.setEndereco(enderecoNovo, cliente.getId());
 
-		return enderecoMapper.toSimplificadoDto(enderecoRepository.save(enderecoMapper.toEntity(endDto)));
+		if (listaEnderecos.size() > 0) {
+			for (EnderecoEntity enderecoEntity : listaEnderecos) {
+				if (enderecoEntity.getCep().equals(enderecoNovo.getCep())) {
+
+					if (dto.getNumero().equals(enderecoEntity.getNumero())
+							&& dto.getComplemento().equals(enderecoEntity.getComplemento())) {
+						throw new EnderecoRepetidoException("Endereco Repetido");
+					} else {
+						if ((enderecoRepository.findByCepAndClienteIdAndNumeroAndComplemento(dto.getCep(),
+								cliente.getId(), dto.getNumero(), dto.getComplemento()) == null)) {
+							enderecoRepository.save(enderecoMapper.toEntity(dto));
+						}
+					}
+
+				}
+			}
+		} else {
+			enderecoRepository.save(enderecoMapper.toEntity(dto));
+		}
+
+		return enderecoMapper.toSimplificadoDto(enderecoRepository.findByCepAndClienteIdAndNumeroAndComplemento(
+				enderecoNovo.getCep(), cliente.getId(), enderecoNovo.getNumero(), enderecoNovo.getComplemento()));
 	}
 
 	public List<EnderecoSimplesDto> criarPeloCliente(List<EnderecoDto> listaEnderecoDto, Long idCliente)

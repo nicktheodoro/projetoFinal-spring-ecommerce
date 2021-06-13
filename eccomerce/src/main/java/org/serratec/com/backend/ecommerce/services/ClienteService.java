@@ -37,7 +37,7 @@ public class ClienteService {
 
 	@Autowired
 	EnderecoMapper enderecoMapper;
-	
+
 	@Autowired
 	BCryptPasswordEncoder bCrypt;
 
@@ -45,8 +45,8 @@ public class ClienteService {
 		return clienteRepository.findAll().stream().map(clienteMapper::toDto).collect(Collectors.toList());
 	}
 
-	public ClienteDto getById(Long id) throws EntityNotFoundException {
-		return clienteMapper.toDto(this.findById(id));
+	public ClienteDto getByUsername(String username) throws EntityNotFoundException {
+		return clienteMapper.toDto(this.findById(clienteRepository.findByUsername(username).getId()));
 	}
 
 	public ClienteSimplesDto create(ClienteDto clienteDto) throws EntityNotFoundException, ClienteException {
