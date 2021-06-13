@@ -28,13 +28,12 @@ public class ProdutoEntity {
 	@ManyToOne
 	private CategoriaEntity categoria;
 
-	@OneToMany(mappedBy="produtos")    
+	@OneToMany(mappedBy = "produtos")
 	private List<CarrinhoEntity> carrinhos;
-	
+
 	@OneToOne
 	private ImagemEntity imagem;
 
-	
 	public Long getId() {
 		return id;
 	}
