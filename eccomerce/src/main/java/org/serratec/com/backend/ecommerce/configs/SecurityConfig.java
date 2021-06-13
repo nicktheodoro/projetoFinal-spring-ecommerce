@@ -1,7 +1,5 @@
 package org.serratec.com.backend.ecommerce.configs;
 
-import javax.servlet.Filter;
-
 import org.serratec.com.backend.ecommerce.security.AuthService;
 import org.serratec.com.backend.ecommerce.security.JWTAuthenticationFilter;
 import org.serratec.com.backend.ecommerce.security.JWTAuthorizationFilter;
@@ -27,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	JWTUtil jwtUtil;
 
-	private static final String[] AUTH_WHITELIST = { "/cliente/**" };
+	private static final String[] AUTH_WHITELIST = { "/cliente/**", "**"};
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {

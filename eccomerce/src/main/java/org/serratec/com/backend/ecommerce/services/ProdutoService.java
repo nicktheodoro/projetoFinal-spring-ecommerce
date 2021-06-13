@@ -48,7 +48,8 @@ public class ProdutoService {
 	}
 	
 	public List<ProdutoDto> getByCategoriaNome(String nomeCategoria) throws EntityNotFoundException {
-		return produtoMapper.listToDto((produtoRepository.findByCategoriaId(categoriaService.findByNome(nomeCategoria).getId())));
+		return produtoMapper
+				.listToDto((produtoRepository.findByCategoriaId(categoriaService.findByNome(nomeCategoria.toLowerCase()).getId())));
 	}
 
 	public List<ProdutoDto> getAll() {
@@ -69,10 +70,10 @@ public class ProdutoService {
 
 	public ProdutoDto create(ProdutoDto produtoDto, MultipartFile file)
 			throws EntityNotFoundException, ProdutoException, IOException {
-
+		produtoDto.setNome(produtoDto.getNome().toLowerCase());
 		try {
 			if (produtoDto.getNome().isBlank() || produtoDto.getPreco() == null
-					|| produtoDto.getQuantidadeEstoque() == null || produtoDto.getCategoria() == null) {
+					|| produtoDto.getQuantidadeEstoque() == null || produtoDto.getCategoria().isBlank()) {
 				throw new ProdutoException(
 						"Os campos Nome, Preço, Quantidade em estoque e categoria são obrigatórios!");
 			} else {
@@ -81,11 +82,12 @@ public class ProdutoService {
 				} else {
 					produtoDto.setNome(produtoDto.getNome().toLowerCase());
 					ProdutoEntity produtoEntity = produtoMapper.toEntity(produtoDto);
-					produtoEntity.setCategoria(categoriaService.findById(produtoDto.getCategoria()));
+					produtoEntity.setCategoria(categoriaService.findByNome(produtoDto.getCategoria().toLowerCase()));
 
 					produtoEntity = produtoRepository.save(produtoEntity);
 					imagemService.create(produtoEntity, file);
 					ProdutoDto pDto = produtoMapper.toDto(produtoEntity);
+					
 					pDto.setUrl(criarImagem(produtoEntity.getId()));
 
 					return pDto;
@@ -98,11 +100,12 @@ public class ProdutoService {
 	}
 
 	public ProdutoDto update(Long id, ProdutoDto produtoUpdate) throws EntityNotFoundException {
+		produtoUpdate.setNome(produtoUpdate.getNome().toLowerCase());
 		ProdutoEntity produtoEntity = this.findById(id);
 		produtoEntity.setNome(produtoUpdate.getNome());
 		produtoEntity.setPreco(produtoUpdate.getPreco());
 		produtoEntity.setQuantidadeEstoque(produtoUpdate.getQuantidadeEstoque());
-		produtoEntity.setCategoria(categoriaService.findById(produtoUpdate.getCategoria()));
+		produtoEntity.setCategoria(categoriaService.findByNome(produtoUpdate.getCategoria()));
 
 		if (produtoUpdate.getDescricao() != null) {
 			produtoEntity.setDescricao(produtoUpdate.getDescricao());
@@ -111,17 +114,21 @@ public class ProdutoService {
 		return produtoMapper.toDto(produtoRepository.save(produtoEntity));
 	}
 
-	public void delete(Long id) throws EntityNotFoundException, ProdutoException {
-		if (this.findById(id) != null) {
-			if (carrinhoRepository.findByProdutos(this.findById(id)).isEmpty()) {
-				imagemService.deletarImagemProduto(id);
-				produtoRepository.deleteById(id);
+	public void delete(String nome) throws EntityNotFoundException, ProdutoException {
+		ProdutoEntity produto = this.findByName(nome.toLowerCase());
+		if(nome.isBlank()) {
+			throw new ProdutoException("É necessário informar o nome do produto que se deseja deletar");
+		}
+		if (produto != null) {
+			if (carrinhoRepository.findByProdutos(this.findById(produto.getId())).isEmpty()) {
+				imagemService.deletarImagemProduto(produto.getId());
+				produtoRepository.deleteById(produto.getId());
 			} else {
 				throw new ProdutoException(
-						"Produto com id: " + id + " já vinculado a um ou mais pedidos, favor verificar!");
+						"Produto com nome: " + nome + " já vinculado a um ou mais pedidos, favor verificar!");
 			}
 		} else {
-			throw new EntityNotFoundException("Produto com id: " + id + "não encontrado!");
+			throw new EntityNotFoundException("Produto com nome: " + nome + "não encontrado!");
 		}
 
 	}

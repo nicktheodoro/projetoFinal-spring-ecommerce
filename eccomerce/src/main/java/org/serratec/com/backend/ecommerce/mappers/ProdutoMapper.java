@@ -8,6 +8,7 @@ import org.serratec.com.backend.ecommerce.entities.dto.ProdutoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.ProdutosPedidosDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.services.CategoriaService;
+import org.serratec.com.backend.ecommerce.services.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,9 @@ public class ProdutoMapper {
 
 	@Autowired
 	CategoriaService categoriaService;
+	
+	@Autowired 
+	ProdutoService produtoService;
 
 	public ProdutoEntity toEntity(ProdutoDto dto) throws EntityNotFoundException {
 		ProdutoEntity entity = new ProdutoEntity();
@@ -24,7 +28,7 @@ public class ProdutoMapper {
 		entity.setPreco(dto.getPreco());
 		entity.setQuantidadeEstoque(dto.getQuantidadeEstoque());
 		entity.setDataCadastro(dto.getDataCadastro());
-		entity.setCategoria(categoriaService.findById(dto.getCategoria()));
+		entity.setCategoria(categoriaService.findByNome(dto.getCategoria()));
 
 		return entity;
 	}
@@ -36,7 +40,8 @@ public class ProdutoMapper {
 		dto.setPreco(entity.getPreco());
 		dto.setQuantidadeEstoque(entity.getQuantidadeEstoque());
 		dto.setDataCadastro(entity.getDataCadastro());
-		dto.setCategoria(entity.getCategoria().getId());
+		dto.setCategoria(entity.getCategoria().getNome());
+		dto.setUrl(produtoService.criarImagem(entity.getId()));
 
 		return dto;
 	}
@@ -52,6 +57,7 @@ public class ProdutoMapper {
 		List<ProdutoDto> listaDto = new ArrayList<>();
 		for (ProdutoEntity entity : listaEntity) {
 			ProdutoDto dto = this.toDto(entity);
+			dto.setUrl(produtoService.criarImagem(entity.getId()));
 			listaDto.add(dto);
 		}
 		return listaDto;

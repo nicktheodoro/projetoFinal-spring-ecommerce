@@ -63,24 +63,32 @@ public class CategoriaService {
 		}
 	}
 
-	public CategoriaDto update(Long id, CategoriaDto categoriaUpdate) throws EntityNotFoundException {
-		CategoriaEntity categoriaEntity = this.findById(id);
-		categoriaEntity.setNome(categoriaUpdate.getNome());
-
-		if (categoriaUpdate.getDescricao() != null) {
-			categoriaEntity.setDescricao(categoriaUpdate.getDescricao());
+	public CategoriaDto update(String nome, CategoriaDto categoriaUpdate)
+			throws EntityNotFoundException, CategoriaException {
+		CategoriaEntity categoriaEntity = this.findByNome(nome.toLowerCase());
+		if (categoriaEntity != null) {
+			if (categoriaUpdate.getDescricao().isBlank()) {
+				throw new CategoriaException(
+						"É necessário informar uma descrição para se realizar a atualização da categoria");
+			} else {
+				categoriaEntity.setDescricao(categoriaUpdate.getDescricao());
+			}
+			return categoriaMapper.toDto(categoriaRepository.save(categoriaEntity));
+		} else {
+			throw new EntityNotFoundException("Categoria com nome: " + nome.toLowerCase() + "não encontrada");
 		}
-
-		return categoriaMapper.toDto(categoriaRepository.save(categoriaEntity));
 	}
 
-	public void delete(Long id) throws EntityNotFoundException, CategoriaException {
-		if (this.findById(id) != null) {
-			if(produtoService.findByCategoriaId(id).isEmpty()){
-				categoriaRepository.deleteById(id);
+	public void delete(String nomeCategoria) throws EntityNotFoundException, CategoriaException {
+		CategoriaEntity categoria = this.findByNome(nomeCategoria.toLowerCase());
+		if (categoria != null) {
+			if(produtoService.findByCategoriaId(categoria.getId()).isEmpty()){
+				categoriaRepository.deleteById(categoria.getId());
 			}else {
-				throw new CategoriaException("Categoria com id: " + id + " já vinculada a um ou mais produtos, favor verificar!");
+				throw new CategoriaException("Categoria com nome: " + nomeCategoria.toLowerCase() + " já vinculada a um ou mais produtos, favor verificar!");
 			}
+		}else {
+			throw new EntityNotFoundException("Categoria com nome: " + nomeCategoria.toLowerCase() + " não encontrada");
 		}
 	}
 }
