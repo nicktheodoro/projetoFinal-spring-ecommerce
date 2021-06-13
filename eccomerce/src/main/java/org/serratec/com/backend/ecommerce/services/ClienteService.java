@@ -94,8 +94,9 @@ public class ClienteService {
 			} else {
 				throw new ClienteException("O cliente " + username + " possui pedidos vinculados. Favor verificar");
 			}
+		} else {
+			throw new EntityNotFoundException("O cliente " + username + " não existe");
 		}
-		throw new EntityNotFoundException("O cliente " + username + " não existe");
 	}
 
 	public ClienteEntity findById(Long id) throws EntityNotFoundException {

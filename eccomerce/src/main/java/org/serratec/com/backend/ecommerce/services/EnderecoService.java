@@ -79,8 +79,13 @@ public class EnderecoService {
 			throws EntityNotFoundException {
 
 		for (EnderecoDto enderecoDto : listaEnderecoDto) {
-			EnderecoDto endDto = this.setEndereco(enderecoDto, idCliente);
-			enderecoRepository.save(enderecoMapper.toEntity(endDto));
+
+			if (enderecoRepository.findByCepAndClienteIdAndNumeroAndComplemento(enderecoDto.getCep(), idCliente,
+					enderecoDto.getNumero(), enderecoDto.getComplemento()) == null) {
+
+				EnderecoDto endDto = this.setEndereco(enderecoDto, idCliente);
+				enderecoRepository.save(enderecoMapper.toEntity(endDto));
+			}
 		}
 
 		enderecoMapper.toListaSimplficadoDto(enderecoRepository.findByCliente(clienteService.findById(idCliente)));
