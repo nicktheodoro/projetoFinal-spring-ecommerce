@@ -8,6 +8,7 @@ import org.serratec.com.backend.ecommerce.entities.dto.EnderecoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.EnderecoSimplesDto;
 import org.serratec.com.backend.ecommerce.exceptions.DataIntegrityViolationException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
+import org.serratec.com.backend.ecommerce.services.EnderecoRepetidoException;
 import org.serratec.com.backend.ecommerce.services.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,24 +34,21 @@ public class EnderecoController {
 		return new ResponseEntity<List<EnderecoSimplesDto>>(enderecoService.getAll(), HttpStatus.OK);
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<EnderecoSimplesDto> getOne(@PathVariable Long id) throws EntityNotFoundException {
-		return new ResponseEntity<EnderecoSimplesDto>(enderecoService.getById(id), HttpStatus.OK);
-	}
-
-	@PostMapping("/{id}")
-	public ResponseEntity<EnderecoSimplesDto> create(@Valid @RequestBody EnderecoDto dto, @PathVariable Long id) throws EntityNotFoundException {
-		return new ResponseEntity<EnderecoSimplesDto>(enderecoService.create(dto, id), HttpStatus.CREATED);
+	@PostMapping("/{username}")
+	public ResponseEntity<EnderecoSimplesDto> create(@Valid @RequestBody EnderecoDto dto, @PathVariable String username)
+			throws EntityNotFoundException, EnderecoRepetidoException {
+		return new ResponseEntity<EnderecoSimplesDto>(enderecoService.create(dto, username), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{username}")
-	public ResponseEntity<List<EnderecoDto>> update(@PathVariable String username, @Valid @RequestBody List<EnderecoDto> dto)
-			throws EntityNotFoundException {
+	public ResponseEntity<List<EnderecoDto>> update(@PathVariable String username,
+			@Valid @RequestBody List<EnderecoDto> dto) throws EntityNotFoundException {
 		return new ResponseEntity<List<EnderecoDto>>(enderecoService.update(username, dto), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, DataIntegrityViolationException {
+	public ResponseEntity<String> delete(@PathVariable Long id)
+			throws EntityNotFoundException, DataIntegrityViolationException {
 		enderecoService.delete(id);
 		return new ResponseEntity<String>("Endereço deletado com sucesso!", HttpStatus.OK);
 	}

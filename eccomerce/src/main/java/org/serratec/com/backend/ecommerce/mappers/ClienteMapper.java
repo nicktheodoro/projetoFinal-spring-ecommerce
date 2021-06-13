@@ -44,7 +44,6 @@ public class ClienteMapper {
 		ClienteSimplesDto dto = new ClienteSimplesDto();
 		dto.setEmail(entity.getEmail());
 		dto.setUsername(entity.getUsername());
-		dto.setSenha(entity.getSenha());
 		dto.setNome(entity.getNome());
 		dto.setCpf(entity.getCpf());
 		dto.setTelefone(entity.getTelefone());
