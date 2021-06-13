@@ -25,7 +25,6 @@ public class JWTUtil {
 	public String generateToken(String username) {
 		return Jwts.builder().setSubject(username).setExpiration(new Date(System.currentTimeMillis() + expiration))
 				.signWith(SignatureAlgorithm.HS512, secret.getBytes()).compact();
-
 	}
 
 	static Authentication getAuthentication(HttpServletRequest req) {
@@ -37,6 +36,7 @@ public class JWTUtil {
 				return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
 			}
 		}
+				
 		return null;
 	}
 

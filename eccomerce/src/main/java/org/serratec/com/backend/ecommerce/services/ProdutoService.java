@@ -46,10 +46,10 @@ public class ProdutoService {
 	public List<ProdutoEntity> findByCategoriaId(Long idCategoria) {
 		return produtoRepository.findByCategoriaId(idCategoria);
 	}
-	
+
 	public List<ProdutoDto> getByCategoriaNome(String nomeCategoria) throws EntityNotFoundException {
-		return produtoMapper
-				.listToDto((produtoRepository.findByCategoriaId(categoriaService.findByNome(nomeCategoria.toLowerCase()).getId())));
+		return produtoMapper.listToDto((produtoRepository
+				.findByCategoriaId(categoriaService.findByNome(nomeCategoria.toLowerCase()).getId())));
 	}
 
 	public List<ProdutoDto> getAll() {
@@ -66,12 +66,11 @@ public class ProdutoService {
 
 	public ProdutoEntity findByName(String nome) throws EntityNotFoundException {
 		ProdutoEntity produto = produtoRepository.findByNome(nome.toLowerCase());
-		if(produto != null) {
+		if (produto != null) {
 			return produto;
-		}
-		else {
+		} else {
 			throw new EntityNotFoundException("Produto com nome: " + nome + " não encontrado");
-		}	
+		}
 	}
 
 	public ProdutoDto create(ProdutoDto produtoDto, MultipartFile file)
@@ -107,7 +106,7 @@ public class ProdutoService {
 
 	public ProdutoDto update(String nome, ProdutoDto produtoUpdate) throws EntityNotFoundException, ProdutoException {
 		ProdutoEntity produtoEntity = this.findByName(nome.toLowerCase());
-		
+
 		if (produtoUpdate.getNome() != null) {
 			if (this.findByName(produtoUpdate.getNome().toLowerCase()) != null) {
 				throw new ProdutoException("Produto " + produtoUpdate.getNome().toLowerCase()
@@ -116,19 +115,18 @@ public class ProdutoService {
 				produtoEntity.setNome(produtoUpdate.getNome().toLowerCase());
 			}
 		}
-		if(produtoUpdate.getPreco()!= null) {
-			produtoEntity.setPreco(produtoUpdate.getPreco());			
+		if (produtoUpdate.getPreco() != null) {
+			produtoEntity.setPreco(produtoUpdate.getPreco());
 		}
-		if(produtoUpdate.getQuantidadeEstoque() != null) {
-			produtoEntity.setQuantidadeEstoque(produtoUpdate.getQuantidadeEstoque());			
+		if (produtoUpdate.getQuantidadeEstoque() != null) {
+			produtoEntity.setQuantidadeEstoque(produtoUpdate.getQuantidadeEstoque());
 		}
-		if(produtoUpdate.getCategoria() != null) {
-			produtoEntity.setCategoria(categoriaService.findByNome(produtoUpdate.getCategoria().toLowerCase()));			
+		if (produtoUpdate.getCategoria() != null) {
+			produtoEntity.setCategoria(categoriaService.findByNome(produtoUpdate.getCategoria().toLowerCase()));
 		}
 		if (produtoUpdate.getDescricao() != null) {
 			produtoEntity.setDescricao(produtoUpdate.getDescricao());
-		}	
-		else {
+		} else {
 			produtoEntity.setNome(produtoEntity.getNome());
 			produtoEntity.setPreco(produtoEntity.getPreco());
 			produtoEntity.setCategoria(produtoEntity.getCategoria());
@@ -141,7 +139,7 @@ public class ProdutoService {
 
 	public void delete(String nome) throws EntityNotFoundException, ProdutoException {
 		ProdutoEntity produto = this.findByName(nome.toLowerCase());
-		if(nome.isBlank()) {
+		if (nome.isBlank()) {
 			throw new ProdutoException("É necessário informar o nome do produto que se deseja deletar");
 		}
 		if (produto != null) {

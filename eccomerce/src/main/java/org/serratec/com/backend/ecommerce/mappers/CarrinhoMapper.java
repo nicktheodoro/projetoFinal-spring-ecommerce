@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CarrinhoMapper {
-	
+
 	@Autowired
 	ProdutoService produtoService;
-	
+
 	@Autowired
 	PedidoService pedidoService;
-	
+
 	public CarrinhoEntity toEntity(CarrinhoDto dto) throws EntityNotFoundException {
 		CarrinhoEntity entity = new CarrinhoEntity();
 		entity.setPreco(dto.getPreco());
@@ -33,7 +33,7 @@ public class CarrinhoMapper {
 		dto.setQuantidade(entity.getQuantidade());
 		dto.setProduto(entity.getProdutos().getId());
 		dto.setPedido(entity.getPedidos().getId());
-		
+
 		return dto;
 	}
 }

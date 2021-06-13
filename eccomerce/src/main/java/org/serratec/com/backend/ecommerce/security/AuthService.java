@@ -13,14 +13,15 @@ public class AuthService implements UserDetailsService {
 
 	@Autowired
 	ClienteRepository clienteRepository;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		ClienteEntity cliente = clienteRepository.findByUsername(username);
-		if(cliente==null) {
+		if (cliente == null) {
 			throw new UsernameNotFoundException("Usuário não encontrado");
 		}
-		return new UserSS(cliente.getId(),cliente.getUsername(),cliente.getSenha());
+		
+		return new UserSS(cliente.getId(), cliente.getUsername(), cliente.getSenha());
 	}
 
 }

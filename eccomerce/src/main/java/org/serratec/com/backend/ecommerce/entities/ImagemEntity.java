@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class ImagemEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

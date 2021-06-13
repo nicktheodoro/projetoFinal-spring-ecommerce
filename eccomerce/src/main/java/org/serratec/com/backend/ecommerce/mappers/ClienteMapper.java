@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ClienteMapper {
-	
+
 	@Autowired
 	EnderecoMapper enderecoMapper;
 
@@ -39,7 +39,7 @@ public class ClienteMapper {
 
 		return dto;
 	}
-	
+
 	public ClienteSimplesDto toSimplesDto(ClienteEntity entity) {
 		ClienteSimplesDto dto = new ClienteSimplesDto();
 		dto.setEmail(entity.getEmail());
@@ -49,7 +49,7 @@ public class ClienteMapper {
 		dto.setTelefone(entity.getTelefone());
 		dto.setDataNascimento(entity.getDataNascimento());
 		dto.setEnderecos(enderecoMapper.toListCadastroDto(entity.getEnderecos()));
-		
+
 		return dto;
 	}
 }

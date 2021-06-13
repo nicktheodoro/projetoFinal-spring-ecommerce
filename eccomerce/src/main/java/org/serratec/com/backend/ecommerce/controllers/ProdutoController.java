@@ -45,9 +45,10 @@ public class ProdutoController {
 	public ResponseEntity<ProdutoDto> getById(@PathVariable Long id) throws EntityNotFoundException {
 		return new ResponseEntity<ProdutoDto>(produtoService.getById(id), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/categoria/{nome}")
-	public ResponseEntity<List<ProdutoDto>> getByProdutoByNomeCategoria(@PathVariable String nome) throws EntityNotFoundException {
+	public ResponseEntity<List<ProdutoDto>> getByProdutoByNomeCategoria(@PathVariable String nome)
+			throws EntityNotFoundException {
 		return new ResponseEntity<List<ProdutoDto>>(produtoService.getByCategoriaNome(nome), HttpStatus.OK);
 	}
 
@@ -79,7 +80,8 @@ public class ProdutoController {
 	}
 
 	@DeleteMapping("/{nomeProduto}")
-	public ResponseEntity<String> delete(@PathVariable String nomeProduto) throws EntityNotFoundException, ProdutoException {
+	public ResponseEntity<String> delete(@PathVariable String nomeProduto)
+			throws EntityNotFoundException, ProdutoException {
 		produtoService.delete(nomeProduto);
 
 		return new ResponseEntity<String>("Produto com id: " + nomeProduto + " deletado com sucesso!", HttpStatus.OK);

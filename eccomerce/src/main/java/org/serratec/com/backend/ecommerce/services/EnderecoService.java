@@ -8,6 +8,7 @@ import org.serratec.com.backend.ecommerce.entities.ClienteEntity;
 import org.serratec.com.backend.ecommerce.entities.EnderecoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.EnderecoDto;
 import org.serratec.com.backend.ecommerce.entities.dto.EnderecoSimplesDto;
+import org.serratec.com.backend.ecommerce.exceptions.EnderecoRepetidoException;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.mappers.EnderecoMapper;
 import org.serratec.com.backend.ecommerce.repositories.ClienteRepository;

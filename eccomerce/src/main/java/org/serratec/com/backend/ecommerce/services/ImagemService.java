@@ -13,10 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ImagemService {
-	
+
 	@Autowired
 	ImagemRepository imagemRepository;
-	
+
 	@Transactional
 	public ImagemEntity create(ProdutoEntity produtoEntity, MultipartFile file) throws IOException {
 		ImagemEntity imagemEntity = new ImagemEntity();
@@ -26,13 +26,13 @@ public class ImagemService {
 		imagemEntity.setNome("Imagem");
 		return imagemRepository.save(imagemEntity);
 	}
-	
+
 	@Transactional
 	public ImagemEntity getImagem(Long id) {
 		ImagemEntity imagemEntity = imagemRepository.findByProdutoId(id);
 		return imagemEntity;
 	}
-	
+
 	@Transactional
 	public void deletarImagemProduto(Long id) {
 		ImagemEntity imagemEntity = imagemRepository.findByProdutoId(id);

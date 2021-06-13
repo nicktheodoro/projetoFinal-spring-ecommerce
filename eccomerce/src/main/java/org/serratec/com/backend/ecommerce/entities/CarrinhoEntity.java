@@ -11,19 +11,19 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "PRODUTO_PEDIDO")
 public class CarrinhoEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private Double preco;
-	
+
 	private Integer quantidade;
-	
+
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private ProdutoEntity produtos;
-	
+
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private PedidoEntity pedidos;

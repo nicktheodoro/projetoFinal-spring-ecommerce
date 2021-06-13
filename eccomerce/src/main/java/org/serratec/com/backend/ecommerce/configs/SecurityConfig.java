@@ -26,19 +26,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	JWTUtil jwtUtil;
 
-	private static final String[] AUTH_WHITELIST = { "/categoria/**","/produto/**"};
+	private static final String[] AUTH_WHITELIST = { "/categoria/**", "/produto/**" };
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.authorizeRequests()
-		.antMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()
-		.antMatchers(HttpMethod.POST,"/cliente").permitAll()
-		.anyRequest().authenticated();
+		http.authorizeRequests().antMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()
+				.antMatchers(HttpMethod.POST, "/cliente").permitAll().anyRequest().authenticated();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.addFilterBefore(new JWTAuthenticationFilter(authenticationManager(),jwtUtil), 
+		http.addFilterBefore(new JWTAuthenticationFilter(authenticationManager(), jwtUtil),
 				UsernamePasswordAuthenticationFilter.class);
-		http.addFilterBefore(new JWTAuthorizationFilter(),UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 	}
 

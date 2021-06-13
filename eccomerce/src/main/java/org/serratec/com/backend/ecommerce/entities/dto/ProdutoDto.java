@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ProdutoDto {
 
-
 	@Size(max = 40)
 	private String nome;
 
@@ -22,7 +21,6 @@ public class ProdutoDto {
 
 	private Integer quantidadeEstoque;
 
-//	private Long categoria;
 	private String categoria;
 
 	private LocalDate dataCadastro = LocalDate.now();
@@ -32,7 +30,7 @@ public class ProdutoDto {
 
 	@JsonIgnore
 	private Integer quantidade;
-	
+
 	private String url;
 
 	public String getNome() {

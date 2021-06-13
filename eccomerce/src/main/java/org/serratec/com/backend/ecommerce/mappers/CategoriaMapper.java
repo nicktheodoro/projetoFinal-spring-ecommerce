@@ -19,13 +19,13 @@ public class CategoriaMapper {
 
 	public CategoriaDto toDto(CategoriaEntity entity) {
 		CategoriaDto dto = new CategoriaDto();
-		
+
 		dto.setNome(entity.getNome());
 		dto.setDescricao(entity.getDescricao());
-		
+
 		return dto;
 	}
-	
+
 	public List<CategoriaDto> listToDto(List<CategoriaEntity> listaEntity) {
 		List<CategoriaDto> listaDto = new ArrayList<>();
 		for (CategoriaEntity entity : listaEntity) {
@@ -34,6 +34,7 @@ public class CategoriaMapper {
 		}
 		return listaDto;
 	}
+
 	public List<CategoriaEntity> listToEntity(List<CategoriaDto> listaDto) {
 		List<CategoriaEntity> listaEntity = new ArrayList<>();
 		for (CategoriaDto dto : listaDto) {

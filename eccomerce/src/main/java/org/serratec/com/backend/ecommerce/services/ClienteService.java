@@ -46,8 +46,8 @@ public class ClienteService {
 	}
 
 	public ClienteSimplesDto getByUsername(String username) throws ClienteException {
-		
-		if(clienteRepository.findByUsername(username) != null) {
+
+		if (clienteRepository.findByUsername(username) != null) {
 			return clienteMapper.toSimplesDto(clienteRepository.findByUsername(username));
 		} else {
 			throw new ClienteException("Usuário não existe");
@@ -85,7 +85,7 @@ public class ClienteService {
 
 		ClienteDto dto = clienteMapper.toDto(clienteRepository.save(clienteEntity));
 		dto.setEnderecos(enderecoRepository.findByCliente(clienteEntity));
-		
+
 		return clienteMapper.toSimplesDto(clienteMapper.toEntity(dto));
 	}
 

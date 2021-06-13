@@ -36,7 +36,8 @@ public class PedidoController {
 	}
 
 	@GetMapping("/{numeroPedido}")
-	public ResponseEntity<PedidoDto> getById(@PathVariable String numeroPedido) throws EntityNotFoundException, PedidoException {
+	public ResponseEntity<PedidoDto> getById(@PathVariable String numeroPedido)
+			throws EntityNotFoundException, PedidoException {
 		return new ResponseEntity<PedidoDto>(pedidoService.getByNumeroPedido(numeroPedido), HttpStatus.OK);
 	}
 
@@ -52,31 +53,36 @@ public class PedidoController {
 		return new ResponseEntity<PedidoDto>(pedidoService.adicionarProdutoPedido(numeroPedido, productOrderDto),
 				HttpStatus.ACCEPTED);
 	}
+
 	@PutMapping("/atualizar-quantidade/{numeroPedido}")
 	public ResponseEntity<PedidoDto> atualizarQuantidadeProduto(@PathVariable String numeroPedido,
-			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException, ProdutoException, PedidoException, CarrinhoException {
-		return new ResponseEntity<PedidoDto>(pedidoService.alterarQuantidadeProdutoPedido(numeroPedido, productOrderDto),
-				HttpStatus.ACCEPTED);
+			@RequestBody List<ProdutosPedidosDto> productOrderDto)
+			throws EntityNotFoundException, ProdutoException, PedidoException, CarrinhoException {
+		return new ResponseEntity<PedidoDto>(
+				pedidoService.alterarQuantidadeProdutoPedido(numeroPedido, productOrderDto), HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/remover-produto/{numeroPedido}")
 	public ResponseEntity<PedidoDto> remover(@PathVariable String numeroPedido,
-			@RequestBody List<ProdutosPedidosDto> productOrderDto) throws EntityNotFoundException, CarrinhoException, ProdutoException, PedidoException {
+			@RequestBody List<ProdutosPedidosDto> productOrderDto)
+			throws EntityNotFoundException, CarrinhoException, ProdutoException, PedidoException {
 		pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto);
 		return new ResponseEntity<PedidoDto>(pedidoService.deletarProdutoOrder(numeroPedido, productOrderDto),
 				HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/finalizar-pedido/{numeroPedido}")
-	public ResponseEntity<PedidoFinalizadoDto> finalizarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException, PedidoException{
-		return new ResponseEntity<PedidoFinalizadoDto>(pedidoService.finalizarPedido(numeroPedido), HttpStatus.ACCEPTED);
+	public ResponseEntity<PedidoFinalizadoDto> finalizarPedido(@PathVariable String numeroPedido)
+			throws EntityNotFoundException, PedidoException {
+		return new ResponseEntity<PedidoFinalizadoDto>(pedidoService.finalizarPedido(numeroPedido),
+				HttpStatus.ACCEPTED);
 	}
-	
+
 	@PutMapping("/cancelar-pedido/{numeroPedido}")
-	public ResponseEntity<String> cancelarPedido ( @PathVariable String numeroPedido) throws EntityNotFoundException, ProdutoException, CarrinhoException, PedidoException{
+	public ResponseEntity<String> cancelarPedido(@PathVariable String numeroPedido)
+			throws EntityNotFoundException, ProdutoException, CarrinhoException, PedidoException {
 		return new ResponseEntity<String>(pedidoService.cancelarPedido(numeroPedido), HttpStatus.ACCEPTED);
 	}
-	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, PedidoException {

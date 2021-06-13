@@ -100,8 +100,4 @@ public class EnderecoEntity {
 		this.cliente = cliente;
 	}
 
-	@Override
-	public String toString() {
-		return "Rua " + rua +  ", " + numero + ", " + bairro + ", " + cidade;
-	}
 }

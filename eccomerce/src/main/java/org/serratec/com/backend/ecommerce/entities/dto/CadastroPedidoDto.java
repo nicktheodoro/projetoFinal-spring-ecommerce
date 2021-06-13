@@ -5,15 +5,15 @@ import java.util.List;
 import org.serratec.com.backend.ecommerce.enums.StatusCompra;
 
 public class CadastroPedidoDto {
-	
+
 	private String numeroPedido;
 
 	private Long cliente;
-	
+
 	private Double valorTotal;
 
 	private StatusCompra status;
-	
+
 	private List<ProdutosPedidosDto> produtos;
 
 	public String getNumeroPedido() {

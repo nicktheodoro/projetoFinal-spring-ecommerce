@@ -17,8 +17,8 @@ public class ProdutoMapper {
 
 	@Autowired
 	CategoriaService categoriaService;
-	
-	@Autowired 
+
+	@Autowired
 	ProdutoService produtoService;
 
 	public ProdutoEntity toEntity(ProdutoDto dto) throws EntityNotFoundException {
@@ -45,11 +45,11 @@ public class ProdutoMapper {
 
 		return dto;
 	}
-	
+
 	public ProdutosPedidosDto toProdutosPedidos(ProdutoEntity entity) {
 		ProdutosPedidosDto dto = new ProdutosPedidosDto();
 		dto.setNome(entity.getNome());
-		
+
 		return dto;
 	}
 

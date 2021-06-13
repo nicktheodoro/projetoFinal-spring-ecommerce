@@ -11,8 +11,7 @@ public class CategoriaDto {
 
 	@Size(max = 250)
 	private String descricao;
-	
-	
+
 	public String getNome() {
 		return nome;
 	}

@@ -21,7 +21,7 @@ public class PedidoEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(unique = true)
 	private String numeroPedido;
 	private Double valorTotal;
@@ -32,9 +32,9 @@ public class PedidoEntity {
 	@ManyToOne
 	private ClienteEntity cliente;
 
-	@OneToMany(mappedBy="pedidos")    
+	@OneToMany(mappedBy = "pedidos")
 	private List<CarrinhoEntity> carrinhos;
-	
+
 	public Long getId() {
 		return id;
 	}

@@ -20,12 +20,11 @@ public class CategoriaEntity {
 	private Long id;
 	private String nome;
 	private String descricao;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "categoria")
 	private List<ProdutoEntity> products;
 
-	
 	public Long getId() {
 		return id;
 	}

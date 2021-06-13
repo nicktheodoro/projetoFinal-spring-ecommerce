@@ -1,4 +1,4 @@
-package org.serratec.com.backend.ecommerce.services;
+package org.serratec.com.backend.ecommerce.exceptions;
 
 public class EnderecoRepetidoException extends Exception {
 	private static final long serialVersionUID = 2944929780843118966L;
@@ -29,5 +29,4 @@ public class EnderecoRepetidoException extends Exception {
 		// TODO Auto-generated constructor stub
 	}
 
-	
 }

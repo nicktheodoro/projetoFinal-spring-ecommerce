@@ -4,13 +4,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class ProdutosPedidosDto {
-	
+
 	@NotBlank
 	private String nome;
-	
+
 	@NotNull
 	private Integer quantidade;
-
 
 	public String getNome() {
 		return nome;
@@ -32,6 +31,5 @@ public class ProdutosPedidosDto {
 	public String toString() {
 		return "ProductOrderDto [nome=" + nome + ", quantidade=" + quantidade + "]";
 	}
-	
-	
+
 }

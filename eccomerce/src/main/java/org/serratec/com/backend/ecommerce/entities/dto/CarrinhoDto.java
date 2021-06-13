@@ -5,13 +5,13 @@ import javax.validation.constraints.NotNull;
 public class CarrinhoDto {
 
 	private Double preco;
-	
+
 	@NotNull
 	private Integer quantidade;
-	
+
 	@NotNull
 	private Long produto;
-	
+
 	private Long pedido;
 
 	public Double getPreco() {

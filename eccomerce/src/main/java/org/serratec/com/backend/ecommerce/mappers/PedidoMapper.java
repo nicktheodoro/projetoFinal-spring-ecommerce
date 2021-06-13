@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PedidoMapper {
-	
+
 	@Autowired
 	ClienteService clienteService;
-	
+
 	public PedidoEntity toEntity(PedidoDto dto) throws EntityNotFoundException {
 		PedidoEntity entity = new PedidoEntity();
 		entity.setNumeroPedido(dto.getNumeroPedido());
@@ -34,7 +34,7 @@ public class PedidoMapper {
 
 		return dto;
 	}
-	
+
 	public CadastroPedidoDto toCadastroPedidoDto(PedidoDto pedidoDto) {
 		CadastroPedidoDto cadastroPedidoDto = new CadastroPedidoDto();
 		cadastroPedidoDto.setNumeroPedido(pedidoDto.getNumeroPedido());
@@ -42,10 +42,10 @@ public class PedidoMapper {
 		cadastroPedidoDto.setStatus(pedidoDto.getStatus());
 		cadastroPedidoDto.setValorTotal(pedidoDto.getValorTotal());
 		cadastroPedidoDto.setProdutos(pedidoDto.getProduto());
-		
+
 		return cadastroPedidoDto;
 	}
-	
+
 	public PedidoFinalizadoDto toPedidoFinalizadoDto(PedidoEntity pedido) {
 		PedidoFinalizadoDto dto = new PedidoFinalizadoDto();
 		dto.setNumeroPedido(pedido.getNumeroPedido());
@@ -57,5 +57,5 @@ public class PedidoMapper {
 
 		return dto;
 	}
-	
+
 }
