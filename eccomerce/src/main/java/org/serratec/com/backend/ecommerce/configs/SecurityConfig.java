@@ -7,6 +7,7 @@ import org.serratec.com.backend.ecommerce.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,12 +26,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	JWTUtil jwtUtil;
 
-	private static final String[] AUTH_WHITELIST = { "**" };
+	private static final String[] AUTH_WHITELIST = { "/categoria", "/produto" };
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().anyRequest().authenticated();
+		http.authorizeRequests().antMatchers(HttpMethod.POST,"/cliente").permitAll();
+		http.authorizeRequests().antMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(new JWTAuthenticationFilter(authenticationManager(),jwtUtil), 
 				UsernamePasswordAuthenticationFilter.class);
