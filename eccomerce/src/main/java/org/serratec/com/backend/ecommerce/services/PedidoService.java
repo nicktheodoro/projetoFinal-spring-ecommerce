@@ -337,21 +337,28 @@ public class PedidoService {
 
 			PedidoFinalizadoDto pedidoFinalizadoDto = pedidoMapper.toPedidoFinalizadoDto(pedidoEntity);
 
-			String msg = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"/> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"/> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/> <title>Nota Fiscal</title> <link href=\"https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&display=swap\" rel=\"stylesheet\"/> <style>*{font-family: \"Quicksand\", sans-serif;}.container{background-color: #808080; border: thin, solid; border-radius: 5%; margin: 0 auto; width: 1000px; height: 700px;}.content{width: 800px; height: 500px; margin: 0 auto; border-radius: 2%; background-color: #e6e8eb; transform: translateY(10%); padding: 40px;}h1{text-align: center; margin-bottom: 80px;}p{margin-left: 5%; font-weight: 700;}</style> </head> <body> <div class=\"container\"> <div class=\"content\"> <h1>Spring Play</h1> <p>Número Pedido:{numeroPedido}</p><p>Nome Cliente:{username}</p><p>Cpf:{cpf}</p><p>Data do pedido:{dataPedido}</p><p>Data de entrega:{dataEntrega}</p><p>Nome do produto:{nome}</p><p>Quandtidade:{quantidade}</p><p>Total do pedido:{valorTotal}</p></div></div></body></html>";
-			String listaProdutos = "";
+		String msg = "<!DOCTYPE html><html> <head> <meta charset=\"UTF-8\"/> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"/> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/> <title>Nota Fiscal</title> <style>.container{background-color: #e6e8eb; border: thin, solid; margin: 0 auto; width: 50rem; height: 40rem; padding: 2rem; color: black;}</style> </head> <body> <div class=\"container\"> <div class=\"emitente\"> <h2>Emitente</h2> <hr/> <p>Razão Social</p><p>Spring Play Ecommerce de Jogos S.A.</p><p>CNPJ: 07.714.105/0002-07</p><p>Inscrição Estadual: 083078665</p><p>UF: RJ</p></div><div class=\"content-tomador\"> <h2>Destinatário</h2> <hr/> <p>Nome Cliente:{username}</p><p>Cpf:{cpf}</p></div><div class=\"dados-nfe\"> <h2>Dados Pedido</h2> <hr/> <p>Número Pedido:{numeroPedido}</p><p>Data de entrega:{dataEntrega}</p><p>Nome do produto:{nome}</p><p>Total do pedido:{valorTotal}</p></div></div></body></html>";
+		String listaProdutos = "";
 
-			for (ProdutosPedidosDto produto : listaProdutosPedidosDto) {
-				listaProdutos += produto.getNome() + "\n";
+		int i = 1;
+		for (ProdutosPedidosDto produto : listaProdutosPedidosDto) {
+
+			if (listaProdutosPedidosDto.size() != i) {
+				listaProdutos += produto.getNome() + " - ";
+				listaProdutos += produto.getQuantidade() + ", ";
+			} else {
+				listaProdutos += produto.getNome() + " - ";
+				listaProdutos += produto.getQuantidade() + ".";
 			}
+			i++;
+		}
 
-			msg = msg.replaceAll(Pattern.quote("{valorTotal}"), pedidoFinalizadoDto.getValorTotal().toString());
-			msg = msg.replaceAll(Pattern.quote("{nome}"), listaProdutos);
-			msg = msg.replaceAll(Pattern.quote("{nome}"), listaProdutos);
-			msg = msg.replaceAll(Pattern.quote("{dataEntrega}"), pedidoEntity.getDataEntrega().toString());
-			msg = msg.replaceAll(Pattern.quote("{dataPedido}"), pedidoEntity.getDataEntrega().toString());
-			msg = msg.replaceAll(Pattern.quote("{cpf}"), pedidoEntity.getCliente().getCpf());
-			msg = msg.replaceAll(Pattern.quote("{username}"), pedidoEntity.getCliente().getUsername());
-			msg = msg.replaceAll(Pattern.quote("{numeroPedido}"), pedidoEntity.getNumeroPedido());
+		msg = msg.replaceAll(Pattern.quote("{username}"), pedidoEntity.getCliente().getNome());
+		msg = msg.replaceAll(Pattern.quote("{cpf}"), pedidoEntity.getCliente().getCpf());
+		msg = msg.replaceAll(Pattern.quote("{numeroPedido}"), pedidoEntity.getNumeroPedido());
+		msg = msg.replaceAll(Pattern.quote("{dataEntrega}"), pedidoEntity.getDataEntrega().toString());
+		msg = msg.replaceAll(Pattern.quote("{nome}"), listaProdutos);
+		msg = msg.replaceAll(Pattern.quote("{valorTotal}"), pedidoFinalizadoDto.getValorTotal().toString());
 
 			mailConfig.sendMail(pedidoEntity.getCliente().getEmail(), "Pedido recebido com sucesso", msg);
 
