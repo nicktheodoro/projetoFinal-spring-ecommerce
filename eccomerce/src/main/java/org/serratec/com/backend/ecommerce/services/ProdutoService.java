@@ -99,15 +99,35 @@ public class ProdutoService {
 		}
 	}
 
-	public ProdutoDto update(String nome, ProdutoDto produtoUpdate) throws EntityNotFoundException {
+	public ProdutoDto update(String nome, ProdutoDto produtoUpdate) throws EntityNotFoundException, ProdutoException {
 		ProdutoEntity produtoEntity = this.findByName(nome.toLowerCase());
-		produtoEntity.setNome(produtoUpdate.getNome().toLowerCase());
-		produtoEntity.setPreco(produtoUpdate.getPreco());
-		produtoEntity.setQuantidadeEstoque(produtoUpdate.getQuantidadeEstoque());
-		produtoEntity.setCategoria(categoriaService.findByNome(produtoUpdate.getCategoria()));
-
+		
+		if (produtoUpdate.getNome() != null) {
+			if (this.findByName(produtoUpdate.getNome().toLowerCase()) != null) {
+				throw new ProdutoException("Produto " + produtoUpdate.getNome().toLowerCase()
+						+ " já cadastrado, favor verificar o cadastro ou escolher um outro nome");
+			} else {
+				produtoEntity.setNome(produtoUpdate.getNome().toLowerCase());
+			}
+		}
+		if(produtoUpdate.getPreco()!= null) {
+			produtoEntity.setPreco(produtoUpdate.getPreco());			
+		}
+		if(produtoUpdate.getQuantidadeEstoque() != null) {
+			produtoEntity.setQuantidadeEstoque(produtoUpdate.getQuantidadeEstoque());			
+		}
+		if(produtoUpdate.getCategoria() != null) {
+			produtoEntity.setCategoria(categoriaService.findByNome(produtoUpdate.getCategoria().toLowerCase()));			
+		}
 		if (produtoUpdate.getDescricao() != null) {
 			produtoEntity.setDescricao(produtoUpdate.getDescricao());
+		}	
+		else {
+			produtoEntity.setNome(produtoEntity.getNome());
+			produtoEntity.setPreco(produtoEntity.getPreco());
+			produtoEntity.setCategoria(produtoEntity.getCategoria());
+			produtoEntity.setQuantidadeEstoque(produtoEntity.getQuantidadeEstoque());
+			produtoEntity.setDescricao(produtoEntity.getDescricao());
 		}
 
 		return produtoMapper.toDto(produtoRepository.save(produtoEntity));

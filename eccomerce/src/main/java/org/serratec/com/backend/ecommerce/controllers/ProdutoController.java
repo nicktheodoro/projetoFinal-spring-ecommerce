@@ -72,7 +72,7 @@ public class ProdutoController {
 
 	@PutMapping("/{nomeProduto}")
 	public ResponseEntity<ProdutoDto> update(@PathVariable String nomeProduto, @RequestBody ProdutoDto produto)
-			throws EntityNotFoundException {
+			throws EntityNotFoundException, ProdutoException {
 		return new ResponseEntity<ProdutoDto>(produtoService.update(nomeProduto, produto), HttpStatus.ACCEPTED);
 	}
 
