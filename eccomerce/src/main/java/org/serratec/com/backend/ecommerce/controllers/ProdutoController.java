@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.serratec.com.backend.ecommerce.entities.ImagemEntity;
+import org.serratec.com.backend.ecommerce.entities.ProdutoEntity;
 import org.serratec.com.backend.ecommerce.entities.dto.ProdutoDto;
 import org.serratec.com.backend.ecommerce.exceptions.EntityNotFoundException;
 import org.serratec.com.backend.ecommerce.exceptions.ProdutoException;
@@ -55,13 +56,14 @@ public class ProdutoController {
 		return new ResponseEntity<ProdutoDto>(produtoService.getByName(nome), HttpStatus.OK);
 	}
 
-	@GetMapping("/{id}/imagem")
-	public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
-		ImagemEntity imagem = imagemService.getImagem(id);
+	@GetMapping("/{nomeProduto}/imagem")
+	public ResponseEntity<byte[]> getImage(@PathVariable String nomeProduto) throws EntityNotFoundException {
+		ProdutoEntity produto = produtoService.findByName(nomeProduto.toLowerCase());
+		ImagemEntity imagem = imagemService.getImagem(produto.getId());
 		HttpHeaders header = new HttpHeaders();
 		header.add("content-length", String.valueOf(imagem.getData().length));
 		header.add("content-type", imagem.getMimeType());
-		return new ResponseEntity<byte[]>(imagemService.getImagem(id).getData(), header, HttpStatus.OK);
+		return new ResponseEntity<byte[]>(imagemService.getImagem(produto.getId()).getData(), header, HttpStatus.OK);
 	}
 
 	@PostMapping

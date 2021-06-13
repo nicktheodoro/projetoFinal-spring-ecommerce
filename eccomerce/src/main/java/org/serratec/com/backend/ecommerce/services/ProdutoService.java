@@ -61,41 +61,47 @@ public class ProdutoService {
 	}
 
 	public ProdutoDto getByName(String nome) throws EntityNotFoundException {
-		return produtoMapper.toDto(produtoRepository.findByNome(nome.toLowerCase()));
+		return produtoMapper.toDto(this.findByName(nome.toLowerCase()));
 	}
 
 	public ProdutoEntity findByName(String nome) throws EntityNotFoundException {
-		return produtoRepository.findByNome(nome.toLowerCase());
+		ProdutoEntity produto = produtoRepository.findByNome(nome.toLowerCase());
+		if(produto != null) {
+			return produto;
+		}
+		else {
+			throw new EntityNotFoundException("Produto com nome: " + nome + " não encontrado");
+		}	
 	}
 
 	public ProdutoDto create(ProdutoDto produtoDto, MultipartFile file)
 			throws EntityNotFoundException, ProdutoException, IOException {
 		produtoDto.setNome(produtoDto.getNome().toLowerCase());
-		try {
-			if (produtoDto.getNome().isBlank() || produtoDto.getPreco() == null
-					|| produtoDto.getQuantidadeEstoque() == null || produtoDto.getCategoria().isBlank()) {
-				throw new ProdutoException(
-						"Os campos Nome, Preço, Quantidade em estoque e categoria são obrigatórios!");
+		if (produtoDto.getNome().isBlank() || produtoDto.getPreco() == null || produtoDto.getQuantidadeEstoque() == null
+				|| produtoDto.getCategoria().isBlank()) {
+			throw new ProdutoException("Os campos Nome, Preço, Quantidade em estoque e categoria são obrigatórios!");
+		} else {
+			if (produtoRepository.findByNome(produtoDto.getNome()) != null) {
+				throw new ProdutoException("Produto com o nome: " + produtoDto.getNome() + " já cadastrado.");
 			} else {
-				if (this.findByName(produtoDto.getNome()) != null) {
-					throw new ProdutoException("Produto com o nome: " + produtoDto.getNome() + " já cadastrado.");
-				} else {
-					produtoDto.setNome(produtoDto.getNome().toLowerCase());
-					ProdutoEntity produtoEntity = produtoMapper.toEntity(produtoDto);
+				produtoDto.setNome(produtoDto.getNome().toLowerCase());
+				ProdutoEntity produtoEntity = produtoMapper.toEntity(produtoDto);
+				if (categoriaService.findByNome(produtoDto.getCategoria().toLowerCase()) != null) {
 					produtoEntity.setCategoria(categoriaService.findByNome(produtoDto.getCategoria().toLowerCase()));
-
-					produtoEntity = produtoRepository.save(produtoEntity);
-					imagemService.create(produtoEntity, file);
-					ProdutoDto pDto = produtoMapper.toDto(produtoEntity);
-					
-					pDto.setUrl(criarImagem(produtoEntity.getId()));
-
-					return pDto;
+				} else if (categoriaService.findByNome(produtoDto.getCategoria().toLowerCase()) == null) {
+					throw new EntityNotFoundException(
+							"Categoria " + produtoDto.getCategoria().toLowerCase() + " não encontrada");
 				}
 
+				produtoEntity = produtoRepository.save(produtoEntity);
+				imagemService.create(produtoEntity, file);
+				ProdutoDto pDto = produtoMapper.toDto(produtoEntity);
+
+				pDto.setUrl(criarImagem(produtoEntity.getId()));
+
+				return pDto;
 			}
-		} catch (EntityNotFoundException e) {
-			throw new EntityNotFoundException("Categoria com id: " + produtoDto.getCategoria() + " não existe");
+
 		}
 	}
 
