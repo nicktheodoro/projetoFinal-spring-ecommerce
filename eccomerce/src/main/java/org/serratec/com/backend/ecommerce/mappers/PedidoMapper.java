@@ -30,8 +30,7 @@ public class PedidoMapper {
 		dto.setNumeroPedido(entity.getNumeroPedido());
 		dto.setCliente(entity.getCliente().getId());
 		dto.setStatus(entity.getStatus());
-		dto.setValorTotal(entity.getValorTotal());
-
+		dto.setValorTotal(entity.getValorTotal());;
 		return dto;
 	}
 

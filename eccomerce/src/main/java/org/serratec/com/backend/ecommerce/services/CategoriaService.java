@@ -69,7 +69,11 @@ public class CategoriaService {
 					throw new CategoriaException(
 							"Categoria " + categoriaUpdate.getNome().toLowerCase() + " já cadastrada");
 				} else {
-					categoriaEntity.setNome(categoriaUpdate.getNome());
+					if(categoriaUpdate.getNome().isBlank()) {
+						throw new CategoriaException("Para se atualizar o nome é necessário informar um valor.");
+					}else {						
+						categoriaEntity.setNome(categoriaUpdate.getNome());
+					}
 				}
 			}
 			if (!categoriaUpdate.getDescricao().isBlank()) {
@@ -79,7 +83,7 @@ public class CategoriaService {
 			}
 			return categoriaMapper.toDto(categoriaRepository.save(categoriaEntity));
 		} else {
-			throw new EntityNotFoundException("Categoria com nome: " + nome.toLowerCase() + "não encontrada");
+			throw new EntityNotFoundException("Categoria com nome: " + nome.toLowerCase() + " não encontrada");
 		}
 	}
 

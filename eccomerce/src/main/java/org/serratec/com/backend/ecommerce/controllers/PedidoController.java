@@ -78,16 +78,9 @@ public class PedidoController {
 				HttpStatus.ACCEPTED);
 	}
 
-	@PutMapping("/cancelar-pedido/{numeroPedido}")
+	@DeleteMapping("/cancelar-pedido/{numeroPedido}")
 	public ResponseEntity<String> cancelarPedido(@PathVariable String numeroPedido)
 			throws EntityNotFoundException, ProdutoException, CarrinhoException, PedidoException {
 		return new ResponseEntity<String>(pedidoService.cancelarPedido(numeroPedido), HttpStatus.ACCEPTED);
 	}
-
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException, PedidoException {
-		pedidoService.delete(id);
-		return new ResponseEntity<String>("Pedido com id: " + id + " deletado com sucesso!", HttpStatus.OK);
-	}
-
 }

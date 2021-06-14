@@ -84,6 +84,6 @@ public class ProdutoController {
 			throws EntityNotFoundException, ProdutoException {
 		produtoService.delete(nomeProduto);
 
-		return new ResponseEntity<String>("Produto com id: " + nomeProduto + " deletado com sucesso!", HttpStatus.OK);
+		return new ResponseEntity<String>("Produto com nome " + nomeProduto + " deletado com sucesso!", HttpStatus.OK);
 	}
 }

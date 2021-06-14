@@ -108,7 +108,7 @@ public class ProdutoService {
 		ProdutoEntity produtoEntity = this.findByName(nome.toLowerCase());
 
 		if (produtoUpdate.getNome() != null) {
-			if (this.findByName(produtoUpdate.getNome().toLowerCase()) != null) {
+			if (produtoRepository.findByNome(produtoUpdate.getNome().toLowerCase()) != null) {
 				throw new ProdutoException("Produto " + produtoUpdate.getNome().toLowerCase()
 						+ " já cadastrado, favor verificar o cadastro ou escolher um outro nome");
 			} else {

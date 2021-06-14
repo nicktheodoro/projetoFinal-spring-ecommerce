@@ -61,7 +61,8 @@ public class PedidoService {
 	}
 
 	public List<PedidoDto> getAll() {
-		return pedidoRepository.findAll().stream().map(pedidoMapper::toDto).collect(Collectors.toList());
+		 return pedidoRepository.findAll().stream().map(pedidoMapper::toDto).collect(Collectors.toList());
+		
 	}
 
 	public PedidoEntity findByNumeroPedido(String numeroPedido) {
@@ -229,7 +230,7 @@ public class PedidoService {
 			for (CarrinhoEntity entity : carrinho) {
 				for (ProdutoDto produtoDto : listaProdutoDto) {
 					if (produtoDto.getNome().equals(entity.getProdutos().getNome())) {
-						entity.setQuantidade(produtoDto.getQuantidade());
+						entity.setQuantidade(produtoDto.getQuantidade() - entity.getQuantidade());
 						carrinhoService.atualizarQuantidade(entity);
 					}
 				}
