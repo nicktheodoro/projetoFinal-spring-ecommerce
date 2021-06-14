@@ -389,8 +389,12 @@ public class PedidoService {
 
 	public String cancelarPedido(String numeroPedido)
 			throws EntityNotFoundException, ProdutoException, CarrinhoException, PedidoException {
-
-		if (this.getByNumeroPedido(numeroPedido).getStatus().equals(StatusCompra.NAO_FINALIZADO)) {
+		PedidoEntity pedido = this.findByNumeroPedido(numeroPedido);
+		if(pedido == null) {
+			throw new PedidoException("Pedido com número " + numeroPedido + " não encontrado");
+		}
+		
+		if (pedido.getStatus().equals(StatusCompra.NAO_FINALIZADO)) {
 			this.devolverProdutosEstoque(numeroPedido);
 
 			PedidoEntity pedidoEntity = pedidoRepository.findByNumeroPedido(numeroPedido);
@@ -399,7 +403,10 @@ public class PedidoService {
 				carrinhoRepository.deleteById(carrinhoEntity.getId());
 			}
 			pedidoRepository.delete(pedidoEntity);
+			return "Pedido Cancelado com sucesso!";
 		}
-		return "Pedido Cancelado com sucesso!";
+		else {
+			return "Pedido já finalizado, favor verificar";
+		}
 	}
 }
