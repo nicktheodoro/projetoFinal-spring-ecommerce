@@ -18,7 +18,7 @@ public class PedidoDto {
 	private StatusCompra status;
 
 	@NotNull
-	private Long cliente;
+	private String cliente;
 
 	@JsonIgnore
 	private List<CarrinhoEntity> carrinhos;
@@ -49,11 +49,11 @@ public class PedidoDto {
 		this.status = status;
 	}
 
-	public Long getCliente() {
+	public String getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(Long cliente) {
+	public void setCliente(String cliente) {
 		this.cliente = cliente;
 	}
 

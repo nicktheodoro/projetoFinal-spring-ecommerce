@@ -8,7 +8,7 @@ public class CadastroPedidoDto {
 
 	private String numeroPedido;
 
-	private Long cliente;
+	private String cliente;
 
 	private Double valorTotal;
 
@@ -24,11 +24,11 @@ public class CadastroPedidoDto {
 		this.numeroPedido = numeroPedido;
 	}
 
-	public Long getCliente() {
+	public String getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(Long cliente) {
+	public void setCliente(String cliente) {
 		this.cliente = cliente;
 	}
 

@@ -45,6 +45,10 @@ public class ClienteService {
 		return clienteRepository.findAll().stream().map(clienteMapper::toSimplesDto).collect(Collectors.toList());
 	}
 
+	public ClienteEntity findByUsername(String username) {
+		return clienteRepository.findByUsername(username);
+	}
+	
 	public ClienteSimplesDto getByUsername(String username) throws ClienteException {
 
 		if (clienteRepository.findByUsername(username) != null) {

@@ -18,7 +18,7 @@ public class PedidoMapper {
 	public PedidoEntity toEntity(PedidoDto dto) throws EntityNotFoundException {
 		PedidoEntity entity = new PedidoEntity();
 		entity.setNumeroPedido(dto.getNumeroPedido());
-		entity.setCliente(clienteService.findById(dto.getCliente()));
+		entity.setCliente(clienteService.findByUsername(dto.getCliente()));
 		entity.setStatus(dto.getStatus());
 		entity.setValorTotal(dto.getValorTotal());
 
@@ -28,7 +28,7 @@ public class PedidoMapper {
 	public PedidoDto toDto(PedidoEntity entity) {
 		PedidoDto dto = new PedidoDto();
 		dto.setNumeroPedido(entity.getNumeroPedido());
-		dto.setCliente(entity.getCliente().getId());
+		dto.setCliente(entity.getCliente().getUsername());
 		dto.setStatus(entity.getStatus());
 		dto.setValorTotal(entity.getValorTotal());;
 		return dto;

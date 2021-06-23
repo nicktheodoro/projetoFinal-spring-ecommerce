@@ -36,7 +36,7 @@ public class PedidoController {
 	}
 
 	@GetMapping("/{numeroPedido}")
-	public ResponseEntity<PedidoDto> getById(@PathVariable String numeroPedido)
+	public ResponseEntity<PedidoDto> getByNumeroPedido(@PathVariable String numeroPedido)
 			throws EntityNotFoundException, PedidoException {
 		return new ResponseEntity<PedidoDto>(pedidoService.getByNumeroPedido(numeroPedido), HttpStatus.OK);
 	}

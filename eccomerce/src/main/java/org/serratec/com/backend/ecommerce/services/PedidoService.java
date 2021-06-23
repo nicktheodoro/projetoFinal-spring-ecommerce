@@ -95,7 +95,7 @@ public class PedidoService {
 
 	public PedidoEntity create(PedidoDto pedidoDto) throws EntityNotFoundException {
 		PedidoEntity pedidoEntity = pedidoMapper.toEntity(pedidoDto);
-		pedidoEntity.setCliente(clienteService.findById(pedidoDto.getCliente()));
+		pedidoEntity.setCliente(clienteService.findByUsername(pedidoDto.getCliente()));
 
 		pedidoDto.setStatus(StatusCompra.NAO_FINALIZADO);
 
